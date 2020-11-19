@@ -202,7 +202,7 @@ const WidgetList: React.FC<RouteComponentWithParams> = (props) => {
   const mappingIcon = (widgetConfig: IWidgetConfigBase) => {
     const selectedChart = widgetConfig.selectedChart
     const mode = widgetlibs[widgetConfig.mode]
-    return mode[selectedChart - 1].icon
+    return mode[selectedChart - 1]?.icon
   }
 
   const columns: Array<ColumnProps<IWidgetFormed>> = [

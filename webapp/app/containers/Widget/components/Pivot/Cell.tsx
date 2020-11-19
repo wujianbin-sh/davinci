@@ -11,6 +11,8 @@ const styles = require('./Pivot.less')
 interface ICellProps {
   colKey?: string
   rowKey?: string
+  cols?: string[]
+  rows?: string[]
   width: number
   height?: number
   interacting?: boolean
@@ -44,6 +46,8 @@ export class Cell extends React.PureComponent <ICellProps, ICellState> {
       this.setState({isSelected: false})
     }
   }
+
+
   private selectTd  = (event) => {
     const pagex = event.pageX
     const pagey = event.pageY
@@ -67,8 +71,9 @@ export class Cell extends React.PureComponent <ICellProps, ICellState> {
       ifSelectedTdToDrill(obj)
     })
   }
+
   public render () {
-    const { colKey = '', rowKey = '', width, height, data, chartStyles, color, legend } = this.props
+    let { colKey = '', rowKey = '', rows, cols,  width, height, data, chartStyles, color, legend, metrics } = this.props
     const { isSelected } = this.state
     const {
       color: fontColor,
@@ -77,7 +82,16 @@ export class Cell extends React.PureComponent <ICellProps, ICellState> {
       lineColor,
       lineStyle
     } = chartStyles.pivot
-    let metrics = this.props.metrics
+    let totalOpen = metrics.some((m)=> m?.total?.totalType?.length)
+    if(totalOpen){
+      if(colKey && !cols.indexOf("指标名称") && colKey.includes(DEFAULT_SPLITER)){
+        colKey = colKey.replace(/\[总和\]/g,'')
+      }
+      if(rowKey && !rows.indexOf("指标名称") && rowKey.includes(DEFAULT_SPLITER)){
+        rowKey = rowKey.replace(/\[总和\]/g,'')
+      }
+    }
+    
     if (colKey.includes(DEFAULT_SPLITER) && rowKey.includes(DEFAULT_SPLITER)) {
       const metricColKey = getMetricKey(colKey)
       const metricRowKey = getMetricKey(rowKey)
@@ -100,11 +114,21 @@ export class Cell extends React.PureComponent <ICellProps, ICellState> {
       const currentColorItem = color.items.find((i) => i.config.actOn === m.name) || color.items.find((i) => i.config.actOn === 'all')
       return data && data.map((d, index) => {
         let styleColor
-        if (currentColorItem) {
+       if (currentColorItem) {
           const legendSelectedItem = legend[currentColorItem.name]
-          if (!(legendSelectedItem && legendSelectedItem.includes(d[currentColorItem.name]))) {
+          let legendValue
+          if(totalOpen){
+            if(d[currentColorItem.name]){
+              legendValue = d[currentColorItem.name]
+            } else {
+              legendValue = d[`${currentColorItem.name}_cols`] || d[`${currentColorItem.name}_rows`]
+            }
+          } else {
+            legendValue = d[currentColorItem.name]
+          }
+          if (!(legendSelectedItem && legendSelectedItem.includes(legendValue))) {
             styleColor = {
-              color: currentColorItem.config.values[d[currentColorItem.name]]
+              color: currentColorItem.config.values[legendValue]
             }
           }
         }

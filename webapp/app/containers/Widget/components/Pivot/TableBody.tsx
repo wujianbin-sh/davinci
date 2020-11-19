@@ -63,9 +63,7 @@ export class TableBody extends React.Component<ITableBodyProps, ITableBodyState>
     }
   }
   private gridCutting = (width, height, chartGrid) => {
-    // console.log(chartGrid)
     const chunks = this.horizontalCutting(height, chartGrid)
-    // console.log(chunks)
     chunks.forEach((chunk) => {
       chunk.data = this.verticalCutting(width, chunk.data)
     })
@@ -229,7 +227,6 @@ export class TableBody extends React.Component<ITableBodyProps, ITableBodyState>
     const chartGrid: IChartLine[] = []
     const cells = []
     let tableWidth = 0
-
     if (dimetionAxis) {
       let metricAxisCount = 0
       if (colKeys.length && rowKeys.length) {
@@ -526,6 +523,8 @@ export class TableBody extends React.Component<ITableBodyProps, ITableBodyState>
                 key={`${flatRowKey}${flatColKey}`}
                 colKey={flatColKey}
                 rowKey={flatRowKey}
+                rows={rows}
+                cols={cols}
                 width={cellWidth}
                 interacting={this.props.interacting}
                 height={getPivotCellHeight(height)}
@@ -558,6 +557,7 @@ export class TableBody extends React.Component<ITableBodyProps, ITableBodyState>
             <Cell
               key={flatColKey}
               colKey={flatColKey}
+              cols={cols}
               width={cellWidth}
               interacting={this.props.interacting}
               height={getPivotCellHeight(height)}
@@ -591,6 +591,7 @@ export class TableBody extends React.Component<ITableBodyProps, ITableBodyState>
             <Cell
               key={flatRowKey}
               rowKey={flatRowKey}
+              rows={rows}
               width={cellWidth}
               height={getPivotCellHeight(height)}
               metrics={metrics}

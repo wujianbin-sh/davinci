@@ -6,7 +6,9 @@ import { getFieldAlias } from '../../Config/Field'
 import { FieldSortTypes } from '../../Config/Sort'
 import { getAggregatorLocale, decodeMetricName } from '../../util'
 import { IChartInfo } from '../../Widget'
-import { getAvailableSettings, getSettingsDropdownList, getSettingKeyByDropItem, MapSettingTypes, MapItemTypes, MapItemValueTypes } from './settings'
+import { IWidgetMetric } from 'containers/Widget/components/Widget'
+import { getPivot } from 'containers/Widget/components/util'
+import { getAvailableSettings, getSettingsDropdownList, getSettingKeyByDropItem, MapSettingTypes, MapItemTypes, MapItemValueTypes, MapViewChartTypes } from './settings'
 
 import { Icon, Menu, Dropdown, Tooltip } from 'antd'
 const { Item: MenuItem, SubMenu, Divider: MenuDivider } = Menu
@@ -15,6 +17,8 @@ const styles = require('../Workbench.less')
 interface IDropboxItemProps {
   container: string
   item: IDataParamSourceInBox
+  mode: string
+  metrics: IWidgetMetric[]
   dimetionsCount: number
   metricsCount: number
   onDragStart: (item: IDataParamSource, e: React.DragEvent<HTMLLIElement | HTMLParagraphElement>) => void
@@ -26,6 +30,7 @@ interface IDropboxItemProps {
   onChangeColorConfig: (item: IDataParamSource) => void
   onChangeFilterConfig: (item: IDataParamSource) => void
   onChangeChart: (item: IDataParamSource) => (chart: IChartInfo) => void
+  onChangeTotal: (item: IDataParamSource) => void
   onRemove: (e) => void
 }
 
@@ -72,9 +77,9 @@ export class DropboxItem extends React.PureComponent<IDropboxItemProps, IDropbox
       onChangeFormatConfig,
       onSort,
       onChangeColorConfig,
-      onChangeFilterConfig } = this.props
+      onChangeFilterConfig,
+      onChangeTotal } = this.props
     const settingKey = getSettingKeyByDropItem(key)
-
     switch (settingKey) {
       case 'aggregator':
         onChangeAgg(item as IDataParamSource, key as AggregatorType)
@@ -91,17 +96,20 @@ export class DropboxItem extends React.PureComponent<IDropboxItemProps, IDropbox
       case 'format':
         onChangeFormatConfig(item as IDataParamSource)
         break
+      case 'total':
+        onChangeTotal(item as IDataParamSource)
+        break
       case 'sort':
         onSort(item as IDataParamSource, key as FieldSortTypes)
         break
+      
     }
   }
 
   public render () {
-    const { container, item, dimetionsCount, metricsCount, onChangeChart, onRemove } = this.props
-    const { name: originalName, type, sort, agg, field } = item
+    const { container, item, mode, metrics, dimetionsCount, metricsCount, onChangeChart, onRemove } = this.props
+    const { name: originalName, type, sort, agg, field, chart } = item
     const { dragging } = this.state
-
     const name = type === 'value' ? decodeMetricName(originalName) : originalName
 
     let pivotChartSelector
@@ -150,8 +158,9 @@ export class DropboxItem extends React.PureComponent<IDropboxItemProps, IDropbox
     if (type === 'add') {
       contentWithDropdownList = content
     } else {
-      const availableSettings =  getAvailableSettings(MapSettingTypes[container], MapItemTypes[item.type], MapItemValueTypes[item.visualType])
-      const dropdownList = getSettingsDropdownList(availableSettings)
+      const chartTable = metrics.every((item) => item.chart.id === getPivot().id)
+      const availableSettings =  getAvailableSettings(MapSettingTypes[container], MapItemTypes[item.type], MapItemValueTypes[item.visualType], MapViewChartTypes[mode], chartTable)
+      let dropdownList = getSettingsDropdownList(availableSettings)
       let menuClass = ''
       if (type === 'value') {
         menuClass = styles.valueDropDown

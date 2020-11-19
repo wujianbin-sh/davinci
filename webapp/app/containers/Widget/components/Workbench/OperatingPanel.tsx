@@ -36,6 +36,11 @@ import {
   FormatConfigModal
 } from '../Config/Format'
 import {
+  IFieldTotalConfig,
+  getDefaultTotalConfig,
+  TotalConfigModal
+} from '../Config/Total'
+import {
   IFieldSortConfig,
   FieldSortTypes,
   SortConfigModal
@@ -138,6 +143,7 @@ interface IOperatingPanelProps {
   autoLoadData: boolean
   expired: number
   workbenchQueryMode: WorkbenchQueryMode
+  widgetProps: IWidgetProps
   multiDrag: boolean
   computed: any[]
   originalComputed: any[]
@@ -147,6 +153,7 @@ interface IOperatingPanelProps {
   onLimitChange: (value) => void
   onCacheChange: (e: RadioChangeEvent) => void
   onChangeAutoLoadData: (e: RadioChangeEvent) => void
+  onChangeSum: (e: RadioChangeEvent) => void
   onExpiredChange: (expired: number) => void
   onSetComputed: (computesField: any[]) => void
   onDeleteComputed: (computesField: any[]) => void
@@ -192,14 +199,14 @@ interface IOperatingPanelStates {
 
   formatModalVisible: boolean
   sortModalVisible: boolean
-
+  
   colorModalVisible: boolean
   actOnModalVisible: boolean
   actOnModalList: IDataParamSource[]
   filterModalVisible: boolean
   controlConfigVisible: boolean
   referenceConfigVisible: boolean
-
+  totalModalVisible: boolean
   categoryDragItems: IDragItem[]
   valueDragItems: IDragItem[]
 
@@ -237,6 +244,7 @@ export class OperatingPanel extends React.Component<
       currentEditingItem: null,
       fieldModalVisible: false,
       formatModalVisible: false,
+      totalModalVisible: false,
       sortModalVisible: false,
       colorModalVisible: false,
       actOnModalVisible: false,
@@ -367,7 +375,6 @@ export class OperatingPanel extends React.Component<
           })
         }
       })
-
       if (secondaryMetrics) {
         dataParams.metrics = {
           title: '左轴指标',
@@ -408,6 +415,7 @@ export class OperatingPanel extends React.Component<
           }
         })
       }
+    
       filters.forEach((f) => {
         const modelColumn = model[f.name]
         if (modelColumn) {
@@ -813,6 +821,10 @@ export class OperatingPanel extends React.Component<
 
     if (this.state.showColsAndRows && rows.items.length) {
       cols.items = cols.items.concat(rows.items)
+      .reduce((cols,item)=>{
+        const repeatCols = cols.some((col)=> col.name === item.name)
+        return cols = repeatCols ? [...cols] : [...cols, item]
+      },[])
       rows.items = []
       this.setWidgetProps(dataParams, styleParams)
     }
@@ -920,6 +932,16 @@ export class OperatingPanel extends React.Component<
       formatModalVisible: true
     })
   }
+  
+  private dropboxItemChangeTotal = (from: string) => (
+    item: IDataParamSource
+  ) => {
+    this.setState({
+      currentEditingCommonParamKey: from,
+      currentEditingItem: item,
+      totalModalVisible: true
+    })
+  }
 
   private saveFormatConfig = (formatConfig: IFieldFormatConfig) => {
     const {
@@ -963,6 +985,29 @@ export class OperatingPanel extends React.Component<
 
   private cancelSortConfig = () => {
     this.setState({ sortModalVisible: false })
+  }
+
+  private saveTotalConfig = (totalConfig: IFieldTotalConfig) => {
+    const {
+      currentEditingCommonParamKey,
+      currentEditingItem,
+      dataParams,
+      styleParams
+    } = this.state
+    const item = dataParams[currentEditingCommonParamKey].items.find(
+      (i) => i.name === currentEditingItem.name
+    )
+    item.total = totalConfig
+    this.setWidgetProps(dataParams, styleParams)
+    this.setState({
+      totalModalVisible: false
+    })
+  }
+
+  private cancelTotalConfig = () => {
+    this.setState({
+      totalModalVisible: false
+    })
   }
 
   private dropboxItemChangeColorConfig = (item: IDataParamSource) => {
@@ -1224,7 +1269,6 @@ export class OperatingPanel extends React.Component<
     const mergedParams = this.getChartDataConfig(selectedCharts)
     const mergedDataParams = mergedParams.dataParams
     const mergedStyleParams = mergedParams.styleParams
-
     let noAggregators = false
     if (styleParams.table) {
       // @FIXME pagination in table style config
@@ -1266,21 +1310,21 @@ export class OperatingPanel extends React.Component<
         requestParams.orders = requestParams.orders.concat(options.orders)
       }
     }
-
     const requestParamString = JSON.stringify(requestParams)
     const needRequest =
       (groups.length > 0 || aggregators.length > 0) &&
       selectedViewId &&
-      requestParamString !== this.lastRequestParamString &&
+      (requestParamString !== this.lastRequestParamString ||
+        requestParamString == this.lastRequestParamString) &&
+          // !dataParams.rows.items.length)) &&
       workbenchQueryMode === WorkbenchQueryMode.Immediately
-
     if (needRequest) {
       this.lastRequestParamString = requestParamString
       onLoadData(
         selectedViewId,
         requestParams,
         (result) => {
-          const { resultList: data, pageNo, pageSize, totalCount } = result
+          let { resultList: data, pageNo, pageSize, totalCount } = result
           updatedPagination = !updatedPagination.withPaging
             ? updatedPagination
             : {
@@ -1307,7 +1351,8 @@ export class OperatingPanel extends React.Component<
               agg: item.agg || 'sum',
               chart: item.chart || getPivot(),
               field: item.field || getDefaultFieldConfig(),
-              format: item.format || getDefaultFieldFormatConfig()
+              format: item.format || getDefaultFieldFormatConfig(),
+              total: item.total || getDefaultTotalConfig()
             })),
             ...(secondaryMetrics && {
               secondaryMetrics: secondaryMetrics.items.map((item) => ({
@@ -1315,7 +1360,8 @@ export class OperatingPanel extends React.Component<
                 agg: item.agg || 'sum',
                 chart: item.chart || getPivot(),
                 field: item.field || getDefaultFieldConfig(),
-                format: item.format || getDefaultFieldFormatConfig()
+                format: item.format || getDefaultFieldFormatConfig(),
+                total: item.total || getDefaultTotalConfig()
               }))
             }),
             filters: filters.items.map(({ name, type, config }) => ({
@@ -1388,7 +1434,8 @@ export class OperatingPanel extends React.Component<
           agg: item.agg || 'sum',
           chart: item.chart || getPivot(),
           field: item.field || getDefaultFieldConfig(),
-          format: item.format || getDefaultFieldFormatConfig()
+          format: item.format || getDefaultFieldFormatConfig(),
+          total: item.total || getDefaultTotalConfig()
         })),
         ...(secondaryMetrics && {
           secondaryMetrics: secondaryMetrics.items.map((item) => ({
@@ -1396,7 +1443,8 @@ export class OperatingPanel extends React.Component<
             agg: item.agg || 'sum',
             chart: item.chart || getPivot(),
             field: item.field || getDefaultFieldConfig(),
-            format: item.format || getDefaultFieldFormatConfig()
+            format: item.format || getDefaultFieldFormatConfig(),
+            total: item.total || getDefaultTotalConfig()
           }))
         }),
         filters: filters.items.map(({ name, type, config }) => ({
@@ -1892,6 +1940,7 @@ export class OperatingPanel extends React.Component<
       computed,
       onCacheChange,
       onChangeAutoLoadData,
+      onChangeSum,
       onExpiredChange,
       onLoadColumnDistinctValue,
       onLoadViews,
@@ -1912,6 +1961,7 @@ export class OperatingPanel extends React.Component<
       distinctColumnValues,
       fieldModalVisible,
       formatModalVisible,
+      totalModalVisible,
       sortModalVisible,
       currentEditingItem,
       colorModalVisible,
@@ -1970,7 +2020,6 @@ export class OperatingPanel extends React.Component<
         <MenuItem key="computed">计算字段</MenuItem>
       </Menu>
     )
-
     const dropboxes = Object.entries(dataParams).map(([k, v]) => {
       if (k === 'rows' && !showColsAndRows) {
         return
@@ -1994,6 +2043,7 @@ export class OperatingPanel extends React.Component<
           value={v.value}
           items={v.items}
           mode={mode}
+          metrics={metrics.items}
           selectedChartId={chartModeSelectedChart.id}
           dragged={dragged}
           panelList={panelList}
@@ -2009,6 +2059,7 @@ export class OperatingPanel extends React.Component<
           onItemChangeFormatConfig={this.dropboxItemChangeFormatConfig(k)}
           onItemChangeColorConfig={this.dropboxItemChangeColorConfig}
           onItemChangeFilterConfig={this.dropboxItemChangeFilterConfig}
+          onItemChangeTotal={this.dropboxItemChangeTotal(k)}
           onItemChangeChart={this.getDropboxItemChart}
           beforeDrop={this.beforeDrop}
           onDrop={this.drop}
@@ -2641,6 +2692,14 @@ export class OperatingPanel extends React.Component<
                 list={distinctColumnValues}
                 onSave={this.saveSortConfig}
                 onCancel={this.cancelSortConfig}
+              />,
+              <TotalConfigModal
+                key="totalConfigModal"
+                visible={totalModalVisible}
+                visualType={currentEditingItem.visualType}
+                totalConfig={currentEditingItem.total}
+                onSave={this.saveTotalConfig}
+                onCancel={this.cancelTotalConfig}
               />
             ]}
         <Modal
