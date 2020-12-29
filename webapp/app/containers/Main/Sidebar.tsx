@@ -20,11 +20,7 @@
 
 import React, { useEffect, useMemo, PropsWithChildren } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  useLocation,
-  matchPath,
-  useHistory
-} from 'react-router-dom'
+import { useLocation, matchPath, useHistory } from 'react-router-dom'
 
 import { showNavigator } from 'containers/App/actions'
 import { makeSelectCurrentProject } from 'containers/Projects/selectors'
@@ -48,27 +44,27 @@ const sidebarSource: Array<{
     icon: <i className="iconfont icon-dashboard" />,
     routes: ['vizs'],
     permissionName: 'vizPermission'
-  },
-  {
-    icon: <i className="iconfont icon-widget-gallery" />,
-    routes: ['widgets'],
-    permissionName: 'widgetPermission'
-  },
-  {
-    icon: <i className="iconfont icon-custom-business" />,
-    routes: ['views'],
-    permissionName: 'viewPermission'
-  },
-  {
-    icon: <i className="iconfont icon-datasource24" />,
-    routes: ['sources'],
-    permissionName: 'sourcePermission'
-  },
-  {
-    icon: <Icon type="clock-circle" />,
-    routes: ['schedules'],
-    permissionName: 'schedulePermission'
   }
+  // {
+  //   icon: <i className="iconfont icon-widget-gallery" />,
+  //   routes: ['widgets'],
+  //   permissionName: 'widgetPermission'
+  // },
+  // {
+  //   icon: <i className="iconfont icon-custom-business" />,
+  //   routes: ['views'],
+  //   permissionName: 'viewPermission'
+  // },
+  // {
+  //   icon: <i className="iconfont icon-datasource24" />,
+  //   routes: ['sources'],
+  //   permissionName: 'sourcePermission'
+  // },
+  // {
+  //   icon: <Icon type="clock-circle" />,
+  //   routes: ['schedules'],
+  //   permissionName: 'schedulePermission'
+  // }
 ]
 
 const MainSidebar: React.FC<PropsWithChildren<{}>> = (props) => {

@@ -28,8 +28,15 @@ import { createStructuredSelector } from 'reselect'
 import Navigator from 'components/Navigator'
 
 import { logged, logout, loadDownloadList } from '../App/actions'
-import { makeSelectLogged, makeSelectNavigator, makeSelectOauth2Enabled } from '../App/selectors'
-import { DOWNLOAD_LIST_POLLING_FREQUENCY, EXTERNAL_LOG_OUT_URL } from 'app/globalConstants'
+import {
+  makeSelectLogged,
+  makeSelectNavigator,
+  makeSelectOauth2Enabled
+} from '../App/selectors'
+import {
+  DOWNLOAD_LIST_POLLING_FREQUENCY,
+  EXTERNAL_LOG_OUT_URL
+} from 'app/globalConstants'
 
 import { Project, ProjectList } from 'containers/Projects/Loadable'
 
@@ -94,12 +101,13 @@ export class Main extends React.Component<IMainProps, {}> {
         <Redirect from="/account" exact to="/account/profile" />
         <Route path="/account/profile" component={Profile} />
         <Route path="/account/profile/:userId" component={UserProfile} />
-        <Route path="/account/resetPassword" component={ResetPassword} />
+        {/* <Route path="/account/resetPassword" component={ResetPassword} /> */}
         <Route path="/account/organizations" component={OrganizationList} />
         <Route
           path="/account/organization/:organizationId"
           component={Organization}
         />
+        <Redirect to="/account" />
       </Switch>
     </Account>
   )
@@ -125,7 +133,7 @@ export class Main extends React.Component<IMainProps, {}> {
                       path="/project/:projectId/display/:displayId"
                       component={Viz}
                     />
-                    <Route
+                    {/* <Route
                       exact
                       path="/project/:projectId/widget/:widgetId?"
                       component={Workbench}
@@ -139,7 +147,7 @@ export class Main extends React.Component<IMainProps, {}> {
                       exact
                       path="/project/:projectId/schedule/:scheduleId?"
                       component={ScheduleEditor}
-                    />
+                    /> */}
                     <Sidebar>
                       <Switch>
                         <AuthorizedRoute
@@ -147,7 +155,7 @@ export class Main extends React.Component<IMainProps, {}> {
                           path="/project/:projectId/vizs"
                           component={Viz}
                         />
-                        <AuthorizedRoute
+                        {/* <AuthorizedRoute
                           permission="widgetPermission"
                           path="/project/:projectId/widgets"
                           component={Widget}
@@ -167,7 +175,7 @@ export class Main extends React.Component<IMainProps, {}> {
                           permission="schedulePermission"
                           path="/project/:projectId/schedules"
                           component={Schedule}
-                        />
+                        /> */}
                       </Switch>
                     </Sidebar>
                   </Switch>

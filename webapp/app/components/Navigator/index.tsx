@@ -25,10 +25,7 @@ import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import DownloadList from '../DownloadList'
 
-import {
-  loadDownloadList,
-  downloadFile
-} from 'containers/App/actions'
+import { loadDownloadList, downloadFile } from 'containers/App/actions'
 import {
   makeSelectLoginUser,
   makeSelectDownloadList,
@@ -52,7 +49,7 @@ interface INavigatorProps {
   onDownloadFile: (id) => void
 }
 
-export function Navigator (props: INavigatorProps) {
+export function Navigator(props: INavigatorProps) {
   const {
     show,
     downloadList,
@@ -67,9 +64,7 @@ export function Navigator (props: INavigatorProps) {
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <Link to="/account" >
-          用户设置
-        </Link>
+        <Link to="/account">用户设置</Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="3">
@@ -98,17 +93,17 @@ export function Navigator (props: INavigatorProps) {
       </div>
       <ul className={styles.tools}>
         <li>
-          <DownloadList
+          {/* <DownloadList
             downloadList={downloadList}
             onLoadDownloadList={onLoadDownloadList}
             onDownloadFile={onDownloadFile}
-          />
+          /> */}
         </li>
         <li>
           <Icon type="file-text" onClick={goDoc} />
         </li>
         <li>
-          <Icon type="github" onClick={goGithub}/>
+          <Icon type="github" onClick={goGithub} />
         </li>
         <li>
           <Dropdown overlay={menu} trigger={['click']} placement="bottomCenter">
@@ -125,7 +120,7 @@ const mapStateToProps = createStructuredSelector({
   downloadList: makeSelectDownloadList()
 })
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
     onLoadDownloadList: () => dispatch(loadDownloadList()),
     onDownloadFile: (id) => dispatch(downloadFile(id))

@@ -798,6 +798,9 @@ export class DashboardItem extends React.PureComponent<
     )
     const widgetName = alias || widget.name
 
+    // public net remove download edit
+    downloadButton = []
+    widgetButton = []
     return (
       <div className={gridItemClass} ref={(f) => (this.container = f)}>
         <div className={styles.header}>

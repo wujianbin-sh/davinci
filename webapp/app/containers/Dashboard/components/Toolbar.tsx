@@ -22,10 +22,11 @@ interface IToolbarProps {
 }
 
 export class Toolbar extends React.PureComponent<IToolbarProps> {
-
-  public render () {
+  public render() {
     const { currentDashboard } = this.props
-    if (!currentDashboard) { return null }
+    if (!currentDashboard) {
+      return null
+    }
 
     const {
       currentProject,
@@ -36,11 +37,29 @@ export class Toolbar extends React.PureComponent<IToolbarProps> {
       onDownloadDashboard
     } = this.props
 
-    const AddButton = ModulePermission<ButtonProps>(currentProject, 'viz', true)(Button)
-    const ShareButton = ShareDownloadPermission<ButtonProps>(currentProject, 'share')(Button)
-    const DownloadButton = ShareDownloadPermission<ButtonProps>(currentProject, 'download')(Button)
-    const LinkageButton = ModulePermission<ButtonProps>(currentProject, 'viz', false)(Button)
-    const GlobalFilterButton = ModulePermission<ButtonProps>(currentProject, 'viz', false)(Button)
+    const AddButton = ModulePermission<ButtonProps>(
+      currentProject,
+      'viz',
+      true
+    )(Button)
+    const ShareButton = ShareDownloadPermission<ButtonProps>(
+      currentProject,
+      'share'
+    )(Button)
+    const DownloadButton = ShareDownloadPermission<ButtonProps>(
+      currentProject,
+      'download'
+    )(Button)
+    const LinkageButton = ModulePermission<ButtonProps>(
+      currentProject,
+      'viz',
+      false
+    )(Button)
+    const GlobalFilterButton = ModulePermission<ButtonProps>(
+      currentProject,
+      'viz',
+      false
+    )(Button)
 
     let addButton
     let shareButton
@@ -53,7 +72,7 @@ export class Toolbar extends React.PureComponent<IToolbarProps> {
         <AddButton
           type="primary"
           icon="plus"
-          style={{marginLeft: '8px'}}
+          style={{ marginLeft: '8px' }}
           onClick={showAddDashboardItem}
         />
       </Tooltip>
@@ -63,7 +82,7 @@ export class Toolbar extends React.PureComponent<IToolbarProps> {
         <ShareButton
           type="primary"
           icon="share-alt"
-          style={{marginLeft: '8px'}}
+          style={{ marginLeft: '8px' }}
           onClick={onOpenSharePanel}
         />
       </Tooltip>
@@ -78,7 +97,7 @@ export class Toolbar extends React.PureComponent<IToolbarProps> {
           <DownloadButton
             type="primary"
             icon="download"
-            style={{marginLeft: '8px'}}
+            style={{ marginLeft: '8px' }}
           />
         </Popconfirm>
       </Tooltip>
@@ -88,7 +107,7 @@ export class Toolbar extends React.PureComponent<IToolbarProps> {
         <LinkageButton
           type="primary"
           icon="link"
-          style={{marginLeft: '8px'}}
+          style={{ marginLeft: '8px' }}
           onClick={onOpenLinkageConfig}
         />
       </Tooltip>
@@ -98,12 +117,13 @@ export class Toolbar extends React.PureComponent<IToolbarProps> {
         <GlobalFilterButton
           type="primary"
           icon="filter"
-          style={{marginLeft: '8px'}}
+          style={{ marginLeft: '8px' }}
           onClick={onOpenGlobalControlConfig}
         />
       </Tooltip>
     )
-
+    // public net remove download
+    downloadButton = []
     return (
       <Col sm={12} className={utilStyles.textAlignRight}>
         {addButton}
