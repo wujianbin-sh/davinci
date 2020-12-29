@@ -136,7 +136,7 @@ export class Login extends React.PureComponent<
           onChangePassword={this.changePassword}
           onLogin={this.doLogin}
         />
-        <p className={styles.tips}>
+        {/* <p className={styles.tips}>
           <a
             href="javascript:;"
             className={styles.register}
@@ -151,7 +151,7 @@ export class Login extends React.PureComponent<
           >
             忘记密码？
           </a>
-        </p>
+        </p> */}
         {oauth2Enabled && <ExternalLogin />}
       </div>
     )
