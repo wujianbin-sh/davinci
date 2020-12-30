@@ -92,7 +92,12 @@ export enum ChartTypes {
   /**
    * 仪表盘
    */
-  Gauge = 17
+  Gauge = 17,
+  
+  /**
+   * 矩形树图
+   */
+  TreeMap = 18
 }
 
 export default ChartTypes

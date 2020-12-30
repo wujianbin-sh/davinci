@@ -322,6 +322,23 @@ export function getLabelOption(
         return `${name}(${data.value[2]})`
       }
       break
+    case 'treemap':
+      formatter = (param) => {
+        const { name, value } = param
+        const { labelParts } = labelConfig
+        const tooltipLabels = [name]
+        if (labelParts.includes('indicatorValue')) {
+          if (Array.isArray(value)) {
+            for (let i = 0; i < value.length; i++) {
+              tooltipLabels.push(value[i])
+            }
+          } else {
+            tooltipLabels.push(value)
+          }
+        }
+        return tooltipLabels.join('\n')
+      }
+      break
   }
 
   const labelOption = {
