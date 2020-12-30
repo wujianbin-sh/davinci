@@ -106,7 +106,7 @@ export function errorHandler(error) {
         break
     }
   } else if (error.message) {
-    message.error(error.message, 3)
+    console.log(error.message)
   } else {
     throw error
   }
@@ -197,10 +197,7 @@ export function filterSelectOption(
   return text.toLowerCase().includes(input.toLowerCase())
 }
 
-export function filterTreeSelectOption(
-  input: string,
-  treeNode
-): boolean {
+export function filterTreeSelectOption(input: string, treeNode): boolean {
   const text = treeNode.props.title
   return text.toLowerCase().includes(input.toLowerCase())
 }
