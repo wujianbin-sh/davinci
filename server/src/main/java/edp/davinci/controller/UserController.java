@@ -67,9 +67,10 @@ public class UserController extends BaseController {
      * @param bindingResult
      * @return
      */
-    @ApiOperation(value = "insert user")
-    @AuthIgnore
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "insert user")
+//    @AuthIgnore
+//    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Deprecated
     public ResponseEntity regist(@Valid @RequestBody UserRegist userRegist, @ApiIgnore BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -88,9 +89,10 @@ public class UserController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "active user")
-    @AuthIgnore
-    @PostMapping(value = "/active/{token}")
+//    @ApiOperation(value = "active user")
+//    @AuthIgnore
+//    @PostMapping(value = "/active/{token}")
+    @Deprecated
     public ResponseEntity activate(@PathVariable String token,
                                    HttpServletRequest request) {
 
@@ -170,8 +172,9 @@ public class UserController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "change user password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PutMapping(value = "/{id}/changepassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "change user password", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @PutMapping(value = "/{id}/changepassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Deprecated
     public ResponseEntity changeUserPassword(@PathVariable Long id,
                                              @Valid @RequestBody ChangePassword changePassword,
                                              @ApiIgnore BindingResult bindingResult,
@@ -305,9 +308,10 @@ public class UserController extends BaseController {
         return ResponseEntity.status(resultMap.getCode()).body(resultMap);
     }
 
-    @ApiOperation(value = "forget password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @AuthIgnore
-    @PostMapping(value = "/forget/password/{type}", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "forget password", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @AuthIgnore
+//    @PostMapping(value = "/forget/password/{type}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Deprecated
     public ResponseEntity<ResultMap> forgetPassword(@PathVariable String type,
                                                     @RequestBody UserDistinctTicket ticket) {
 
@@ -315,9 +319,10 @@ public class UserController extends BaseController {
         return ResponseEntity.ok(new ResultMap().success().payload(token));
     }
 
-    @ApiOperation(value = "reset password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @AuthIgnore
-    @PostMapping(value = "/reset/password/{type}/{token}", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "reset password", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @AuthIgnore
+//    @PostMapping(value = "/reset/password/{type}/{token}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Deprecated
     public ResponseEntity<ResultMap> resetPassword(@PathVariable(name = "type") String type,
                                                    @PathVariable(name = "token") String token,
                                                    @RequestBody UserDistinctTicket ticket) {

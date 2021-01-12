@@ -160,11 +160,11 @@ public class SqlUtils {
         return paginate;
     }
 
-    public List<Map<String, Object>> query4List(String sql, int limit) throws Exception {
+    public List<Map<String, Object>> query4List(String sql, int limit) {
         sql = filterAnnotate(sql);
         checkSensitiveSql(sql);
         JdbcTemplate jdbcTemplate = jdbcTemplate();
-        jdbcTemplate.setMaxRows(limit > resultLimit ? resultLimit : limit);
+        jdbcTemplate.setMaxRows(limit > resultLimit ? resultLimit : limit > 0 ? limit : resultLimit);
 
         long before = System.currentTimeMillis();
 
@@ -178,7 +178,7 @@ public class SqlUtils {
         return list;
     }
 
-    public PaginateWithQueryColumns query4Paginate(String sql, int pageNo, int pageSize, int totalCount, int limit, Set<String> excludeColumns) throws Exception {
+    public PaginateWithQueryColumns query4Paginate(String sql, int pageNo, int pageSize, int totalCount, int limit, Set<String> excludeColumns) {
         PaginateWithQueryColumns paginateWithQueryColumns = new PaginateWithQueryColumns();
         sql = filterAnnotate(sql);
         checkSensitiveSql(sql);
@@ -363,45 +363,45 @@ public class SqlUtils {
         return columnPrefixs;
     }
 
-    private static void columnPrefixExtractor(Set<String> columnPrefixs, PlainSelect plainSelect) {
-        getFromItemName(columnPrefixs, plainSelect.getFromItem());
+    private static void columnPrefixExtractor(Set<String> columnPrefixes, PlainSelect plainSelect) {
+        getFromItemName(columnPrefixes, plainSelect.getFromItem());
         List<Join> joins = plainSelect.getJoins();
         if (!CollectionUtils.isEmpty(joins)) {
-            joins.forEach(join -> getFromItemName(columnPrefixs, join.getRightItem()));
+            joins.forEach(join -> getFromItemName(columnPrefixes, join.getRightItem()));
         }
     }
 
-    private static void getFromItemName(Set<String> columnPrefixs, FromItem fromItem) {
+    private static void getFromItemName(Set<String> columnPrefixes, FromItem fromItem) {
         if (fromItem == null) {
             return;
         }
         Alias alias = fromItem.getAlias();
         if (alias != null) {
             if (alias.isUseAs()) {
-                columnPrefixs.add(alias.getName().trim() + DOT);
+                columnPrefixes.add(alias.getName().trim() + DOT);
             } else {
-                columnPrefixs.add(alias.toString().trim() + DOT);
+                columnPrefixes.add(alias.toString().trim() + DOT);
             }
         } else {
-            fromItem.accept(getFromItemTableName(columnPrefixs));
+            fromItem.accept(getFromItemTableName(columnPrefixes));
         }
     }
 
-    public static String getColumnLabel(Set<String> columnPrefixs, String columnLable) {
-        if (!CollectionUtils.isEmpty(columnPrefixs)) {
-            for (String prefix : columnPrefixs) {
-                if (columnLable.startsWith(prefix)) {
-                    return columnLable.replaceFirst(prefix, EMPTY);
+    public static String getColumnLabel(Set<String> columnPrefixes, String columnLabel) {
+        if (!CollectionUtils.isEmpty(columnPrefixes)) {
+            for (String prefix : columnPrefixes) {
+                if (columnLabel.startsWith(prefix)) {
+                    return columnLabel.replaceFirst(prefix, EMPTY);
                 }
-                if (columnLable.startsWith(prefix.toLowerCase())) {
-                    return columnLable.replaceFirst(prefix.toLowerCase(), EMPTY);
+                if (columnLabel.startsWith(prefix.toLowerCase())) {
+                    return columnLabel.replaceFirst(prefix.toLowerCase(), EMPTY);
                 }
-                if (columnLable.startsWith(prefix.toUpperCase())) {
-                    return columnLable.replaceFirst(prefix.toUpperCase(), EMPTY);
+                if (columnLabel.startsWith(prefix.toUpperCase())) {
+                    return columnLabel.replaceFirst(prefix.toUpperCase(), EMPTY);
                 }
             }
         }
-        return columnLable;
+        return columnLabel;
     }
 
     /**
@@ -660,12 +660,12 @@ public class SqlUtils {
      * @throws ServerException
      */
     public static void checkSensitiveSql(String sql) throws ServerException {
-//        Matcher matcher = PATTERN_SENSITIVE_SQL.matcher(sql.toLowerCase());
-//        if (matcher.find()) {
-//            String group = matcher.group();
-//            log.warn("Sensitive SQL operations are not allowed: {}", group.toUpperCase());
-//            throw new ServerException("Sensitive SQL operations are not allowed: " + group.toUpperCase());
-//        }
+        Matcher matcher = PATTERN_SENSITIVE_SQL.matcher(sql.toLowerCase());
+        if (matcher.find()) {
+            String group = matcher.group();
+            log.warn("Sensitive SQL operations are not allowed: {}", group.toUpperCase());
+            throw new ServerException("Sensitive SQL operations are not allowed: " + group.toUpperCase());
+        }
     }
 
     public JdbcTemplate jdbcTemplate() throws SourceException {
@@ -891,7 +891,7 @@ public class SqlUtils {
      * @return
      */
     public static String filterAnnotate(String sql) {
-        // sql = PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1");
+        sql = PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1");
         sql = sql.replaceAll(NEW_LINE_CHAR, SPACE).replaceAll("(;+\\s*)+", SEMICOLON);
         return sql;
     }

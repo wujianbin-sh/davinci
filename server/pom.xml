@@ -42,16 +42,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
@@ -65,30 +68,23 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-ldap</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
             <version>2.2.5.RELEASE</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.3.2</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
@@ -105,14 +101,30 @@
             </exclusions>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test-autoconfigure</artifactId>
+            <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -158,8 +170,9 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
+            <version>8.0.15</version>
         </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
@@ -198,12 +211,14 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.66</version>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>ST4</artifactId>
 			<version>4.0.8</version>
@@ -355,7 +370,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>24.1.1-jre</version>
+            <version>25.1-jre</version>
         </dependency>
 
 		<dependency>
@@ -363,11 +378,13 @@
 			<artifactId>phantomjsdriver</artifactId>
 			<version>1.4.4</version>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
 			<version>4.3</version>
 		</dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -380,112 +397,33 @@
             <artifactId>graal-sdk</artifactId>
             <version>${graalvm.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.graalvm.js</groupId>
             <artifactId>js</artifactId>
             <version>${graalvm.version}</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.graalvm.js</groupId>
             <artifactId>js-scriptengine</artifactId>
             <version>${graalvm.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.graalvm.tools</groupId>
             <artifactId>profiler</artifactId>
             <version>${graalvm.version}</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.graalvm.tools</groupId>
             <artifactId>chromeinspector</artifactId>
             <version>${graalvm.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.17</version>
-        </dependency>
-
-        <!--oracle -->
-		<!--<dependency> -->
-		<!--<groupId>com.oracle</groupId> -->
-		<!--<artifactId>ojdbc6</artifactId> -->
-		<!--<version>11.2.0.3</version> -->
-		<!--</dependency> -->
-
-		<!--clickhouse -->
-		<!--<dependency> -->
-		<!--<groupId>ru.yandex.clickhouse</groupId> -->
-		<!--<artifactId>clickhouse-jdbc</artifactId> -->
-		<!--<version>0.1.39</version> -->
-		<!--</dependency> -->
-
-		<!--sqlserver -->
-		<!--<dependency> -->
-		<!--<groupId>com.microsoft.sqlserver</groupId> -->
-		<!--<artifactId>mssql-jdbc</artifactId> -->
-		<!--<version>6.4.0.jre8</version> -->
-		<!--</dependency> -->
-
-		<!--h2 -->
-		<!--<dependency> -->
-		<!--<groupId>com.h2database</groupId> -->
-		<!--<artifactId>h2</artifactId> -->
-		<!--<version>1.4.196</version> -->
-		<!--</dependency> -->
-
-		<!--phoenix -->
-		<!--<dependency> -->
-		<!--<groupId>org.apache.phoenix</groupId> -->
-		<!--<artifactId>phoenix-core</artifactId> -->
-		<!--<version>4.13.2-cdh5.11.2</version> -->
-		<!--</dependency> -->
-
-		<!--mongodb -->
-		<!--<dependency> -->
-		<!--<groupId>org.mongodb</groupId> -->
-		<!--<artifactId>mongodb-driver</artifactId> -->
-		<!--<version>3.6.3</version> -->
-		<!--</dependency> -->
-
-		<!--presto -->
-		<!--<dependency> -->
-		<!--<groupId>com.facebook.presto</groupId> -->
-		<!--<artifactId>presto-jdbc</artifactId> -->
-		<!--<version>0.203</version> -->
-		<!--</dependency> -->
-
-		<!--cassandra -->
-		<!--<dependency> -->
-		<!--<groupId>com.github.adejanovski</groupId> -->
-		<!--<artifactId>cassandra-jdbc-wrapper</artifactId> -->
-		<!--<version>3.1.0</version> -->
-		<!--</dependency> -->
-
-		<!--kylin -->
-		<!--<dependency> -->
-		<!--<groupId>org.apache.kylin</groupId> -->
-		<!--<artifactId>kylin-jdbc</artifactId> -->
-		<!--<version>2.3.0</version> -->
-		<!--</dependency> -->
-
-        <!--TDengine -->
-        <!--<dependency> -->
-        <!--<groupId>com.taosdata.jdbc</groupId> -->
-        <!--<artifactId>taos-jdbcdriver</artifactId> -->
-        <!--<version>1.0.3</version> -->
-        <!--</dependency> -->
-
-        <!--elasticsearch -->
-        <!--<dependency> -->
-        <!--<groupId>com.amazon.opendistroforelasticsearch.client</groupId> -->
-        <!--<artifactId>opendistro-sql-jdbc</artifactId> -->
-        <!--<version>1.7.0.0</version> -->
-        <!--</dependency> -->
-
 	</dependencies>
 
 	<build>
@@ -509,6 +447,8 @@
 							<outputDirectory>
 								${project.build.directory}/lib
 							</outputDirectory>
+                            <includeScope>compile</includeScope>
+                            <includeScope>runtime</includeScope>
 						</configuration>
 					</execution>
 				</executions>
@@ -537,44 +477,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
-
-			<!-- mybatis generator 自动生成代码插件 -->
-			<!--<plugin> -->
-			<!--<groupId>org.mybatis.generator</groupId> -->
-			<!--<artifactId>mybatis-generator-maven-plugin</artifactId> -->
-			<!--<version>1.3.5</version> -->
-			<!--<dependencies> -->
-			<!--<dependency> -->
-			<!--<groupId> mysql</groupId> -->
-			<!--<artifactId> mysql-connector-java</artifactId> -->
-			<!--<version> 5.1.44</version> -->
-			<!--</dependency> -->
-			<!--<dependency> -->
-			<!--<groupId>org.mybatis.generator</groupId> -->
-			<!--<artifactId>mybatis-generator-core</artifactId> -->
-			<!--<version>1.3.2</version> -->
-			<!--</dependency> -->
-			<!--</dependencies> -->
-			<!--<executions> -->
-			<!--<execution> -->
-			<!--<id>Generate MyBatis Artifacts</id> -->
-			<!--<phase>package</phase> -->
-			<!--<goals> -->
-			<!--<goal>generate</goal> -->
-			<!--</goals> -->
-			<!--</execution> -->
-			<!--</executions> -->
-			<!--<configuration> -->
-			<!--&lt;!&ndash;允许移动生成的文件 &ndash;&gt; -->
-			<!--<verbose>true</verbose> -->
-			<!--&lt;!&ndash; 是否覆盖 &ndash;&gt; -->
-			<!--<overwrite>true</overwrite> -->
-			<!--&lt;!&ndash; 自动生成的配置 &ndash;&gt; -->
-			<!--<configurationFile>src/main/resources/generator/mybatis-generator.xml</configurationFile> -->
-			<!--</configuration> -->
-			<!--</plugin> -->
 		</plugins>
 	</build>
-
 
 </project>

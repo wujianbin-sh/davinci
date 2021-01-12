@@ -55,41 +55,41 @@ import static edp.core.consts.Consts.JDBC_DATASOURCE_DEFAULT_VERSION;
 @Component
 public class JdbcDataSource {
 
-    @Bean(name = "wallConfig")
-    WallConfig wallConfig() {
-        WallConfig config = new WallConfig();
-        config.setDeleteAllow(false);
-        config.setUpdateAllow(false);
-        config.setInsertAllow(false);
-        config.setReplaceAllow(false);
-        config.setMergeAllow(false);
-        config.setTruncateAllow(false);
-        config.setCreateTableAllow(false);
-        config.setAlterTableAllow(false);
-        config.setDropTableAllow(false);
-        config.setCommentAllow(true);
-        config.setUseAllow(false);
-        config.setDescribeAllow(false);
-        config.setShowAllow(false);
-        config.setSelectWhereAlwayTrueCheck(false);
-        config.setSelectHavingAlwayTrueCheck(false);
-        config.setSelectUnionCheck(false);
-        config.setConditionDoubleConstAllow(true);
-        config.setConditionAndAlwayTrueAllow(true);
-        config.setConditionAndAlwayFalseAllow(true);
-        return config;
-    }
+//    @Bean(name = "wallConfig")
+//    WallConfig wallConfig() {
+//        WallConfig config = new WallConfig();
+//        config.setDeleteAllow(false);
+//        config.setUpdateAllow(false);
+//        config.setInsertAllow(false);
+//        config.setReplaceAllow(false);
+//        config.setMergeAllow(false);
+//        config.setTruncateAllow(false);
+//        config.setCreateTableAllow(false);
+//        config.setAlterTableAllow(false);
+//        config.setDropTableAllow(false);
+//        config.setCommentAllow(true);
+//        config.setUseAllow(false);
+//        config.setDescribeAllow(false);
+//        config.setShowAllow(false);
+//        config.setSelectWhereAlwayTrueCheck(false);
+//        config.setSelectHavingAlwayTrueCheck(false);
+//        config.setSelectUnionCheck(false);
+//        config.setConditionDoubleConstAllow(true);
+//        config.setConditionAndAlwayTrueAllow(true);
+//        config.setConditionAndAlwayFalseAllow(true);
+//        return config;
+//    }
+//
+//    @Bean(name = "wallFilter")
+//    @DependsOn("wallConfig")
+//    WallFilter wallFilter(WallConfig wallConfig) {
+//        WallFilter wfilter = new WallFilter();
+//        wfilter.setConfig(wallConfig);
+//        return wfilter;
+//    }
 
-    @Bean(name = "wallFilter")
-    @DependsOn("wallConfig")
-    WallFilter wallFilter(WallConfig wallConfig) {
-        WallFilter wfilter = new WallFilter();
-        wfilter.setConfig(wallConfig);
-        return wfilter;
-    }
-
-    @Autowired
-    WallFilter wallFilter;
+//    @Autowired
+//    WallFilter wallFilter;
 	
     @Value("${source.max-active:8}")
     @Getter
@@ -279,7 +279,6 @@ public class JdbcDataSource {
 
             druidDataSource.setInitialSize(initialSize);
             druidDataSource.setMinIdle(minIdle);
-            druidDataSource.setMaxIdle(minIdle);
             druidDataSource.setMaxActive(maxActive);
             druidDataSource.setMaxWait(maxWait);
             druidDataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
@@ -313,8 +312,12 @@ public class JdbcDataSource {
                 druidDataSource.setValidationQuery(null);
             }
 
+            Properties properties = new Properties();
+            if (driverName.indexOf("mysql") != -1) {
+                properties.setProperty("druid.mysql.usePingMethod", "false");
+            }
+
             if (!CollectionUtils.isEmpty(jdbcSourceInfo.getProperties())) {
-                Properties properties = new Properties();
                 for (Dict dict : jdbcSourceInfo.getProperties()) {
                     if ("davinci.initial-size".equalsIgnoreCase(dict.getKey())) {
                         druidDataSource.setInitialSize(Integer.parseInt(dict.getValue()));
@@ -323,7 +326,6 @@ public class JdbcDataSource {
 
                     if ("davinci.min-idle".equalsIgnoreCase(dict.getKey())) {
                         druidDataSource.setMinIdle(Integer.parseInt(dict.getValue()));
-                        druidDataSource.setMaxIdle(Integer.parseInt(dict.getValue()));
                         continue;
                     }
 
@@ -334,26 +336,27 @@ public class JdbcDataSource {
 
                     properties.setProperty(dict.getKey(), dict.getValue());
                 }
-                druidDataSource.setConnectProperties(properties);
             }
+
+            druidDataSource.setConnectProperties(properties);
 
             try {
 
-                // druid wall filter not support some database so set type mysql
-                if (DataTypeEnum.MOONBOX == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.MONGODB == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.ELASTICSEARCH == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.CASSANDRA == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.VERTICA == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.HANA == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.IMPALA == DataTypeEnum.urlOf(jdbcUrl) ||
-                        DataTypeEnum.TDENGINE == DataTypeEnum.urlOf(jdbcUrl)) {
-                    wallFilter.setDbType(DataTypeEnum.MYSQL.getFeature());
-                }
-
-                if (!"statistic".equals(name)) {// davinci's statistic source don't need wall filter
-                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
-                }
+//                // druid wall filter not support some database so set type mysql
+//                if (DataTypeEnum.MOONBOX == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.MONGODB == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.ELASTICSEARCH == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.CASSANDRA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.VERTICA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.HANA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.IMPALA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                        DataTypeEnum.TDENGINE == DataTypeEnum.urlOf(jdbcUrl)) {
+//                    wallFilter.setDbType(DataTypeEnum.MYSQL.getFeature());
+//                }
+//
+//                if (!"statistic".equals(name)) {// davinci's statistic source don't need wall filter
+//                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
+//                }
 
                 druidDataSource.setFilters(filters);
                 druidDataSource.init();

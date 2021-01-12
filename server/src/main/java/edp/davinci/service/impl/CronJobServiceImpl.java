@@ -39,7 +39,7 @@ import edp.davinci.dto.cronJobDto.CronJobUpdate;
 import edp.davinci.model.CronJob;
 import edp.davinci.model.User;
 import edp.davinci.service.CronJobService;
-import edp.davinci.service.excel.ExecutorUtil;
+import edp.davinci.service.excel.ExecutorUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -51,6 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static edp.davinci.core.common.Constants.DAVINCI_TOPIC_CHANNEL;
 
@@ -342,9 +343,9 @@ public class CronJobServiceImpl extends BaseEntityService implements CronJobServ
 
 		checkWritePermission(entity, cronJob.getProjectId(), user, "execute");
 
-		ExecutorUtil.printThreadPoolStatusLog(QuartzJobExecutor.executorService, "Cronjob_Executor", scheduleLogger);
-
-		QuartzJobExecutor.executorService.submit(() -> {
+		ExecutorService executorService = ExecutorUtils.getJobWorkers();
+		ExecutorUtils.printThreadPoolStatus(executorService, "JOB_WORKERS", scheduleLogger);
+		executorService.submit(() -> {
 			if (cronJob.getStartDate().getTime() <= System.currentTimeMillis()
 					&& cronJob.getEndDate().getTime() >= System.currentTimeMillis()) {
 				String jobType = cronJob.getJobType().trim();
