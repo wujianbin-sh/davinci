@@ -7,10 +7,10 @@ import {
   CHART_LEGEND_POSITIONS,
   CHART_LINES_SYMBOL_TYPE
 } from 'app/globalConstants'
-const defaultTheme = require('assets/json/echartsThemes/default.project.json')
-const defaultThemeColors = defaultTheme.theme.color
 
 import { IChartInfo } from 'containers/Widget/components/Widget'
+const defaultTheme = require('assets/json/echartsThemes/default.project.json')
+const defaultThemeColors = defaultTheme.theme.color
 const map: IChartInfo = {
   id: ChartTypes.CMap,
   name: 'map',

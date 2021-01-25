@@ -25,6 +25,7 @@ export interface ILabelConfig {
     | 'percentage'
     | 'conversion'
     | 'arrival'
+    | 'upperLabel'
   >
   pieLabelPosition?: string
   funnelLabelPosition?: string
@@ -43,18 +44,19 @@ export class LabelSection extends React.PureComponent<ILabelSectionProps, {}> {
     value: ILabelConfig['labelParts'][number]
     charts: string[]
   }> = [
-    { label: '维度名称', value: 'dimensionName', charts: [] },
-    { label: '维度值', value: 'dimensionValue', charts: ['pie', 'funnel'] },
-    { label: '指标名称', value: 'indicatorName', charts: ['radar'] },
-    {
-      label: '指标值',
-      value: 'indicatorValue',
-      charts: ['pie', 'funnel', 'radar']
-    },
-    { label: '转化率', value: 'conversion', charts: ['funnel'] },
-    { label: '到达率', value: 'arrival', charts: ['funnel'] },
-    { label: '百分比', value: 'percentage', charts: ['pie', 'funnel'] }
-  ]
+      { label: '维度名称', value: 'dimensionName', charts: [] },
+      { label: '维度值', value: 'dimensionValue', charts: ['pie', 'funnel'] },
+      { label: '指标名称', value: 'indicatorName', charts: ['radar'] },
+      {
+        label: '指标值',
+        value: 'indicatorValue',
+        charts: ['pie', 'funnel', 'radar', 'treemap']
+      },
+      { label: '父标签', value: 'upperLabel', charts: ['treemap'] },
+      { label: '转化率', value: 'conversion', charts: ['funnel'] },
+      { label: '到达率', value: 'arrival', charts: ['funnel'] },
+      { label: '百分比', value: 'percentage', charts: ['pie', 'funnel'] }
+    ]
 
   private checkboxChange = (prop) => (e) => {
     this.props.onChange(prop, e.target.checked)
@@ -68,7 +70,7 @@ export class LabelSection extends React.PureComponent<ILabelSectionProps, {}> {
     this.props.onChange(prop, color)
   }
 
-  public render () {
+  public render() {
     const { title, config, name } = this.props
 
     const {
