@@ -19,11 +19,8 @@
 
 package edp.core.common.jdbc;
 
-import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.druid.wall.WallConfig;
-import com.alibaba.druid.wall.WallFilter;
 import edp.core.consts.Consts;
 import edp.core.enums.DataTypeEnum;
 import edp.core.exception.SourceException;
@@ -34,14 +31,10 @@ import edp.core.utils.CustomDataSourceUtils;
 import edp.core.utils.SourceUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -213,6 +206,7 @@ public class JdbcDataSource {
     public DruidDataSource getDataSource(JdbcSourceInfo jdbcSourceInfo) throws SourceException {
 
         String name = jdbcSourceInfo.getName();
+        String type = jdbcSourceInfo.getType();
         String jdbcUrl = jdbcSourceInfo.getJdbcUrl();
         String username = jdbcSourceInfo.getUsername();
         String password = jdbcSourceInfo.getPassword();
@@ -317,8 +311,27 @@ public class JdbcDataSource {
                 properties.setProperty("druid.mysql.usePingMethod", "false");
             }
 
+            // druid wall filter not support some database so set type mysql
+//            if (DataTypeEnum.MOONBOX == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.MONGODB == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.ELASTICSEARCH == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.CASSANDRA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.VERTICA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.KYLIN == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.HANA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.IMPALA == DataTypeEnum.urlOf(jdbcUrl) ||
+//                    DataTypeEnum.TDENGINE == DataTypeEnum.urlOf(jdbcUrl)) {
+//                wallFilter.setDbType(DataTypeEnum.MYSQL.getFeature());
+//            }
+
             if (!CollectionUtils.isEmpty(jdbcSourceInfo.getProperties())) {
                 for (Dict dict : jdbcSourceInfo.getProperties()) {
+
+//                    if ("davinci.db-type".equalsIgnoreCase(dict.getKey())) {
+//                        wallFilter.setDbType(dict.getValue());
+//                        continue;
+//                    }
+
                     if ("davinci.initial-size".equalsIgnoreCase(dict.getKey())) {
                         druidDataSource.setInitialSize(Integer.parseInt(dict.getValue()));
                         continue;
