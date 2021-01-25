@@ -13,7 +13,7 @@ const treeMap: IChartInfo = {
   title: '矩形树图',
   icon: 'icon-chart-treemap',
   coordinate: 'cartesian',
-  rules: [{ dimension: [1, 99], metric: [1, 2] }],
+  rules: [{ dimension: [1, 9999], metric: [1, 2] }],
   dimetionAxis: 'col',
   data: {
     cols: {
