@@ -29,6 +29,7 @@ import edp.core.model.JdbcSourceInfo;
 import edp.core.utils.CollectionUtils;
 import edp.core.utils.CustomDataSourceUtils;
 import edp.core.utils.SourceUtils;
+import edp.davinci.core.enums.SourceTypeEnum;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -206,7 +207,7 @@ public class JdbcDataSource {
     public DruidDataSource getDataSource(JdbcSourceInfo jdbcSourceInfo) throws SourceException {
 
         String name = jdbcSourceInfo.getName();
-        String type = jdbcSourceInfo.getType();
+//        String type = jdbcSourceInfo.getType();
         String jdbcUrl = jdbcSourceInfo.getJdbcUrl();
         String username = jdbcSourceInfo.getUsername();
         String password = jdbcSourceInfo.getPassword();
@@ -355,19 +356,7 @@ public class JdbcDataSource {
 
             try {
 
-//                // druid wall filter not support some database so set type mysql
-//                if (DataTypeEnum.MOONBOX == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.MONGODB == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.ELASTICSEARCH == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.CASSANDRA == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.VERTICA == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.HANA == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.IMPALA == DataTypeEnum.urlOf(jdbcUrl) ||
-//                        DataTypeEnum.TDENGINE == DataTypeEnum.urlOf(jdbcUrl)) {
-//                    wallFilter.setDbType(DataTypeEnum.MYSQL.getFeature());
-//                }
-//
-//                if (!"statistic".equals(name)) {// davinci's statistic source don't need wall filter
+//                if (!"statistic".equals(name) && SourceTypeEnum.JDBC.getType().equalsIgnoreCase(type)) {
 //                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
 //                }
 
