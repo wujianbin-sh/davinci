@@ -25,8 +25,9 @@ import { IScorecardConfig } from '../Workbench/ConfigSections/ScorecardSection'
 import { IGaugeConfig } from '../Workbench/ConfigSections/GaugeSection'
 import { IframeConfig } from '../Workbench/ConfigSections/IframeSection'
 import { ITableConfig } from '../Config/Table'
-import { IRichTextConfig, IBarConfig, IRadarConfig } from '../Workbench/ConfigSections'
+import { IRichTextConfig, IBarConfig, IRadarConfig, IMapItemConfig, IAreaScpoe, IDrillLeavel } from '../Workbench/ConfigSections'
 import { IDoubleYAxisConfig } from '../Workbench/ConfigSections/DoubleYAxisSection'
+
 import { IViewModel } from 'containers/View/types'
 import { IQueryVariableMap } from 'containers/Dashboard/types'
 import { IControl } from 'app/components/Control/types'
@@ -100,6 +101,9 @@ export interface IChartStyles {
   bar?: IBarConfig
   radar?: IRadarConfig
   doubleYAxis?: IDoubleYAxisConfig
+  scope?: IAreaScpoe,
+  mapItemStyle?: IMapItemConfig,
+  drillLevel?: IDrillLeavel
 }
 
 export interface IChartRule {
@@ -190,12 +194,12 @@ export interface IWidgetWrapperStates {
 export class Widget extends React.Component<
   IWidgetWrapperProps,
   IWidgetWrapperStates
-> {
+  > {
   public static defaultProps = {
     editing: false
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       width: 0,
@@ -206,11 +210,11 @@ export class Widget extends React.Component<
   private container = createRef<HTMLDivElement>()
   private remeasureRenderTypes = ['rerender', 'clear', 'refresh', 'resize', 'flush']
 
-  public componentDidMount () {
+  public componentDidMount() {
     this.getContainerSize()
   }
 
-  public componentWillReceiveProps (nextProps: IWidgetProps) {
+  public componentWillReceiveProps(nextProps: IWidgetProps) {
     if (this.remeasureRenderTypes.includes(nextProps.renderType)) {
       this.getContainerSize()
     }
@@ -232,7 +236,7 @@ export class Widget extends React.Component<
     }
   }
 
-  public render () {
+  public render() {
     const { loading, empty, ...rest } = this.props
     const { width, height } = this.state
 
@@ -245,8 +249,8 @@ export class Widget extends React.Component<
         widgetProps.mode === 'chart' ? (
           <Chart {...widgetProps} />
         ) : (
-          <Pivot {...widgetProps} />
-        )
+            <Pivot {...widgetProps} />
+          )
     }
 
     return (

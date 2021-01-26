@@ -24,7 +24,7 @@ import scatter from './scatter'
 import pie from './pie'
 import area from './area'
 import funnel from './funnel'
-import map from './map'
+import map from './map/index'
 import radar from './radar'
 import sankey from './sankey'
 import parallel from './parallel'
@@ -40,11 +40,10 @@ export default function (
   type,
   chartProps: IChartProps,
   drillOptions?: any
-): EChartOption {
+): EChartOption | Promise<EChartOption> {
   switch (type) {
     case 'line':
       return line(chartProps, drillOptions)
-
     case 'bar':
       // @ts-ignore
       return bar(chartProps, drillOptions)
@@ -63,7 +62,7 @@ export default function (
     case 'parallel':
       return parallel(chartProps)
     case 'map':
-      return map(chartProps)
+      return map(chartProps, drillOptions)
     case 'wordCloud':
       return wordCloud(chartProps)
     case 'waterfall':

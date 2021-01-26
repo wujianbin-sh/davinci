@@ -1,3 +1,22 @@
+/*
+ * <<
+ * Davinci
+ * ==
+ * Copyright (C) 2016 - 2017 EDP
+ * ==
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * >>
+ */
 import React from 'react'
 import classnames from 'classnames'
 import set from 'lodash/set'
@@ -54,6 +73,8 @@ import SpecSection from './ConfigSections/SpecSection'
 import LabelSection from './ConfigSections/LabelSection'
 import LegendSection from './ConfigSections/LegendSection'
 import VisualMapSection from './ConfigSections/VisualMapSection'
+import MapItemSection from './ConfigSections/MapItemSection'
+import DrillLevelSection from './ConfigSections/DrillLevelSection'
 import ToolboxSection from './ConfigSections/ToolboxSection'
 import DoubleYAxisSection from './ConfigSections/DoubleYAxisSection'
 import AreaSelectSection from './ConfigSections/AreaSelectSection'
@@ -104,6 +125,8 @@ import {
   ControlPanelTypes,
   ControlQueryMode
 } from 'app/components/Control/constants'
+import AreaScpoeSection from './ConfigSections/AreaScope'
+import { IAreaScpoe } from './ConfigSections'
 const MenuItem = Menu.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
@@ -210,7 +233,7 @@ interface IOperatingPanelStates {
 export class OperatingPanel extends React.Component<
   IOperatingPanelProps,
   IOperatingPanelStates
-> {
+  > {
   constructor(props) {
     super(props)
     this.state = {
@@ -467,15 +490,15 @@ export class OperatingPanel extends React.Component<
                 value =
                   color && color.value
                     ? {
-                        all: color.value.all,
-                        ...metrics.items.reduce((props, item, i) => {
-                          props[item.name] =
-                            mode === 'pivot'
-                              ? color.value[item.name] || color.value['all']
-                              : color.value[item.name] || defaultThemeColors[i]
-                          return props
-                        }, {})
-                      }
+                      all: color.value.all,
+                      ...metrics.items.reduce((props, item, i) => {
+                        props[item.name] =
+                          mode === 'pivot'
+                            ? color.value[item.name] || color.value['all']
+                            : color.value[item.name] || defaultThemeColors[i]
+                        return props
+                      }, {})
+                    }
                     : { all: defaultThemeColors[0] }
                 break
               case 'size':
@@ -1284,11 +1307,11 @@ export class OperatingPanel extends React.Component<
           updatedPagination = !updatedPagination.withPaging
             ? updatedPagination
             : {
-                ...updatedPagination,
-                pageNo,
-                pageSize,
-                totalCount
-              }
+              ...updatedPagination,
+              pageNo,
+              pageSize,
+              totalCount
+            }
           onSetWidgetProps({
             cols: cols.items.map((item) => ({
               ...item,
@@ -1440,6 +1463,7 @@ export class OperatingPanel extends React.Component<
   }
 
   private chartSelect = (chart: IChartInfo) => {
+
     const { mode, dataParams } = this.state
     const { cols, rows, metrics } = dataParams
     if (mode === 'pivot') {
@@ -1620,7 +1644,12 @@ export class OperatingPanel extends React.Component<
     }
     this.setWidgetProps(dataParams, styleParams, { renderType })
   }
-
+  private areaScpoeChange = (name) => (value: IAreaScpoe) => {
+    const { dataParams, styleParams } = this.state
+    styleParams[name] = value
+    const renderType: RenderType = 'rerender'
+    this.setWidgetProps(dataParams, styleParams, { renderType })
+  }
   private limitChange = (value) => {
     this.props.onLimitChange(value)
     this.debounceLimitChangeUpdate(value)
@@ -1940,6 +1969,9 @@ export class OperatingPanel extends React.Component<
       label,
       legend,
       visualMap,
+      mapItemStyle,
+      scope,
+      drillLevel,
       toolbox,
       areaSelect,
       scorecard,
@@ -2100,32 +2132,54 @@ export class OperatingPanel extends React.Component<
             )}
             {mapLabelLayerType
               ? label && (
-                  <LabelSection
-                    title="标签"
-                    config={label}
-                    onChange={this.styleChange('label')}
-                    name={chartModeSelectedChart.name}
-                  />
-                )
+                <LabelSection
+                  title="标签"
+                  config={label}
+                  onChange={this.styleChange('label')}
+                  name={chartModeSelectedChart.name}
+                />
+              )
               : null}
             {mapLegendLayerType
               ? legend && (
-                  <LegendSection
-                    title="图例"
-                    config={legend}
-                    onChange={this.styleChange('legend')}
-                  />
-                )
+                <LegendSection
+                  title="图例"
+                  config={legend}
+                  onChange={this.styleChange('legend')}
+                />
+              )
               : null}
+            {scope && (
+              <AreaScpoeSection
+                title="地图最大范围"
+                config={scope}
+                onChange={this.areaScpoeChange('scope')}
+              />
+            )}
+            {drillLevel && (
+              <DrillLevelSection
+                title="下钻设置"
+                config={drillLevel}
+                onChange={this.styleChange('drillLevel')}
+              />
+            )}
+            {mapItemStyle && (
+              <MapItemSection
+                title="地图区域"
+                config={mapItemStyle}
+                onChange={this.styleChange('mapItemStyle')}
+              />
+            )}
+
             {mapLegendLayerType
               ? null
               : visualMap && (
-                  <VisualMapSection
-                    title="视觉映射"
-                    config={visualMap}
-                    onChange={this.styleChange('visualMap')}
-                  />
-                )}
+                <VisualMapSection
+                  title="视觉映射"
+                  config={visualMap}
+                  onChange={this.styleChange('visualMap')}
+                />
+              )}
             {toolbox && (
               <ToolboxSection
                 title="工具"
@@ -2412,9 +2466,8 @@ export class OperatingPanel extends React.Component<
                 const data = { name, title, visualType, ...rest }
                 return (
                   <li
-                    className={`${
-                      title === 'computedField' ? styles.computed : ''
-                    }`}
+                    className={`${title === 'computedField' ? styles.computed : ''
+                      }`}
                     key={name}
                     onDragStart={this.dragStart(data)}
                     onDragEnd={this.dragEnd}
@@ -2459,9 +2512,8 @@ export class OperatingPanel extends React.Component<
                 const data = { name, title, visualType, ...rest }
                 return (
                   <li
-                    className={`${
-                      title === 'computedField' ? styles.computed : ''
-                    }`}
+                    className={`${title === 'computedField' ? styles.computed : ''
+                      }`}
                     key={name}
                     onDragStart={this.dragStart({
                       ...data,
@@ -2618,31 +2670,31 @@ export class OperatingPanel extends React.Component<
         {!currentEditingItem
           ? null
           : [
-              <FieldConfigModal
-                key="fieldConfigModal"
-                queryInfo={queryInfo}
-                visible={fieldModalVisible}
-                fieldConfig={currentEditingItem.field}
-                onSave={this.saveFieldConfig}
-                onCancel={this.cancelFieldConfig}
-              />,
-              <FormatConfigModal
-                key="formatConfigModal"
-                visible={formatModalVisible}
-                visualType={currentEditingItem.visualType}
-                formatConfig={currentEditingItem.format}
-                onSave={this.saveFormatConfig}
-                onCancel={this.cancelFormatConfig}
-              />,
-              <SortConfigModal
-                key="sortConfigModal"
-                visible={sortModalVisible}
-                config={currentEditingItem.sort}
-                list={distinctColumnValues}
-                onSave={this.saveSortConfig}
-                onCancel={this.cancelSortConfig}
-              />
-            ]}
+            <FieldConfigModal
+              key="fieldConfigModal"
+              queryInfo={queryInfo}
+              visible={fieldModalVisible}
+              fieldConfig={currentEditingItem.field}
+              onSave={this.saveFieldConfig}
+              onCancel={this.cancelFieldConfig}
+            />,
+            <FormatConfigModal
+              key="formatConfigModal"
+              visible={formatModalVisible}
+              visualType={currentEditingItem.visualType}
+              formatConfig={currentEditingItem.format}
+              onSave={this.saveFormatConfig}
+              onCancel={this.cancelFormatConfig}
+            />,
+            <SortConfigModal
+              key="sortConfigModal"
+              visible={sortModalVisible}
+              config={currentEditingItem.sort}
+              list={distinctColumnValues}
+              onSave={this.saveSortConfig}
+              onCancel={this.cancelSortConfig}
+            />
+          ]}
         <Modal
           title="计算字段配置"
           wrapClassName="ant-modal-large"

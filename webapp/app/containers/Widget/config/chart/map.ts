@@ -1,3 +1,22 @@
+/*
+ * <<
+ * Davinci
+ * ==
+ * Copyright (C) 2016 - 2017 EDP
+ * ==
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * >>
+ */
 import ChartTypes from './ChartTypes'
 import {
   PIVOT_CHART_FONT_FAMILIES,
@@ -7,10 +26,10 @@ import {
   CHART_LEGEND_POSITIONS,
   CHART_LINES_SYMBOL_TYPE
 } from 'app/globalConstants'
-
-import { IChartInfo } from 'containers/Widget/components/Widget'
 const defaultTheme = require('assets/json/echartsThemes/default.project.json')
 const defaultThemeColors = defaultTheme.theme.color
+
+import { IChartInfo } from 'containers/Widget/components/Widget'
 const map: IChartInfo = {
   id: ChartTypes.CMap,
   name: 'map',
@@ -39,7 +58,7 @@ const map: IChartInfo = {
   },
   style: {
     label: {
-      showLabel: false,
+      showLabel: true,
       labelPosition: CHART_LABEL_POSITIONS[0].value,
       labelFontFamily: PIVOT_CHART_FONT_FAMILIES[0].value,
       labelFontSize: '12',
@@ -69,6 +88,22 @@ const map: IChartInfo = {
       roam: false,
       symbolType: CHART_LINES_SYMBOL_TYPE[0].value,
       linesSpeed: '10'
+    },
+    drillLevel: {
+      enabled: true,
+      level: 'province'
+    },
+    scope: {
+      country: 'china',
+      province: '',
+      city: ''
+    },
+    mapItemStyle: {
+      areaColor: '#cccccc',
+      areaColorEmphasis: '#bbbbbb',
+      borderColor: '#666666',
+      borderWidth: 1,
+      borderType: 'solid'
     }
   }
 }

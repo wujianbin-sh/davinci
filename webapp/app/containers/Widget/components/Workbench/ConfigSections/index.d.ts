@@ -29,3 +29,20 @@ export interface IRadarConfig {
   nameGap: number
   splitNumber: number
 }
+
+export interface IMapItemConfig {
+  areaColor: string
+  areaColorEmphasis: string
+  borderColor: string
+  borderWidth: number
+  borderType: 'solid' | 'dashed' | 'dotted'
+}
+export interface IAreaScpoe {
+  country: string
+  province: string
+  city: string
+}
+export interface IDrillLeavel {
+  enabled: boolean
+  level: 'china' | 'province' | 'city'
+}

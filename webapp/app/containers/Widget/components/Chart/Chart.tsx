@@ -1,11 +1,32 @@
+/*
+ * <<
+ * Davinci
+ * ==
+ * Copyright (C) 2016 - 2017 EDP
+ * ==
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * >>
+ */
 import React from 'react'
+import { message as Message } from 'antd'
 import { IChartProps } from './index'
 import chartlibs from '../../config/chart'
 import echarts from 'echarts/lib/echarts'
-import { ECharts } from 'echarts'
+import { ECharts, EChartOption } from 'echarts'
 import chartOptionGenerator from '../../render/chart'
+import { isPromise } from 'utils/util'
 const styles = require('./Chart.less')
-
+const GeoLevels = ['city', 'province', 'country']
 interface IChartStates {
   seriesItems: string[]
 }
@@ -13,6 +34,7 @@ export class Chart extends React.PureComponent<IChartProps, IChartStates> {
   private asyncEmitTimer: NodeJS.Timer | null = null
   private container: HTMLDivElement = null
   private instance: ECharts
+  private mapData = {}
   constructor(props) {
     super(props)
     this.state = {
@@ -20,14 +42,36 @@ export class Chart extends React.PureComponent<IChartProps, IChartStates> {
     }
   }
   public componentDidMount() {
-    this.renderChart(this.props)
+    this.mapData = this.getMapData(this.props)
+    this.renderChart(this.props, this.mapData)
   }
 
   public componentDidUpdate() {
-    this.renderChart(this.props)
+    this.mapData = this.getMapData(this.props)
+    this.renderChart(this.props, this.mapData)
   }
-
-  private renderChart = (props: IChartProps) => {
+  private getMapData = (props: IChartProps) => {
+    const mapData = { mapLevel: 'country', currentCode: 'china', drillEnable: false, limitLevel: 'province' }
+    const { selectedChart, chartStyles } = props
+    if (selectedChart !== 7) {
+      return mapData
+    }
+    const { scope, drillLevel } = chartStyles
+    if (scope && drillLevel) {
+      mapData.limitLevel = drillLevel.level
+      mapData.drillEnable = drillLevel.enabled
+      // 由小到大
+      for (let i = 0; i < GeoLevels.length; i++) {
+        if (scope[GeoLevels[i]]) {
+          mapData.mapLevel = GeoLevels[i]
+          mapData.currentCode = scope[GeoLevels[i]]
+          break
+        }
+      }
+    }
+    return mapData
+  }
+  private renderChart = (props: IChartProps, mapData) => {
     const {
       selectedChart,
       renderType,
@@ -35,7 +79,6 @@ export class Chart extends React.PureComponent<IChartProps, IChartStates> {
       isDrilling,
       onError
     } = props
-
     if (renderType === 'loading') {
       return
     }
@@ -50,32 +93,66 @@ export class Chart extends React.PureComponent<IChartProps, IChartStates> {
         this.instance.clear()
       }
     }
-
     try {
       this.instance.off('click')
       this.instance.on('click', (params) => {
+        // 如果是 地图 chartid =7
+        if (selectedChart === 7) {
+          mapData = this.getMapData(props)
+          if (!params.data) {
+            this.renderChart(props, mapData)
+            return
+          }
+          const index = GeoLevels.indexOf(params.data.mapLevel)
+          const limitIndex = GeoLevels.indexOf(mapData.limitLevel)
+          if (!(mapData.drillEnable && index >= limitIndex)) {
+            this.renderChart(props, mapData)
+            return
+          }
+          const newMapData = { ...mapData }
+          newMapData.mapLevel = params.data.mapLevel
+          newMapData.currentCode = params.data.curMapCode
+          newMapData.mapName = params.data.curMapName
+          this.renderChart(props, newMapData)
+
+        }
         this.collectSelectedItems(params)
       })
-
-      this.instance.setOption(
-        chartOptionGenerator(
-          chartlibs.find((cl) => cl.id === selectedChart).name,
-          props,
-          {
-            instance: this.instance,
-            isDrilling,
-            getDataDrillDetail,
-            selectedItems: this.props.selectedItems,
-            callback: (seriesData) => {
-              this.instance.off('click')
-              this.instance.on('click', (params) => {
-                this.collectSelectedItems(params, seriesData)
-              })
-            }
-          }
-        )
+      const drillOptions = {
+        instance: this.instance,
+        isDrilling,
+        mapData,
+        getDataDrillDetail,
+        selectedItems: this.props.selectedItems,
+        callback: (seriesData) => {
+          this.instance.off('click')
+          this.instance.on('click', (params) => {
+            this.collectSelectedItems(params, seriesData)
+          })
+        }
+      }
+      const option = chartOptionGenerator(
+        chartlibs.find((cl) => cl.id === selectedChart).name,
+        props,
+        drillOptions
       )
-      this.instance.resize()
+      if (isPromise(option)) {
+        (option as Promise<EChartOption>).then((newOption) => {
+          this.instance.setOption(newOption)
+          this.instance.resize()
+        }).catch((err) => {
+          console.log('EChartOption', err)
+
+          Message.error('暂没有找到相关地图文件')
+          return
+        })
+      } else {
+        this.instance.setOption(
+          (option as EChartOption)
+        )
+        this.instance.resize()
+      }
+
     } catch (error) {
       if (onError) {
         onError(error)
@@ -103,7 +180,9 @@ export class Chart extends React.PureComponent<IChartProps, IChartStates> {
     } = this.props
 
     const { seriesItems } = this.state
-
+    if (selectedChart === 7) {
+      return
+    }
     let selectedItems = []
     let series = []
     if (this.props.selectedItems && this.props.selectedItems.length) {

@@ -201,3 +201,10 @@ export function filterTreeSelectOption(input: string, treeNode): boolean {
   const text = treeNode.props.title
   return text.toLowerCase().includes(input.toLowerCase())
 }
+export function isPromise(obj) {
+  return (
+    !!obj &&
+    (typeof obj === 'object' || typeof obj === 'function') &&
+    typeof obj.then === 'function'
+  )
+}
