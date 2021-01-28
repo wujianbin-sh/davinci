@@ -17,7 +17,7 @@
  *
  */
 
-package edp.davinci.core.utils;
+package edp.davinci.core.util;
 
 import com.alibaba.druid.util.StringUtils;
 import com.sun.tools.javac.util.ListBuffer;
@@ -67,7 +67,7 @@ public class SqlParseUtils {
     private static final String QUERY_WHERE_VALUE = "'%s'";
 
     @Autowired
-    private DacChannelUtil dacChannelUtil;
+    private DacChannelUtils dacChannelUtils;
 
     /**
      * 解析sql
@@ -149,11 +149,11 @@ public class SqlParseUtils {
         if (null == channel) {
             return SqlVariableValueTypeEnum.getValues(variable.getValueType(), variable.getDefaultValues(),
                     variable.isUdf());
-        } else if (DacChannelUtil.dacMap.containsKey(channel.getName())) {
+        } else if (DacChannelUtils.dacMap.containsKey(channel.getName())) {
             if (StringUtils.isEmpty(email)) {
                 return null;
             }
-            List<Object> data = dacChannelUtil.getData(channel.getName(), channel.getBizId().toString(), email);
+            List<Object> data = dacChannelUtils.getData(channel.getName(), channel.getBizId().toString(), email);
             return SqlVariableValueTypeEnum.getValues(variable.getValueType(), data, variable.isUdf());
         }
         return new ArrayList<>();

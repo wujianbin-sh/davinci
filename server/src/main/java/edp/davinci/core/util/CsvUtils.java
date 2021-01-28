@@ -17,7 +17,7 @@
  *
  */
 
-package edp.davinci.core.utils;
+package edp.davinci.core.util;
 
 import com.alibaba.druid.util.StringUtils;
 import edp.core.exception.ServerException;

@@ -1,4 +1,4 @@
-package edp.davinci.core.utils;
+package edp.davinci.core.util;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import edp.core.utils.FileUtils;
@@ -321,8 +321,8 @@ public class SourcePasswordEncryptUtils {
         FileUtils.writeStringToFile("userfiles/" + "AES", AES_PRIVATE, org.apache.commons.codec.binary.Base64.encodeBase64String(skey.getEncoded()), Charset.forName(CODE_TYPE));
     }
 
-    public static void main(String[] args) throws Exception {
-        initAESKey();
-        initRSAKey();
-    }
+//    public static void main(String[] args) throws Exception {
+//        initAESKey();
+//        initRSAKey();
+//    }
 }

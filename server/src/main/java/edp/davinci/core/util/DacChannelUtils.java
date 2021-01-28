@@ -17,7 +17,7 @@
  *
  */
 
-package edp.davinci.core.utils;
+package edp.davinci.core.util;
 
 import com.alibaba.druid.util.StringUtils;
 import edp.core.exception.NotFoundException;
@@ -46,7 +46,7 @@ import static java.util.stream.Collectors.groupingBy;
 @Slf4j
 @Component
 @ConfigurationProperties(prefix = "data-auth-center", ignoreInvalidFields = true)
-public class DacChannelUtil {
+public class DacChannelUtils {
 
     public static final Map<String, DacChannel> dacMap = new HashMap<>();
 
