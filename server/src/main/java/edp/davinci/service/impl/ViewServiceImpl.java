@@ -33,7 +33,7 @@ import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.*;
 import edp.davinci.core.model.SqlEntity;
 import edp.davinci.core.model.SqlFilter;
-import edp.davinci.core.utils.SqlParseUtils;
+import edp.davinci.core.util.SqlParseUtils;
 import edp.davinci.dao.RelRoleViewMapper;
 import edp.davinci.dao.SourceMapper;
 import edp.davinci.dao.ViewMapper;

@@ -20,7 +20,7 @@
 package edp.davinci.runner;
 
 import com.alibaba.druid.util.StringUtils;
-import edp.davinci.core.utils.DacChannelUtil;
+import edp.davinci.core.util.DacChannelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +55,7 @@ public class CheckConfigRunner implements ApplicationRunner {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private DacChannelUtil dacChannelUtil;
+    private DacChannelUtils dacChannelUtils;
 
 
     @Override
@@ -80,6 +80,6 @@ public class CheckConfigRunner implements ApplicationRunner {
             SpringApplication.exit(applicationContext);
         }
 
-        dacChannelUtil.loadDacMap();
+        dacChannelUtils.loadDacMap();
     }
 }

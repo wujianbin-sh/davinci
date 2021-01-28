@@ -25,7 +25,7 @@ import edp.core.model.PaginateWithQueryColumns;
 import edp.davinci.common.controller.BaseController;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ResultMap;
-import edp.davinci.core.utils.DacChannelUtil;
+import edp.davinci.core.util.DacChannelUtils;
 import edp.davinci.dto.viewDto.*;
 import edp.davinci.model.DacChannel;
 import edp.davinci.model.User;
@@ -59,7 +59,7 @@ public class ViewController extends BaseController {
     private ViewService viewService;
 
     @Autowired
-    private DacChannelUtil dacChannelUtil;
+    private DacChannelUtils dacChannelUtils;
 
     /**
      * 获取view
@@ -270,7 +270,7 @@ public class ViewController extends BaseController {
     @ApiOperation(value = "get dac channels")
     @GetMapping("/dac/channels")
     public ResponseEntity getDacChannels(@ApiIgnore @CurrentUser User user, HttpServletRequest request) {
-        Map<String, DacChannel> dacMap = DacChannelUtil.dacMap;
+        Map<String, DacChannel> dacMap = DacChannelUtils.dacMap;
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(dacMap.keySet()));
     }
 
@@ -278,7 +278,7 @@ public class ViewController extends BaseController {
     @GetMapping("/dac/{dacName}/tenants")
     public ResponseEntity getDacTenants(@PathVariable String dacName, @ApiIgnore @CurrentUser User user, HttpServletRequest request) {
 
-        return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(dacChannelUtil.getTenants(dacName)));
+        return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(dacChannelUtils.getTenants(dacName)));
     }
 
 
@@ -288,6 +288,6 @@ public class ViewController extends BaseController {
                                      @PathVariable String tenantId,
                                      @ApiIgnore @CurrentUser User user,
                                      HttpServletRequest request) {
-        return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(dacChannelUtil.getBizs(dacName, tenantId)));
+        return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(dacChannelUtils.getBizs(dacName, tenantId)));
     }
 }

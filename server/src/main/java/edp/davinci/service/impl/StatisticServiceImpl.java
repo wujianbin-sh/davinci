@@ -6,7 +6,7 @@ import edp.core.model.TableInfo;
 import edp.core.utils.SqlUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.SourceTypeEnum;
-import edp.davinci.core.utils.SourcePasswordEncryptUtils;
+import edp.davinci.core.util.SourcePasswordEncryptUtils;
 import edp.davinci.service.StatisticService;
 import edp.davinci.service.elastic.ElasticOperationService;
 import edp.davinci.service.kafka.KafkaOperationService;

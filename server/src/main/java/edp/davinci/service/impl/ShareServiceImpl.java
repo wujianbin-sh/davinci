@@ -32,7 +32,7 @@ import edp.core.utils.TokenUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ErrorMsg;
 import edp.davinci.core.model.TokenEntity;
-import edp.davinci.core.utils.VizUtils;
+import edp.davinci.core.util.VizUtils;
 import edp.davinci.dao.*;
 import edp.davinci.dto.displayDto.MemDisplaySlideWidgetWithSlide;
 import edp.davinci.dto.projectDto.ProjectDetail;

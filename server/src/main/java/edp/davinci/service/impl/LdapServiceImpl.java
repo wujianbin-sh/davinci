@@ -62,6 +62,12 @@ public class LdapServiceImpl implements LdapService {
     @Value("${spring.ldap.urls:''}")
     private String ldapUrls;
 
+    @Value("${spring.ldap.username}")
+    private String username;
+
+    @Value("${spring.ldap.password}")
+    private String password;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -84,7 +90,7 @@ public class LdapServiceImpl implements LdapService {
      * @throws Exception
      */
     @Override
-    public LdapPerson findByUsername(String username, String password) {
+    public LdapPerson checkUser(String username, String password) {
 		LdapPerson ldapPerson = null;
 
 		if (StringUtils.endsWithIgnoreCase(username, ldapDomainName)) {
@@ -94,6 +100,7 @@ public class LdapServiceImpl implements LdapService {
 
 		DirContext ctx = null;
 		try {
+
 			ctx = ldapTemplate.getContextSource().getContext(userDn, password);
 
 			List<LdapPerson> search = ldapTemplate.search(
@@ -121,6 +128,44 @@ public class LdapServiceImpl implements LdapService {
     }
 
     @Override
+    public LdapPerson searchUser(String username) {
+        LdapPerson ldapPerson = null;
+
+        if (StringUtils.endsWithIgnoreCase(username, ldapDomainName)) {
+            username = username.replaceAll("(?i)" + ldapDomainName, EMPTY);
+        }
+
+        DirContext ctx = null;
+        try {
+
+            ctx = ldapTemplate.getContextSource().getContext(this.username, this.password);
+
+            List<LdapPerson> search = ldapTemplate.search(
+                    query().where("objectclass").is("person").and("sAMAccountName").is(username),
+                    (AttributesMapper<LdapPerson>) attributes -> {
+                        LdapPerson person = new LdapPerson();
+                        person.setName(attributes.get("cn").get().toString());
+                        person.setSAMAccountName(attributes.get("sAMAccountName").get().toString());
+                        person.setEmail(attributes.get("mail").get().toString());
+                        return person;
+                    });
+
+            if (!CollectionUtils.isEmpty(search)) {
+                ldapPerson = search.get(0);
+            }
+
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        } finally {
+            if (null != ctx) {
+                LdapUtils.closeContext(ctx);
+            }
+        }
+
+        return ldapPerson;
+    }
+
+    @Override
     @Transactional
     public User registPerson(LdapPerson ldapPerson) throws ServerException {
         User user = new User(ldapPerson);
@@ -132,13 +177,13 @@ public class LdapServiceImpl implements LdapService {
             throw new ServerException("Ldap regist fail");
         }
         
-        String orgName = user.getUsername() + "'s Organization";
-        Organization organization = new Organization(orgName, null, user.getId());
-        if (organizationMapper.insert(organization) > 0) {
-            RelUserOrganization relUserOrganization = new RelUserOrganization(organization.getId(), user.getId(), UserOrgRoleEnum.OWNER.getRole());
-            relUserOrganization.createdBy(user.getId());
-            relUserOrganizationMapper.insert(relUserOrganization);
-        }
+//        String orgName = user.getUsername() + "'s Organization";
+//        Organization organization = new Organization(orgName, null, user.getId());
+//        if (organizationMapper.insert(organization) > 0) {
+//            RelUserOrganization relUserOrganization = new RelUserOrganization(organization.getId(), user.getId(), UserOrgRoleEnum.OWNER.getRole());
+//            relUserOrganization.createdBy(user.getId());
+//            relUserOrganizationMapper.insert(relUserOrganization);
+//        }
 
         return user;
     }
