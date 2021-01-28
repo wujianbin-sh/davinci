@@ -28,15 +28,23 @@ public interface LdapService {
     boolean existLdapServer();
 
     /**
-     * 查找 ldap 用户
+     * 校验ldap用户
      *
      * @param username
      * @param password
      * @return
      * @throws Exception
      */
-    LdapPerson findByUsername(String username, String password);
+    LdapPerson checkUser(String username, String password);
 
+    /**
+     * 查询ldap用户
+     *
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    LdapPerson searchUser(String username);
 
     User registPerson(LdapPerson ldapPerson) throws ServerException;
 }

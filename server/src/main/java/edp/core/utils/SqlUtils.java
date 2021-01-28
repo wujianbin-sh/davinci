@@ -29,8 +29,8 @@ import edp.core.exception.SourceException;
 import edp.core.model.*;
 import edp.davinci.core.enums.LogNameEnum;
 import edp.davinci.core.enums.SqlColumnEnum;
-import edp.davinci.core.utils.SourcePasswordEncryptUtils;
-import edp.davinci.core.utils.SqlParseUtils;
+import edp.davinci.core.util.SourcePasswordEncryptUtils;
+import edp.davinci.core.util.SqlParseUtils;
 import edp.davinci.model.Source;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -105,6 +105,7 @@ public class SqlUtils {
         return SqlUtilsBuilder
                 .getBuilder()
                 .withName(source.getId() + AT_SYMBOL + source.getName())
+                .withType(source.getType())
                 .withJdbcUrl(source.getJdbcUrl())
                 .withUsername(source.getUsername())
                 .withPassword(decrypt)
@@ -117,12 +118,13 @@ public class SqlUtils {
                 .build();
     }
 
-    public SqlUtils init(String name, String jdbcUrl, String username, String password, String dbVersion, List<Dict> properties, boolean ext) {
+    public SqlUtils init(String name, String type, String jdbcUrl, String username, String password, String dbVersion, List<Dict> properties, boolean ext) {
         // Password decryption
         String decrypt = SourcePasswordEncryptUtils.decrypt(password);
         return SqlUtilsBuilder
                 .getBuilder()
                 .withName(name)
+                .withType(type)
                 .withJdbcUrl(jdbcUrl)
                 .withUsername(username)
                 .withPassword(decrypt)
@@ -340,14 +342,14 @@ public class SqlUtils {
     }
 
     public static Set<String> getQueryFromsAndJoins(String sql) {
-        Set<String> columnPrefixs = new HashSet<>();
+        Set<String> columnPrefixes = new HashSet<>();
         try {
             Statement parse = CCJSqlParserUtil.parse(sql);
             Select select = (Select) parse;
             SelectBody selectBody = select.getSelectBody();
             if (selectBody instanceof PlainSelect) {
                 PlainSelect plainSelect = (PlainSelect) selectBody;
-                columnPrefixExtractor(columnPrefixs, plainSelect);
+                columnPrefixExtractor(columnPrefixes, plainSelect);
             }
 
             if (selectBody instanceof SetOperationList) {
@@ -355,19 +357,19 @@ public class SqlUtils {
                 List<SelectBody> selects = setOperationList.getSelects();
                 for (SelectBody optSelectBody : selects) {
                     PlainSelect plainSelect = (PlainSelect) optSelectBody;
-                    columnPrefixExtractor(columnPrefixs, plainSelect);
+                    columnPrefixExtractor(columnPrefixes, plainSelect);
                 }
             }
 
             if (selectBody instanceof WithItem) {
                 WithItem withItem = (WithItem) selectBody;
                 PlainSelect plainSelect = (PlainSelect) withItem.getSelectBody();
-                columnPrefixExtractor(columnPrefixs, plainSelect);
+                columnPrefixExtractor(columnPrefixes, plainSelect);
             }
         } catch (JSQLParserException e) {
             log.debug(e.getMessage(), e);
         }
-        return columnPrefixs;
+        return columnPrefixes;
     }
 
     private static void columnPrefixExtractor(Set<String> columnPrefixes, PlainSelect plainSelect) {
@@ -978,6 +980,7 @@ public class SqlUtils {
         private int resultLimit;
         private boolean isQueryLogEnable;
         private String name;
+        private String type;
         private String jdbcUrl;
         private String username;
         private String password;
@@ -1010,6 +1013,11 @@ public class SqlUtils {
 
         SqlUtilsBuilder withName(String name) {
             this.name = name;
+            return this;
+        }
+
+        SqlUtilsBuilder withType(String type) {
+            this.type = type;
             return this;
         }
 
@@ -1051,6 +1059,7 @@ public class SqlUtils {
                     .JdbcSourceInfoBuilder
                     .aJdbcSourceInfo()
                     .withName(this.name)
+                    .withType(this.type)
                     .withJdbcUrl(this.jdbcUrl)
                     .withUsername(this.username)
                     .withPassword(this.password)

@@ -35,16 +35,12 @@ import edp.davinci.core.common.ResultMap;
 import edp.davinci.core.enums.CheckEntityEnum;
 import edp.davinci.core.enums.LockType;
 import edp.davinci.core.enums.UserDistinctType;
-import edp.davinci.core.enums.UserOrgRoleEnum;
 import edp.davinci.dao.OrganizationMapper;
 import edp.davinci.dao.RelUserOrganizationMapper;
 import edp.davinci.dao.UserMapper;
 import edp.davinci.dto.organizationDto.OrganizationInfo;
 import edp.davinci.dto.userDto.*;
-import edp.davinci.model.LdapPerson;
-import edp.davinci.model.Organization;
-import edp.davinci.model.RelUserOrganization;
-import edp.davinci.model.User;
+import edp.davinci.model.*;
 import edp.davinci.service.LdapService;
 import edp.davinci.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -82,7 +78,6 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
     @Autowired
     private MailUtils mailUtils;
 
-
     @Autowired
     private FileUtils fileUtils;
 
@@ -96,7 +91,6 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
     private Environment environment;
 
     private static final CheckEntityEnum entity = CheckEntityEnum.USER;
-
 
     private static final Long TOKEN_TIMEOUT_MILLIS = 10 * 60 * 1000L;
 
@@ -245,7 +239,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
                 return user;
             }
 
-            if (ldapLogin(username, password)) {
+            if (ldapCheck(username, password)) {
                 return user;
             }
 
@@ -260,12 +254,42 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
         return user;
     }
 
-    private boolean ldapLogin(String username, String password) {
+    @Override
+    public User userLogin(MOAEmployee employee) throws ServerException {
+
+        // email
+        String username = employee.getUserName();
+
+        User user = getByUsername(username);
+        if (user != null) {
+            return user;
+        }
+
+        LdapPerson ldapPerson = ldapSearch(username);
+
+        if (ldapPerson != null) {
+            return ldapService.registPerson(ldapPerson);
+        }
+
+        return null;
+    }
+
+    private LdapPerson ldapSearch(String username) {
+        if (!ldapService.existLdapServer()) {
+            return null;
+        }
+
+        LdapPerson ldapPerson = ldapService.searchUser(username);
+
+        return ldapPerson != null ? ldapPerson : null;
+    }
+
+    private boolean ldapCheck(String username, String password) {
         if (!ldapService.existLdapServer()) {
             return false;
         }
 
-        LdapPerson ldapPerson = ldapService.findByUsername(username, password);
+        LdapPerson ldapPerson = ldapService.checkUser(username, password);
         if (null == ldapPerson) {
             return false;
         }
@@ -279,7 +303,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
             return null;
         }
 
-        LdapPerson ldapPerson = ldapService.findByUsername(username, password);
+        LdapPerson ldapPerson = ldapService.checkUser(username, password);
         if (null == ldapPerson) {
             throw new ServerException("Username or password is wrong");
         }
@@ -373,16 +397,16 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
                 user.setUpdateTime(new Date());
                 userMapper.activeUser(user);
 
-                String orgName = user.getUsername() + "'s Organization";
-                // 激活成功，创建默认Organization
-                Organization organization = new Organization(orgName, null, user.getId());
-                organizationMapper.insert(organization);
-
-                // 关联用户和组织，创建人是组织的owner
-                RelUserOrganization relUserOrganization = new RelUserOrganization(organization.getId(), user.getId(),
-                        UserOrgRoleEnum.OWNER.getRole());
-                relUserOrganization.createdBy(user.getId());
-                relUserOrganizationMapper.insert(relUserOrganization);
+//                String orgName = user.getUsername() + "'s Organization";
+//                // 激活成功，创建默认Organization
+//                Organization organization = new Organization(orgName, null, user.getId());
+//                organizationMapper.insert(organization);
+//
+//                // 关联用户和组织，创建人是组织的owner
+//                RelUserOrganization relUserOrganization = new RelUserOrganization(organization.getId(), user.getId(),
+//                        UserOrgRoleEnum.OWNER.getRole());
+//                relUserOrganization.createdBy(user.getId());
+//                relUserOrganizationMapper.insert(relUserOrganization);
 
                 UserLoginResult userLoginResult = new UserLoginResult();
                 BeanUtils.copyProperties(user, userLoginResult);

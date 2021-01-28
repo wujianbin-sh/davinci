@@ -27,7 +27,7 @@ import edp.core.utils.CollectionUtils;
 import edp.core.utils.MD5Util;
 import edp.core.utils.SqlUtils;
 import edp.davinci.core.enums.ActionEnum;
-import edp.davinci.core.utils.SqlParseUtils;
+import edp.davinci.core.util.SqlParseUtils;
 import edp.davinci.dto.cronJobDto.MsgMailExcel;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;

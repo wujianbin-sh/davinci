@@ -28,6 +28,7 @@ import edp.davinci.dto.userDto.UserBaseInfo;
 import edp.davinci.dto.userDto.UserDistinctTicket;
 import edp.davinci.dto.userDto.UserLogin;
 import edp.davinci.dto.userDto.UserRegist;
+import edp.davinci.model.MOAEmployee;
 import edp.davinci.model.User;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,8 @@ public interface UserService extends CheckEntityService {
     User getByUsername(String username);
 
     User userLogin(UserLogin userLogin) throws ServerException;
+
+    User userLogin(MOAEmployee employee) throws ServerException;
 
     List<UserBaseInfo> getUsersByKeyword(String keyword, User user, Long orgId, Boolean includeSelf);
 

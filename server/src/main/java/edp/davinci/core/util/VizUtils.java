@@ -17,7 +17,7 @@
  *
  */
 
-package edp.davinci.core.utils;
+package edp.davinci.core.util;
 
 import edp.core.utils.CollectionUtils;
 import edp.davinci.dao.ViewMapper;

@@ -41,6 +41,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static edp.core.consts.Consts.EMPTY;
@@ -122,7 +124,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     protected void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginRequiredInterceptor())
                 .addPathPatterns(Constants.BASE_API_PATH + "/**")
-                .excludePathPatterns(Constants.BASE_API_PATH + "/login");
+                .excludePathPatterns(Arrays.asList(new String[]{Constants.BASE_API_PATH + "/login",
+                        Constants.BASE_API_PATH + "/moa/login"}));
 
         registry.addInterceptor(platformAuthInterceptor())
                 .addPathPatterns(Constants.AUTH_API_PATH + "/**");
