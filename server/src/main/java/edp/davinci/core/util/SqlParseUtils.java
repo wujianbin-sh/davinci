@@ -84,6 +84,8 @@ public class SqlParseUtils {
             return null;
         }
 
+        sqlStr = SqlParseUtils.filterAnnotate(sqlStr);
+
         sqlStr = replaceSystemVariables(sqlStr, user, isMaintainer);
 
         Pattern p = Pattern.compile(getPlaceholderReg(sqlTempDelimiter));
