@@ -901,18 +901,6 @@ public class SqlUtils {
         return sqlTempDelimiter;
     }
 
-    /**
-     * 过滤sql中的注释
-     *
-     * @param sql
-     * @return
-     */
-    public static String filterAnnotate(String sql) {
-        sql = PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1");
-        sql = sql.replaceAll(NEW_LINE_CHAR, SPACE).replaceAll("(;+\\s*)+", SEMICOLON);
-        return sql;
-    }
-
     public static String formatSqlType(String type) throws ServerException {
         if (!StringUtils.isEmpty(type.trim())) {
             type = type.trim().toUpperCase();

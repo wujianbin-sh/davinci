@@ -84,6 +84,8 @@ public class SqlParseUtils {
             return null;
         }
 
+        sqlStr = SqlParseUtils.filterAnnotate(sqlStr);
+
         sqlStr = replaceSystemVariables(sqlStr, user, isMaintainer);
 
         Pattern p = Pattern.compile(getPlaceholderReg(sqlTempDelimiter));
@@ -528,7 +530,7 @@ public class SqlParseUtils {
      * @return
      */
     public static String filterAnnotate(String sql) {
-        String temp = PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1").replaceAll(NEW_LINE_CHAR, EMPTY).replaceAll("(;" +
+        String temp = PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1").replaceAll(NEW_LINE_CHAR, SPACE).replaceAll("(;" +
                 "+\\s*)+", SEMICOLON);
         return temp;
     }
