@@ -20,7 +20,7 @@
 package edp.davinci.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import edp.davinci.core.common.ResultMap;
 import edp.davinci.core.enums.CheckEntityEnum;
 import edp.davinci.core.service.CheckEntityService;

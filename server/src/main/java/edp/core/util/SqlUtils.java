@@ -16,7 +16,7 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.util.StringUtils;
@@ -138,10 +138,8 @@ public class SqlUtils {
     }
 
     public void execute(String sql) throws ServerException {
-        sql = filterAnnotate(sql);
-        checkSensitiveSql(sql);
         if (isQueryLogEnable) {
-            String md5 = MD5Util.getMD5(sql, true, 16);
+            String md5 = MD5Utils.getMD5(sql, true, 16);
             sqlLogger.info("{} execute for sql:{}", md5, formatSql(sql));
         }
         try {
@@ -170,8 +168,6 @@ public class SqlUtils {
     }
 
     public List<Map<String, Object>> query4List(String sql, int limit) {
-        sql = filterAnnotate(sql);
-        checkSensitiveSql(sql);
         JdbcTemplate jdbcTemplate = jdbcTemplate();
         jdbcTemplate.setMaxRows(limit > resultLimit ? resultLimit : limit > 0 ? limit : resultLimit);
 
@@ -180,7 +176,7 @@ public class SqlUtils {
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
 
         if (isQueryLogEnable) {
-            String md5 = MD5Util.getMD5(sql, true, 16);
+            String md5 = MD5Utils.getMD5(sql, true, 16);
             sqlLogger.info("{} query for {} ms, total count:{} sql:{}", md5, System.currentTimeMillis() - before, list.size(), formatSql(sql));
         }
 
@@ -189,8 +185,6 @@ public class SqlUtils {
 
     public PaginateWithQueryColumns query4Paginate(String sql, int pageNo, int pageSize, int totalCount, int limit, Set<String> excludeColumns) {
         PaginateWithQueryColumns paginateWithQueryColumns = new PaginateWithQueryColumns();
-        sql = filterAnnotate(sql);
-        checkSensitiveSql(sql);
 
         long before = System.currentTimeMillis();
 
@@ -246,7 +240,7 @@ public class SqlUtils {
         }
 
         if (isQueryLogEnable) {
-            String md5 = MD5Util.getMD5(sql + pageNo + pageSize + limit, true, 16);
+            String md5 = MD5Utils.getMD5(sql + pageNo + pageSize + limit, true, 16);
             sqlLogger.info("{} query for {} ms, total count:{}, page size:{}, sql:{}",
                     md5, System.currentTimeMillis() - before,
                     paginateWithQueryColumns.getTotalCount(),

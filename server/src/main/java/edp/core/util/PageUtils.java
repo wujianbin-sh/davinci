@@ -17,7 +17,7 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 public class PageUtils {
     public static final int defaultPageNum = 1;

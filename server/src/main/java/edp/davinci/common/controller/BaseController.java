@@ -19,7 +19,7 @@
 
 package edp.davinci.common.controller;
 
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

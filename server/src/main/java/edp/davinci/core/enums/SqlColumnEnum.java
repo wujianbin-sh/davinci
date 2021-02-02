@@ -21,7 +21,7 @@ package edp.davinci.core.enums;
 
 import com.alibaba.druid.util.StringUtils;
 import edp.core.exception.ServerException;
-import edp.core.utils.DateUtils;
+import edp.core.util.DateUtils;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;

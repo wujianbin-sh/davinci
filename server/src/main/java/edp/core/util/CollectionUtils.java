@@ -17,7 +17,7 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 import java.util.Collection;
 import java.util.List;

@@ -21,9 +21,9 @@ package edp.davinci.service.impl;
 
 import com.google.common.collect.Lists;
 import edp.core.exception.UnAuthorizedException;
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.DateUtils;
-import edp.core.utils.TokenUtils;
+import edp.core.util.CollectionUtils;
+import edp.core.util.DateUtils;
+import edp.core.util.TokenUtils;
 import edp.davinci.core.common.ErrorMsg;
 import edp.davinci.core.enums.DownloadType;
 import edp.davinci.dao.DashboardMapper;

@@ -18,7 +18,7 @@
 
 package edp.davinci.dto.shareDto;
 
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import edp.davinci.service.share.ShareDataPermission;
 import edp.davinci.service.share.ShareMode;
 import lombok.Data;

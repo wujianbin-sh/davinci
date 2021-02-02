@@ -21,7 +21,7 @@ package edp.davinci.runner;
 
 import edp.core.consts.Consts;
 import edp.core.enums.DataTypeEnum;
-import edp.core.utils.CustomDataSourceUtils;
+import edp.core.util.CustomDataSourceUtils;
 import edp.davinci.dto.sourceDto.DatasourceType;
 import lombok.Getter;
 import org.springframework.boot.ApplicationArguments;

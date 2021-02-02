@@ -17,7 +17,7 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 import edp.core.common.quartz.QuartzJobExecutor;
 import edp.core.consts.Consts;

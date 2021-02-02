@@ -26,7 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import edp.core.model.Dict;
 import edp.core.model.RecordInfo;
-import edp.core.utils.SourceUtils;
+import edp.core.util.SourceUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;

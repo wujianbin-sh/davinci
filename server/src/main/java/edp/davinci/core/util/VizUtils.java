@@ -19,7 +19,7 @@
 
 package edp.davinci.core.util;
 
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import edp.davinci.dao.ViewMapper;
 import edp.davinci.dto.viewDto.SimpleView;
 import org.springframework.beans.factory.annotation.Autowired;

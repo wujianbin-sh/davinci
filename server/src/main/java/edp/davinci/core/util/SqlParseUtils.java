@@ -22,8 +22,8 @@ package edp.davinci.core.util;
 import com.alibaba.druid.util.StringUtils;
 import com.sun.tools.javac.util.ListBuffer;
 import edp.core.exception.ServerException;
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.SqlUtils;
+import edp.core.util.CollectionUtils;
+import edp.core.util.SqlUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.SqlOperatorEnum;
 import edp.davinci.core.enums.SqlVariableTypeEnum;
@@ -84,8 +84,6 @@ public class SqlParseUtils {
             return null;
         }
 
-        sqlStr = SqlUtils.filterAnnotate(sqlStr);
-        sqlStr = sqlStr.replaceAll(NEW_LINE_CHAR, SPACE).trim();
         sqlStr = replaceSystemVariables(sqlStr, user, isMaintainer);
 
         Pattern p = Pattern.compile(getPlaceholderReg(sqlTempDelimiter));
@@ -252,9 +250,16 @@ public class SqlParseUtils {
         return String.format(REG_AUTHVAR, delimiter, delimiter, delimiter, delimiter);
     }
 
+    /**
+     * 从view中获取查询和执行的sql, 统一入口
+     *
+     * @param sqlStr
+     * @param isQuery
+     * @return
+     */
     public List<String> getSqls(String sqlStr, boolean isQuery) {
 
-        sqlStr = sqlStr.trim();
+        sqlStr = SqlParseUtils.filterAnnotate(sqlStr).trim();
 
         if (StringUtils.isEmpty(sqlStr)) {
             return null;
@@ -273,13 +278,15 @@ public class SqlParseUtils {
         String[] sqls = sqlStr.split(SEMICOLON);
         if (sqls.length > 0) {
             for (String sql : sqls) {
+                sql = sql.trim();
                 boolean select = isQuery(sql);
                 if (isQuery) {
-                    if (select || isQuery(PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1"))) {
+                    if (select) {
                         list.add(sql);
                     }
                 } else {
-                    if (!select && !isQuery(PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1"))) {
+                    if (!select) {
+                        SqlUtils.checkSensitiveSql(sql);
                         list.add(sql);
                     }
                 }
@@ -290,7 +297,7 @@ public class SqlParseUtils {
     }
 
     private boolean isQuery(String sql) {
-        return sql.trim().toLowerCase().startsWith(SELECT) || sql.toLowerCase().startsWith(WITH);
+        return sql.toLowerCase().startsWith(SELECT) || sql.toLowerCase().startsWith(WITH);
     }
 
     public static String rebuildSqlWithFragment(String sql) {
@@ -512,5 +519,17 @@ public class SqlParseUtils {
         }
 
         return sql;
+    }
+
+    /**
+     * 过滤sql中的注释
+     *
+     * @param sql
+     * @return
+     */
+    public static String filterAnnotate(String sql) {
+        String temp = PATTERN_SQL_ANNOTATE.matcher(sql).replaceAll("$1").replaceAll(NEW_LINE_CHAR, EMPTY).replaceAll("(;" +
+                "+\\s*)+", SEMICOLON);
+        return temp;
     }
 }

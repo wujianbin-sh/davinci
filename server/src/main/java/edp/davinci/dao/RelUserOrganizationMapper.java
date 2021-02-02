@@ -42,7 +42,6 @@ public interface RelUserOrganizationMapper {
     @Delete("delete from rel_user_organization where org_id = #{orgId}")
     int deleteByOrgId(@Param("orgId") Long orgId);
 
-
     @Select({
             "SELECT ruo.id, u.id AS 'user.id', ",
             "    IF(u.`name` is NULL,u.username,u.`name`) AS 'user.username', ",

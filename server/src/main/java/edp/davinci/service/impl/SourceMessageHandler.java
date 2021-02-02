@@ -23,7 +23,7 @@ import com.alibaba.fastjson.JSON;
 import edp.core.common.jdbc.JdbcDataSource;
 import edp.core.model.JdbcSourceInfo;
 import edp.core.model.JdbcSourceInfo.JdbcSourceInfoBuilder;
-import edp.core.utils.SourceUtils;
+import edp.core.util.SourceUtils;
 import edp.davinci.core.service.RedisMessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

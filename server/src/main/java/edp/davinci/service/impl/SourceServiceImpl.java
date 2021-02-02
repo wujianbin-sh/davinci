@@ -32,7 +32,7 @@ import edp.core.model.JdbcSourceInfo;
 import edp.core.model.JdbcSourceInfo.JdbcSourceInfoBuilder;
 import edp.core.model.QueryColumn;
 import edp.core.model.TableInfo;
-import edp.core.utils.*;
+import edp.core.util.*;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.*;
 import edp.davinci.core.model.DataUploadEntity;

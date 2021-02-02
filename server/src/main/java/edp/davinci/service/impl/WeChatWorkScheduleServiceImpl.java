@@ -3,9 +3,9 @@ package edp.davinci.service.impl;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import edp.core.common.quartz.ScheduleService;
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.FileUtils;
-import edp.core.utils.MD5Util;
+import edp.core.util.CollectionUtils;
+import edp.core.util.FileUtils;
+import edp.core.util.MD5Utils;
 import edp.davinci.core.enums.CronJobMediaType;
 import edp.davinci.dao.CronJobMapper;
 import edp.davinci.dao.UserMapper;
@@ -144,7 +144,7 @@ public class WeChatWorkScheduleServiceImpl extends BaseScheduleService implement
             md.update(bytesOut.toByteArray());
 
             byte b[] = md.digest();
-            resMap.put("md5", MD5Util.byteToString(b));
+            resMap.put("md5", MD5Utils.byteToString(b));
             return resMap;
         } catch (Exception e) {
             log.error(e.toString(), e);
