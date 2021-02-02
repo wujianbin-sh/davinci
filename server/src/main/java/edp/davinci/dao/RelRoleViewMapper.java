@@ -55,7 +55,6 @@ public interface RelRoleViewMapper {
     })
     int deleteByViewId(Long viewId);
 
-
     @Delete({
             "delete from rel_role_view where  role_id = #{roleId}"
     })

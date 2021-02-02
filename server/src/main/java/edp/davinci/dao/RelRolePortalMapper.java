@@ -33,7 +33,6 @@ public interface RelRolePortalMapper {
 
     int insert(RelRolePortal record);
 
-
     int insertBatch(@Param("list") List<RelRolePortal> relRolePortals);
 
     @Select({

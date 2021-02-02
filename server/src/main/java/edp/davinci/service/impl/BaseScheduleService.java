@@ -1,8 +1,8 @@
 package edp.davinci.service.impl;
 
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.DateUtils;
-import edp.core.utils.ServerUtils;
+import edp.core.util.CollectionUtils;
+import edp.core.util.DateUtils;
+import edp.core.util.ServerUtils;
 import edp.davinci.core.enums.LogNameEnum;
 import edp.davinci.dao.DashboardMapper;
 import edp.davinci.dao.DisplaySlideMapper;
@@ -13,7 +13,7 @@ import edp.davinci.model.Dashboard;
 import edp.davinci.model.DisplaySlide;
 import edp.davinci.service.ShareService;
 import edp.davinci.service.screenshot.ImageContent;
-import edp.davinci.service.screenshot.ScreenshotUtil;
+import edp.davinci.service.screenshot.ScreenshotUtils;
 import edp.davinci.service.share.ShareDataPermission;
 import edp.davinci.service.share.ShareFactor;
 import edp.davinci.service.share.ShareMode;
@@ -37,7 +37,7 @@ public class BaseScheduleService {
     protected DashboardMapper dashboardMapper;
 
     @Autowired
-    protected ScreenshotUtil screenshotUtil;
+    protected ScreenshotUtils screenshotUtils;
 
     @Autowired
     protected DisplaySlideMapper displaySlideMapper;
@@ -118,7 +118,7 @@ public class BaseScheduleService {
         }
 
         if (!CollectionUtils.isEmpty(imageContents)) {
-            screenshotUtil.screenshot(jobId, imageContents, cronJobConfig.getImageWidth());
+            screenshotUtils.screenshot(jobId, imageContents, cronJobConfig.getImageWidth());
         }
 
         scheduleLogger.info("CronJob({}) fetched images contents, count:{}", jobId, imageContents.size());

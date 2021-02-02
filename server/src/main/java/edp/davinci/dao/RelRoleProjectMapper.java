@@ -47,7 +47,6 @@ public interface RelRoleProjectMapper {
     })
     int deleteByProjectId(@Param("projectId") Long projectId);
 
-
     @Select({
             "select * from rel_role_project where id = #{id,jdbcType=BIGINT}"
     })
@@ -85,7 +84,6 @@ public interface RelRoleProjectMapper {
             "delete from rel_role_project where role_id = #{roleId}"
     })
     int deleteByRoleId(Long roleId);
-
 
     @Select({
             "select r.id,",

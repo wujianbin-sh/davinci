@@ -20,7 +20,7 @@
 package edp.core.common.jdbc;
 
 import com.alibaba.druid.util.StringUtils;
-import edp.core.utils.MD5Util;
+import edp.core.util.MD5Utils;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -66,7 +66,7 @@ public class ExtendedJdbcClassLoader extends URLClassLoader {
 
 
     public static synchronized ExtendedJdbcClassLoader getExtJdbcClassLoader(String path) {
-        String key = MD5Util.getMD5(path, false, 32);
+        String key = MD5Utils.getMD5(path, false, 32);
         if (classLoaderMap.containsKey(key) && classLoaderMap.get(key) != null) {
             return classLoaderMap.get(key);
         }

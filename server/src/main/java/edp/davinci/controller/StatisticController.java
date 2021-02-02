@@ -17,7 +17,7 @@
  */
 package edp.davinci.controller;
 
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import edp.davinci.common.model.ValidList;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ResultMap;

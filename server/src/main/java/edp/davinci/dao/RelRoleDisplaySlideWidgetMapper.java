@@ -86,6 +86,5 @@ public interface RelRoleDisplaySlideWidgetMapper {
         ") "})
     int deleteByRoleAndProject(Long roleId, Long projectId);
 
-
     int copyRoleSlideWidgetRelation(@Param("relSlideCopies") List<RelModelCopy> memCopies, @Param("userId") Long userId);
 }

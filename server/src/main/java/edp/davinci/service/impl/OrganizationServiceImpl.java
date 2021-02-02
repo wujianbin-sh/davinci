@@ -25,7 +25,7 @@ import edp.core.exception.NotFoundException;
 import edp.core.exception.ServerException;
 import edp.core.exception.UnAuthorizedException;
 import edp.core.model.MailContent;
-import edp.core.utils.*;
+import edp.core.util.*;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.CheckEntityEnum;
 import edp.davinci.core.enums.LogNameEnum;

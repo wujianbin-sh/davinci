@@ -3,7 +3,7 @@ package edp.davinci.service.impl;
 import com.alibaba.fastjson.JSON;
 import edp.core.model.QueryColumn;
 import edp.core.model.TableInfo;
-import edp.core.utils.SqlUtils;
+import edp.core.util.SqlUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.SourceTypeEnum;
 import edp.davinci.core.util.SourcePasswordEncryptUtils;

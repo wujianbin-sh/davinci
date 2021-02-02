@@ -21,8 +21,8 @@ package edp.davinci.service.screenshot;
 
 import com.alibaba.druid.util.StringUtils;
 import edp.core.consts.Consts;
-import edp.core.utils.DateUtils;
-import edp.core.utils.FileUtils;
+import edp.core.util.DateUtils;
+import edp.core.util.FileUtils;
 import edp.davinci.core.enums.LogNameEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -59,7 +59,7 @@ import static edp.davinci.service.screenshot.BrowserEnum.valueOf;
 
 @Slf4j
 @Component
-public class ScreenshotUtil {
+public class ScreenshotUtils {
 	
 	private static final Logger scheduleLogger = LoggerFactory.getLogger(LogNameEnum.BUSINESS_SCHEDULE.getName());
 

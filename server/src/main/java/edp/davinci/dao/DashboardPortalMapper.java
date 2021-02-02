@@ -36,10 +36,8 @@ public interface DashboardPortalMapper {
     @Delete({"delete from dashboard_portal where id = #{id}"})
     int deleteById(@Param("id") Long id);
 
-
     @Select({"select * from dashboard_portal where id = #{id}"})
     DashboardPortal getById(@Param("id") Long id);
-
 
     @Update({
             "update dashboard_portal",
@@ -59,7 +57,6 @@ public interface DashboardPortalMapper {
 
     @Select({"select * from dashboard_portal where project_id = #{projectId}"})
     List<DashboardPortal> getByProject(@Param("projectId") Long projectId);
-
 
     @Select({
             "SELECT ",

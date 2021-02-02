@@ -22,8 +22,8 @@ package edp.davinci.core.util;
 import com.alibaba.druid.util.StringUtils;
 import com.sun.tools.javac.util.ListBuffer;
 import edp.core.exception.ServerException;
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.SqlUtils;
+import edp.core.util.CollectionUtils;
+import edp.core.util.SqlUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.SqlOperatorEnum;
 import edp.davinci.core.enums.SqlVariableTypeEnum;
@@ -259,7 +259,7 @@ public class SqlParseUtils {
      */
     public List<String> getSqls(String sqlStr, boolean isQuery) {
 
-        sqlStr = sqlStr.trim();
+        sqlStr = SqlParseUtils.filterAnnotate(sqlStr).trim();
 
         if (StringUtils.isEmpty(sqlStr)) {
             return null;
@@ -278,6 +278,7 @@ public class SqlParseUtils {
         String[] sqls = sqlStr.split(SEMICOLON);
         if (sqls.length > 0) {
             for (String sql : sqls) {
+                sql = sql.trim();
                 boolean select = isQuery(sql);
                 if (isQuery) {
                     if (select) {
@@ -296,12 +297,7 @@ public class SqlParseUtils {
     }
 
     private boolean isQuery(String sql) {
-        if (sql.toLowerCase().startsWith(SELECT) || sql.toLowerCase().startsWith(WITH)) {
-            return true;
-        }
-
-        String temp = filterAnnotate(sql);
-        return temp.toLowerCase().startsWith(SELECT) || temp.toLowerCase().startsWith(WITH);
+        return sql.toLowerCase().startsWith(SELECT) || sql.toLowerCase().startsWith(WITH);
     }
 
     public static String rebuildSqlWithFragment(String sql) {

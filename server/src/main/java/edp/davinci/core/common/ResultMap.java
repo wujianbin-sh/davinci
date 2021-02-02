@@ -20,7 +20,7 @@
 package edp.davinci.core.common;
 
 import edp.core.enums.HttpCodeEnum;
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

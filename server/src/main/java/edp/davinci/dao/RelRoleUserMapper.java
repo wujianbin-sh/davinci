@@ -40,12 +40,10 @@ public interface RelRoleUserMapper {
     })
     int deleteById(Long id);
 
-
     @Delete({
             "delete from rel_role_user where role_id = #{roleId,jdbcType=BIGINT}"
     })
     int deleteByRoleId(Long roleId);
-
 
     @Select({
             "select",
@@ -55,12 +53,9 @@ public interface RelRoleUserMapper {
     })
     RelRoleUser getById(Long id);
 
-
     List<RelRoleUser> getByIds(List<Long> ids);
 
-
     Set<RelRoleUser> selectByUserAndRoles(@Param("userId") Long userId, @Param("roleIds") Set<Long> roleIds);
-
 
     @Select({
             "SELECT rru.id, u.id as 'user.id', IFNULL(u.`name`, u.username) as 'user.username', u.avatar",

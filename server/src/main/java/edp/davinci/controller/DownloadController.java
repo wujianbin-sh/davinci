@@ -22,7 +22,7 @@ package edp.davinci.controller;
 import edp.core.annotation.AuthIgnore;
 import edp.core.annotation.AuthShare;
 import edp.core.annotation.CurrentUser;
-import edp.core.utils.FileUtils;
+import edp.core.util.FileUtils;
 import edp.davinci.common.controller.BaseController;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ResultMap;

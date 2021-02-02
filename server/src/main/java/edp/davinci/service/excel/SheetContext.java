@@ -20,7 +20,7 @@
 package edp.davinci.service.excel;
 
 import edp.core.model.QueryColumn;
-import edp.core.utils.SqlUtils;
+import edp.core.util.SqlUtils;
 import edp.davinci.core.model.ExcelHeader;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Sheet;

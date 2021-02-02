@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import edp.davinci.core.enums.VizEnum;
 import edp.davinci.core.model.RoleDisableViz;
 import edp.davinci.dao.DashboardMapper;

@@ -147,7 +147,8 @@ public class Consts {
     /**
      * 敏感sql操作
      */
-    public static final String REG_SENSITIVE_SQL = "drop\\s|alter\\s|grant\\s|insert\\s|replace\\s|delete\\s|truncate\\s|update\\s|remove\\s";
+    public static final String REG_SENSITIVE_SQL = "drop\\s|drop`|alter\\s|alter`|grant\\s|grant`|insert\\s|insert`" +
+            "|replace\\s|replace`|delete\\s|delete`|truncate\\s|truncate`|update\\s|update`|remove\\s|remove`";
     public static final Pattern PATTERN_SENSITIVE_SQL = Pattern.compile(REG_SENSITIVE_SQL);
 
     private static final String REG_WITH_SQL_FRAGMENT = "((?i)WITH[\\s\\S]+(?i)AS?\\s*\\([\\s\\S]+\\))\\s*(?i)SELECT";

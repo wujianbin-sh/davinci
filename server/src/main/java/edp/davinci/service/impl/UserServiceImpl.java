@@ -28,7 +28,7 @@ import edp.core.enums.MailContentTypeEnum;
 import edp.core.exception.NotFoundException;
 import edp.core.exception.ServerException;
 import edp.core.model.MailContent;
-import edp.core.utils.*;
+import edp.core.util.*;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ErrorMsg;
 import edp.davinci.core.common.ResultMap;
@@ -631,7 +631,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
                 .build();
 
         mailUtils.sendMail(mailContent, null);
-        return StringZipUtil.compress(checkToken);
+        return StringZipUtils.compress(checkToken);
     }
 
     @Override
@@ -674,7 +674,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
             throw new ServerException("Password cannot be Empty");
         }
 
-        String decompress = StringZipUtil.decompress(token);
+        String decompress = StringZipUtils.decompress(token);
         user.setPassword(ticket.getCheckCode());
         if (!tokenUtils.validateToken(decompress, user)) {
             throw new ServerException("Invalid check code, check code is wrong or has expired");

@@ -22,7 +22,7 @@ package edp.davinci.service.excel;
 import com.alibaba.druid.util.StringUtils;
 import edp.core.enums.SqlTypeEnum;
 import edp.core.model.QueryColumn;
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import edp.davinci.core.enums.NumericUnitEnum;
 import edp.davinci.core.model.ExcelHeader;
 import edp.davinci.core.model.FieldCurrency;

@@ -17,7 +17,7 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 import com.alibaba.druid.util.StringUtils;
 import edp.core.consts.Consts;

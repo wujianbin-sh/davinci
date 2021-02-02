@@ -43,7 +43,6 @@ public interface RoleMapper {
     })
     Role getById(Long id);
 
-
     @Select({
             "SELECT a.* " +
                     "FROM role a " +
@@ -67,19 +66,15 @@ public interface RoleMapper {
     })
     int update(Role record);
 
-
     @Select({
             "select id, `name`, description  from `role` where org_id = #{orgId}"
     })
     List<RoleBaseInfo> getBaseInfoByOrgId(Long orgId);
 
-
     List<Role> selectByIdsAndOrgId(@Param("orgId") Long orgId, @Param("roleIds") List<Long> roleIds);
-
 
     @Delete({"delete from `role` where org_id = #{orgId}"})
     int deleteByOrg(Long orgId);
-
 
     @Select({
             "SELECT DISTINCT r.id FROM role r INNER JOIN rel_role_project rrp on rrp.role_id = r.id",
@@ -88,7 +83,6 @@ public interface RoleMapper {
             "WHERE p.id = #{portalId} and rru.user_id = #{userId}"
     })
     List<Long> getRolesByUserAndPortal(@Param("userId") Long userId, @Param("portalId") Long portalId);
-
 
     @Select({
             "SELECT DISTINCT r.id FROM role r INNER JOIN rel_role_project rrp on rrp.role_id = r.id",

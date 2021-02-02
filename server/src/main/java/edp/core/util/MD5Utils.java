@@ -17,13 +17,13 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 
-public class MD5Util {
+public class MD5Utils {
 
 
     public static final int BIT16 = 16;
