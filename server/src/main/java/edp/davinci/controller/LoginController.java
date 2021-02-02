@@ -20,7 +20,7 @@
 package edp.davinci.controller;
 
 import edp.core.annotation.AuthIgnore;
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ResultMap;
 import edp.davinci.dto.userDto.UserLogin;

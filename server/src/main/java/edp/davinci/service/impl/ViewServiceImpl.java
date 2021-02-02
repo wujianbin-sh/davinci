@@ -28,7 +28,7 @@ import edp.core.exception.ServerException;
 import edp.core.exception.UnAuthorizedException;
 import edp.core.model.Paginate;
 import edp.core.model.PaginateWithQueryColumns;
-import edp.core.utils.*;
+import edp.core.util.*;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.enums.*;
 import edp.davinci.core.model.SqlEntity;
@@ -620,7 +620,7 @@ ViewServiceImpl extends BaseEntityService implements ViewService {
                     saltBuilder.append(MINUS);
                     saltBuilder.append(executeParam.getPageSize());
                     excludeColumns.forEach(saltBuilder::append);
-                    cacheKey = MD5Util.getMD5(saltBuilder.toString() + querySqlList.get(querySqlList.size() - 1), true,
+                    cacheKey = MD5Utils.getMD5(saltBuilder.toString() + querySqlList.get(querySqlList.size() - 1), true,
                             32);
                     if (!executeParam.getFlush()) {
 
@@ -710,7 +710,7 @@ ViewServiceImpl extends BaseEntityService implements ViewService {
                     querySqlList.set(querySqlList.size() - 1, sql);
 
                     if (null != param.getCache() && param.getCache() && param.getExpired().longValue() > 0L) {
-                        cacheKey = MD5Util.getMD5(sql, true, 32);
+                        cacheKey = MD5Utils.getMD5(sql, true, 32);
 
                         try {
                             Object object = redisUtils.get(cacheKey);

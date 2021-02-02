@@ -20,8 +20,8 @@
 package edp.davinci.dto.viewDto;
 
 import com.alibaba.druid.util.StringUtils;
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.SqlUtils;
+import edp.core.util.CollectionUtils;
+import edp.core.util.SqlUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -18,7 +18,7 @@
 
 package edp.davinci.dto.dashboardDto;
 
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import lombok.Data;
 
 import java.util.ArrayList;

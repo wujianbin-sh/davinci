@@ -19,7 +19,7 @@
 
 package edp.davinci.dto.cronJobDto;
 
-import edp.core.utils.DateUtils;
+import edp.core.util.DateUtils;
 import lombok.Data;
 
 import javax.validation.constraints.Min;

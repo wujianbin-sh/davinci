@@ -22,8 +22,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import edp.core.model.RecordInfo;
-import edp.core.utils.AESUtils;
-import edp.core.utils.StringZipUtil;
+import edp.core.util.AESUtils;
+import edp.core.util.StringZipUtils;
 import edp.davinci.dto.projectDto.ProjectDetail;
 import edp.davinci.dto.shareDto.ShareEntity;
 import edp.davinci.dto.shareDto.ShareView;
@@ -154,7 +154,7 @@ public class ShareFactor {
     public static ShareFactor parseShareFactor(String token, String secret) throws IllegalArgumentException {
         ShareFactor factor;
         try {
-            String decompress = StringZipUtil.decompress(token);
+            String decompress = StringZipUtils.decompress(token);
             String decrypt = AESUtils.decrypt(decompress, secret);
             factor = JSONObject.parseObject(decrypt, ShareFactor.class);
             factor.format();
@@ -171,7 +171,7 @@ public class ShareFactor {
         }
         format();
         String jsonString = JSONObject.toJSONString(this, serializeFilter, serializerFeatures);
-        return new ShareResult(StringZipUtil.compress(AESUtils.encrypt(jsonString, secret)), this.password);
+        return new ShareResult(StringZipUtils.compress(AESUtils.encrypt(jsonString, secret)), this.password);
     }
 
     public void freshWidgetDataToken(SimpleShareWidget simpleShareWidget, String secret) {

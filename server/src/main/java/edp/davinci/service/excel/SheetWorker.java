@@ -23,9 +23,9 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Maps;
 import edp.core.enums.DataTypeEnum;
 import edp.core.model.QueryColumn;
-import edp.core.utils.CollectionUtils;
-import edp.core.utils.MD5Util;
-import edp.core.utils.SqlUtils;
+import edp.core.util.CollectionUtils;
+import edp.core.util.MD5Utils;
+import edp.core.util.SqlUtils;
 import edp.davinci.core.enums.ActionEnum;
 import edp.davinci.core.util.SqlParseUtils;
 import edp.davinci.dto.cronJobDto.MsgMailExcel;
@@ -85,7 +85,7 @@ public class SheetWorker<T> extends AbstractSheetWriter implements Callable {
 
             String sql = context.getQuerySql().get(context.getQuerySql().size() - 1);
             sql = SqlParseUtils.rebuildSqlWithFragment(sql);
-            md5 = MD5Util.getMD5(sql, true, 16);
+            md5 = MD5Utils.getMD5(sql, true, 16);
             Set<String> queryFromsAndJoins = SqlUtils.getQueryFromsAndJoins(sql);
             if (log) {
                 logger.info("Task({}) sheet worker(name:{}, sheetNo:{}, sheetName:{}) query start sql:{}, md5:{}",
@@ -152,20 +152,13 @@ public class SheetWorker<T> extends AbstractSheetWriter implements Callable {
     }
 
     private void propertiesSet(JdbcTemplate template) {
-        if (!CollectionUtils.isEmpty(context.getExecuteSql())) {
-            context.getExecuteSql().stream().filter(x -> x != null).forEach(x -> {
-                String sql = SqlUtils.filterAnnotate(x);
-                SqlUtils.checkSensitiveSql(sql);
-                template.execute(sql);
-            });
+        if (CollectionUtils.isEmpty(context.getExecuteSql())) {
+            return;
         }
-        if (!CollectionUtils.isEmpty(context.getQuerySql())) {
-            for (int i = 0; i < context.getQuerySql().size() - 1; i++) {
-                String sql = SqlUtils.filterAnnotate(context.getQuerySql().get(i));
-                SqlUtils.checkSensitiveSql(sql);
-                template.execute(sql);
-            }
-        }
+
+        context.getExecuteSql().stream().filter(sql -> sql != null).forEach(sql -> {
+            template.execute(sql);
+        });
     }
 
     private void buildQueryColumn(JdbcTemplate template) {

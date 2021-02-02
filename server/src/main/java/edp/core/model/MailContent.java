@@ -23,7 +23,7 @@ import com.alibaba.druid.util.StringUtils;
 import edp.core.consts.Consts;
 import edp.core.enums.MailContentTypeEnum;
 import edp.core.exception.ServerException;
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

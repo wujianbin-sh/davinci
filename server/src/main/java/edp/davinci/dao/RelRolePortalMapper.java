@@ -24,13 +24,14 @@ import edp.davinci.model.RelRolePortal;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public interface RelRolePortalMapper {
 
     int insert(RelRolePortal record);
-
 
     int insertBatch(@Param("list") List<RelRolePortal> relRolePortals);
 

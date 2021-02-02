@@ -20,7 +20,7 @@
 package edp.davinci.model;
 
 import edp.core.model.ScheduleJob;
-import edp.core.utils.DateUtils;
+import edp.core.util.DateUtils;
 import edp.davinci.core.enums.CronJobStatusEnum;
 import lombok.Data;
 

@@ -24,7 +24,7 @@ import edp.core.exception.ForbiddenException;
 import edp.core.exception.NotFoundException;
 import edp.core.exception.ServerException;
 import edp.core.exception.UnAuthorizedException;
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import edp.davinci.core.common.ErrorMsg;
 import edp.davinci.core.common.ResultMap;
 import edp.davinci.dao.*;

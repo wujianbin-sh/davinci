@@ -1,7 +1,7 @@
 package edp.davinci.core.util;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-import edp.core.utils.FileUtils;
+import edp.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sun.misc.BASE64Decoder;

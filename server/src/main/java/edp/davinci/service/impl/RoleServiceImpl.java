@@ -22,7 +22,7 @@ package edp.davinci.service.impl;
 import edp.core.exception.NotFoundException;
 import edp.core.exception.ServerException;
 import edp.core.exception.UnAuthorizedException;
-import edp.core.utils.CollectionUtils;
+import edp.core.util.CollectionUtils;
 import edp.davinci.core.enums.LogNameEnum;
 import edp.davinci.core.enums.UserOrgRoleEnum;
 import edp.davinci.core.enums.UserPermissionEnum;

@@ -24,7 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import edp.core.annotation.AuthIgnore;
 import edp.core.annotation.AuthShare;
 import edp.core.enums.HttpCodeEnum;
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ErrorMsg;
 import edp.davinci.core.common.ResultMap;

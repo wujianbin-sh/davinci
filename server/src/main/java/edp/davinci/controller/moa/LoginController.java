@@ -20,7 +20,7 @@
 package edp.davinci.controller.moa;
 
 import edp.core.exception.NotFoundException;
-import edp.core.utils.TokenUtils;
+import edp.core.util.TokenUtils;
 import edp.davinci.core.common.Constants;
 import edp.davinci.core.common.ResultMap;
 import edp.davinci.core.util.MOAUtils;

@@ -24,10 +24,12 @@ import edp.davinci.model.RelRoleUser;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
 
+@Component
 public interface RelRoleUserMapper {
     int insert(RelRoleUser relRoleUser);
 
@@ -38,12 +40,10 @@ public interface RelRoleUserMapper {
     })
     int deleteById(Long id);
 
-
     @Delete({
             "delete from rel_role_user where role_id = #{roleId,jdbcType=BIGINT}"
     })
     int deleteByRoleId(Long roleId);
-
 
     @Select({
             "select",
@@ -53,12 +53,9 @@ public interface RelRoleUserMapper {
     })
     RelRoleUser getById(Long id);
 
-
     List<RelRoleUser> getByIds(List<Long> ids);
 
-
     Set<RelRoleUser> selectByUserAndRoles(@Param("userId") Long userId, @Param("roleIds") Set<Long> roleIds);
-
 
     @Select({
             "SELECT rru.id, u.id as 'user.id', IFNULL(u.`name`, u.username) as 'user.username', u.avatar",

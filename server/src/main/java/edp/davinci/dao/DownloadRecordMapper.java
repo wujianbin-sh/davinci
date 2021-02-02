@@ -23,9 +23,11 @@ import edp.davinci.model.DownloadRecord;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public interface DownloadRecordMapper {
 
     int insert(DownloadRecord downloadRecord);
@@ -40,12 +42,10 @@ public interface DownloadRecordMapper {
     })
     DownloadRecord getById(Long id);
 
-
     @Delete({
             "delete from download_record where create_time < DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m%d')"
     })
     int deleteBeforeAMonthRecord();
-
 
     @Select({
             "select * from download_record where user_id = #{userId} and create_time > DATE_FORMAT((NOW() - INTERVAL 7 DAY),'%Y%m%d')  order by create_time desc"

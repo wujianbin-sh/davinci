@@ -16,7 +16,7 @@
  *  >>
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 @Slf4j
-public class StringZipUtil {
+public class StringZipUtils {
 
     private static final int BYTES_LENGTH = 256;
 

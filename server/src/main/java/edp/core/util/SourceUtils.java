@@ -17,7 +17,7 @@
  *
  */
 
-package edp.core.utils;
+package edp.core.util;
 
 import com.alibaba.druid.util.StringUtils;
 import edp.core.common.jdbc.ExtendedJdbcClassLoader;
@@ -272,6 +272,6 @@ public class SourceUtils {
             sb.append("null");
         }
 
-        return MD5Util.getMD5(sb.toString(), true, 64);
+        return MD5Utils.getMD5(sb.toString(), true, 64);
     }
 }
