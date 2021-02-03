@@ -38,6 +38,7 @@ import edp.davinci.server.dto.user.*;
 import edp.davinci.server.enums.*;
 import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.model.LdapPerson;
+import edp.davinci.server.model.MOAEmployee;
 import edp.davinci.server.model.MailContent;
 import edp.davinci.server.model.TokenEntity;
 import edp.davinci.server.service.LdapService;
@@ -249,7 +250,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
                 return user;
             }
 
-            if (ldapLogin(username, password)) {
+            if (ldapCheck(username, password)) {
                 return user;
             }
 
@@ -264,12 +265,43 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
         return user;
     }
 
-    private boolean ldapLogin(String username, String password) {
+    @Override
+    public User userLogin(MOAEmployee employee) throws ServerException {
+
+        // email
+        String username = employee.getUserName();
+
+        User user = getByUsername(username);
+        if (user != null) {
+            return user;
+        }
+
+        LdapPerson ldapPerson = ldapSearch(username);
+
+        if (ldapPerson != null) {
+            return ldapService.registPerson(ldapPerson);
+        }
+
+        return null;
+    }
+
+    private LdapPerson ldapSearch(String username) {
+        if (!ldapService.existLdapServer()) {
+            return null;
+        }
+
+        LdapPerson ldapPerson = ldapService.searchUser(username);
+
+        return ldapPerson != null ? ldapPerson : null;
+    }
+
+
+    private boolean ldapCheck(String username, String password) {
         if (!ldapService.existLdapServer()) {
             return false;
         }
 
-        LdapPerson ldapPerson = ldapService.findByUsername(username, password);
+        LdapPerson ldapPerson = ldapService.checkUser(username, password);
         if (null == ldapPerson) {
             return false;
         }
@@ -283,9 +315,9 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
             return null;
         }
 
-        LdapPerson ldapPerson = ldapService.findByUsername(username, password);
+        LdapPerson ldapPerson = ldapService.checkUser(username, password);
         if (null == ldapPerson) {
-            throw new ServerException("username or password is wrong");
+            throw new ServerException("Username or password is wrong");
         }
 
         String email = ldapPerson.getEmail();

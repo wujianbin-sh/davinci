@@ -21,9 +21,11 @@ package edp.davinci.server.service;
 
 import edp.davinci.server.controller.ResultMap;
 import edp.davinci.core.dao.entity.User;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Component
 public interface StarService {
 
     ResultMap starAndUnstar(String target, Long targetId, User user, HttpServletRequest request);

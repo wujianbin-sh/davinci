@@ -26,10 +26,12 @@ import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.exception.UnAuthorizedException;
 import edp.davinci.server.model.Paging;
 import edp.davinci.server.model.PagingWithQueryColumns;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public interface ViewService extends CheckEntityService {
     
     ViewWithSourceBaseInfo getView(Long id, User user) throws NotFoundException, UnAuthorizedException, ServerException;

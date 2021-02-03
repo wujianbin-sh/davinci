@@ -53,41 +53,41 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 public class JdbcDataSource {
 
-    @Bean(name = "wallConfig")
-	WallConfig wallConfig() {
-		WallConfig config = new WallConfig();
-        config.setDeleteAllow(false);
-        config.setUpdateAllow(false);
-        config.setInsertAllow(false);
-        config.setReplaceAllow(false);
-        config.setMergeAllow(false);
-        config.setTruncateAllow(false);
-        config.setCreateTableAllow(false);
-        config.setAlterTableAllow(false);
-        config.setDropTableAllow(false);
-        config.setCommentAllow(true);
-        config.setUseAllow(false);
-        config.setDescribeAllow(false);
-        config.setShowAllow(false);
-        config.setSelectWhereAlwayTrueCheck(false);
-        config.setSelectHavingAlwayTrueCheck(false);
-        config.setSelectUnionCheck(false);
-        config.setConditionDoubleConstAllow(true);
-        config.setConditionAndAlwayTrueAllow(true);
-        config.setConditionAndAlwayFalseAllow(true);
-		return config;
-	}
-
-    @Bean(name = "wallFilter")
-	@DependsOn("wallConfig")
-	WallFilter wallFilter(WallConfig wallConfig) {
-		WallFilter wfilter = new WallFilter();
-		wfilter.setConfig(wallConfig);
-		return wfilter;
-	}
-
-    @Autowired
-	WallFilter wallFilter;
+//    @Bean(name = "wallConfig")
+//	WallConfig wallConfig() {
+//		WallConfig config = new WallConfig();
+//        config.setDeleteAllow(false);
+//        config.setUpdateAllow(false);
+//        config.setInsertAllow(false);
+//        config.setReplaceAllow(false);
+//        config.setMergeAllow(false);
+//        config.setTruncateAllow(false);
+//        config.setCreateTableAllow(false);
+//        config.setAlterTableAllow(false);
+//        config.setDropTableAllow(false);
+//        config.setCommentAllow(true);
+//        config.setUseAllow(false);
+//        config.setDescribeAllow(false);
+//        config.setShowAllow(false);
+//        config.setSelectWhereAlwayTrueCheck(false);
+//        config.setSelectHavingAlwayTrueCheck(false);
+//        config.setSelectUnionCheck(false);
+//        config.setConditionDoubleConstAllow(true);
+//        config.setConditionAndAlwayTrueAllow(true);
+//        config.setConditionAndAlwayFalseAllow(true);
+//		return config;
+//	}
+//
+//    @Bean(name = "wallFilter")
+//	@DependsOn("wallConfig")
+//	WallFilter wallFilter(WallConfig wallConfig) {
+//		WallFilter wfilter = new WallFilter();
+//		wfilter.setConfig(wallConfig);
+//		return wfilter;
+//	}
+//
+//    @Autowired
+//	WallFilter wallFilter;
 
     @Value("${source.max-active:8}")
     @Getter
@@ -319,17 +319,17 @@ public class JdbcDataSource {
             }
 
             // druid wall filter not support some database so set type mysql
-            if (DatabaseTypeEnum.MOONBOX == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.MONGODB == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.ELASTICSEARCH == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.CASSANDRA == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.VERTICA == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.KYLIN == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.HANA == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.IMPALA == DatabaseTypeEnum.urlOf(url) ||
-                    DatabaseTypeEnum.TDENGINE == DatabaseTypeEnum.urlOf(url)) {
-                wallFilter.setDbType(DatabaseTypeEnum.MYSQL.getFeature());
-            }
+//            if (DatabaseTypeEnum.MOONBOX == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.MONGODB == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.ELASTICSEARCH == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.CASSANDRA == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.VERTICA == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.KYLIN == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.HANA == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.IMPALA == DatabaseTypeEnum.urlOf(url) ||
+//                    DatabaseTypeEnum.TDENGINE == DatabaseTypeEnum.urlOf(url)) {
+//                wallFilter.setDbType(DatabaseTypeEnum.MYSQL.getFeature());
+//            }
 
             Properties properties = new Properties();
             if (driverName.indexOf("mysql") != -1) {
@@ -339,10 +339,10 @@ public class JdbcDataSource {
             if (!CollectionUtils.isEmpty(config.getProperties())) {
                 for (SourceProperty property : config.getProperties()) {
 
-                    if ("davinci.db-type".equalsIgnoreCase(property.getKey())) {
-                        wallFilter.setDbType(property.getValue());
-                        continue;
-                    }
+//                    if ("davinci.db-type".equalsIgnoreCase(property.getKey())) {
+//                        wallFilter.setDbType(property.getValue());
+//                        continue;
+//                    }
 
                     if ("davinci.initial-size".equalsIgnoreCase(property.getKey())) {
                         druidDataSource.setInitialSize(Integer.parseInt(property.getValue()));
@@ -369,16 +369,16 @@ public class JdbcDataSource {
                 druidDataSource.setFilters(filters);
 
                 // you can operate csv datasource
-                if (CSVDataProvider.type.equals(type)) {
-                    WallConfig wallConfig = wallFilter.getConfig();
-                    wallConfig.setDropTableAllow(true);
-                    wallConfig.setCreateTableAllow(true);
-                    wallConfig.setInsertAllow(true);
-                    wallConfig.setTruncateAllow(true);
-                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
-                } else if (!name.equals(aggregatorName) && !name.equals("statistic")) {// davinci's aggregator source and statistic source don't need wall filter
-                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
-                }
+//                if (CSVDataProvider.type.equals(type)) {
+//                    WallConfig wallConfig = wallFilter.getConfig();
+//                    wallConfig.setDropTableAllow(true);
+//                    wallConfig.setCreateTableAllow(true);
+//                    wallConfig.setInsertAllow(true);
+//                    wallConfig.setTruncateAllow(true);
+//                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
+//                } else if (!name.equals(aggregatorName) && !name.equals("statistic")) {// davinci's aggregator source and statistic source don't need wall filter
+//                    druidDataSource.setProxyFilters(Arrays.asList(new Filter[]{wallFilter}));
+//                }
 
 				druidDataSource.init();
             } catch (Exception e) {

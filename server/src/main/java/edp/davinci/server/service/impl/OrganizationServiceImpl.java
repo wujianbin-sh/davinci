@@ -35,9 +35,11 @@ import edp.davinci.server.enums.MailContentTypeEnum;
 import edp.davinci.server.exception.NotFoundException;
 import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.exception.UnAuthorizedException;
+import edp.davinci.server.model.LdapPerson;
 import edp.davinci.server.model.MailContent;
 import edp.davinci.server.model.TokenEntity;
 import edp.davinci.core.dao.entity.User;
+import edp.davinci.server.service.LdapService;
 import edp.davinci.server.service.OrganizationService;
 import edp.davinci.server.util.BaseLock;
 import edp.davinci.commons.util.CollectionUtils;
@@ -96,6 +98,9 @@ public class OrganizationServiceImpl extends BaseEntityService implements Organi
     private static final CheckEntityEnum entity = CheckEntityEnum.ORGANIZATION;
 
     private static final ExecutorService FIXED_THREAD_POOL = Executors.newFixedThreadPool(8);
+
+    @Autowired
+    private LdapService ldapService;
 
     @Override
     public boolean isExist(String name, Long id, Long scopeId) {
@@ -379,46 +384,6 @@ public class OrganizationServiceImpl extends BaseEntityService implements Organi
     }
 
 
-    /**
-     * 邀请成员
-     *
-     * @param orgId
-     * @param memId
-     * @param user
-     * @return
-     */
-    @Override
-    public void inviteMember(Long orgId, Long memId, User user) throws NotFoundException, UnAuthorizedException, ServerException {
-        //验证组织
-        Organization organization = getOrganization(orgId);
-
-        //验证被邀请者
-        User member = userExtendMapper.selectByPrimaryKey(memId);
-        if (null == member) {
-            log.error("User({}) is not found", memId);
-            throw new NotFoundException("user is not found");
-        }
-
-        // 验证用户权限，只有organization的owner可以邀请
-        RelUserOrganization relOwner = relUserOrganizationExtendMapper.getRel(user.getId(), orgId);
-        if (null == relOwner || relOwner.getRole() != UserOrgRoleEnum.OWNER.getRole()) {
-            throw new UnAuthorizedException("You can not invite anyone to join this organization, cause you are not the owner of this organization");
-        }
-
-        //验证被邀请用户是否已经加入
-        RelUserOrganization rel = relUserOrganizationExtendMapper.getRel(memId, orgId);
-        if (null != rel) {
-            throw new ServerException("The invitee is already a member of this organization");
-        }
-
-        //校验邮箱
-        if (StringUtils.isEmpty(user.getEmail())) {
-            throw new ServerException("The email address of the invitee is empty");
-        }
-
-        sendInviteEmail(organization, member, user);
-    }
-
     @Override
     public BatchInviteMemberResult batchInviteCustomMembers(Long orgId, InviteMembers inviteMembers, User user) throws NotFoundException, UnAuthorizedException, ServerException {
         //验证组织
@@ -439,9 +404,17 @@ public class OrganizationServiceImpl extends BaseEntityService implements Organi
             User currentUser = userExtendMapper.selectByUsername(member);
             if(currentUser != null) {
                 users.add(currentUser);
-            } else {
-                notUsers.add(member);
+                continue;
             }
+
+            LdapPerson ldapPerson = ldapService.searchUser(member);
+            if (ldapPerson != null) {
+                currentUser = ldapService.registPerson(ldapPerson);
+                users.add(currentUser);
+                continue;
+            }
+
+            notUsers.add(member);
         }
 
         result.setNotUsers(notUsers);

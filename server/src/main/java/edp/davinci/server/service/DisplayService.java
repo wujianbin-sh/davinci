@@ -30,10 +30,12 @@ import edp.davinci.server.exception.NotFoundException;
 import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.exception.UnAuthorizedException;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Component
 public interface DisplayService extends CheckEntityService {
 
     List<Display> getDisplayListByProject(Long projectId, User user) throws NotFoundException, UnAuthorizedException, ServerException;

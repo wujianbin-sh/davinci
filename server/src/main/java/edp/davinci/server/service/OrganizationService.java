@@ -26,11 +26,13 @@ import edp.davinci.server.exception.UnAuthorizedException;
 import edp.davinci.core.dao.entity.User;
 import edp.davinci.server.dto.organization.BatchInviteMemberResult;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public interface OrganizationService extends CheckEntityService {
 
     List<OrganizationInfo> getOrganizations(User user);
@@ -46,8 +48,6 @@ public interface OrganizationService extends CheckEntityService {
     OrganizationInfo getOrganization(Long id, User user) throws NotFoundException, UnAuthorizedException;
 
     List<OrganizationMember> getOrgMembers(Long id);
-
-    void inviteMember(Long orgId, Long memId, User user) throws NotFoundException, UnAuthorizedException, ServerException;
 
     BatchInviteMemberResult batchInviteCustomMembers(Long orgId, InviteMembers inviteMembers, User user) throws NotFoundException, UnAuthorizedException, ServerException;
 

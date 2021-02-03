@@ -26,7 +26,12 @@ import { Route, HashRouter as Router, Switch, Redirect } from 'react-router-dom'
 import { RouteComponentWithParams } from 'utils/types'
 
 import { compose } from 'redux'
-import { logged, logout, getServerConfigurations, getUserByToken } from './actions'
+import {
+  logged,
+  logout,
+  getServerConfigurations,
+  getUserByToken
+} from './actions'
 import injectReducer from 'utils/injectReducer'
 import reducer from './reducer'
 import injectSaga from 'utils/injectSaga'
@@ -48,8 +53,7 @@ type MappedDispatches = ReturnType<typeof mapDispatchToProps>
 type AppProps = MappedStates & MappedDispatches & RouteComponentWithParams
 
 export class App extends React.PureComponent<AppProps> {
-
-  constructor (props: AppProps) {
+  constructor(props: AppProps) {
     super(props)
     props.onGetServerConfigurations()
     this.checkTokenLink()
@@ -59,23 +63,18 @@ export class App extends React.PureComponent<AppProps> {
     const search = location.search
     const qs = search ? search.substr(1) : ''
     if (qs) {
-      return qs
-        .split('&')
-        .reduce((rdc, val) => {
-          const pair = val.split('=')
-          rdc[pair[0]] = pair[1]
-          return rdc
-        }, {})
+      return qs.split('&').reduce((rdc, val) => {
+        const pair = val.split('=')
+        rdc[pair[0]] = pair[1]
+        return rdc
+      }, {})
     } else {
       return false
     }
   }
 
   private checkTokenLink = () => {
-    const {
-      history,
-      onGetLoginUser
-    } = this.props
+    const { history, onGetLoginUser } = this.props
 
     const qs = this.getQs()
     const token = qs['usertoken']
@@ -113,18 +112,14 @@ export class App extends React.PureComponent<AppProps> {
   private renderRoute = () => {
     const { logged } = this.props
 
-    return (
-      logged ? (
-        <Redirect to="/projects" />
-      ) : (
-        <Redirect to="/login" />
-      )
-    )
+    return logged ? <Redirect to="/projects" /> : <Redirect to="/login" />
   }
 
-  public render () {
+  public render() {
     const { logged } = this.props
-    if (typeof logged !== 'boolean') { return null }
+    if (typeof logged !== 'boolean') {
+      return null
+    }
 
     return (
       <div>
@@ -142,7 +137,7 @@ export class App extends React.PureComponent<AppProps> {
           <Switch>
             <Route path="/activate" component={Activate} />
             <Route path="/joinOrganization" exact component={Background} />
-            <Route path="/findPassword" component={FindPassword} />
+            {/* <Route path="/findPassword" component={FindPassword} /> */}
             <Route path="/" exact render={this.renderRoute} />
             <Route path="/" component={logged ? Main : Background} />
           </Switch>
@@ -166,13 +161,6 @@ const mapDispatchToProps = (dispatch) => ({
   onGetServerConfigurations: () => dispatch(getServerConfigurations())
 })
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect
-)(App)
+export default compose(withReducer, withSaga, withConnect)(App)

@@ -29,11 +29,13 @@ import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.exception.UnAuthorizedException;
 import edp.davinci.server.model.Paging;
 import edp.davinci.core.dao.entity.User;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public interface ShareService {
     ShareWidget getShareWidget(User user) throws NotFoundException, ServerException, ForbiddenException, UnAuthorizedException;
 

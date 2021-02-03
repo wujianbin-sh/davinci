@@ -1,0 +1,197 @@
+#  <<
+#  Davinci
+#  ==
+#  Copyright (C) 2016 - 2018 EDP
+#  ==
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#  >>
+
+
+server:
+  protocol: http
+  address: 0.0.0.0
+  port: 8080
+
+  servlet:
+    context-path:
+
+  access:
+    address: davinci3.edp.creditease.corp
+    port: 80
+
+
+jwtToken:
+  secret: secret
+  timeout: 21600000
+  algorithm: HS512
+
+
+#your datasource config
+source:
+  initial-size: 5
+  min-idle: 5
+  max-wait: 30000
+  max-active: 50
+  break-after-acquire-failure: false
+  connection-error-retry-attempts: 1
+  time-between-eviction-runs-millis: 120000
+  min-evictable-idle-time-millis: 600000
+  max-evictable-idle-time-millis: 900000
+  time-between-connect-error-millis: 60000
+  test-while-idle: true
+  test-on-borrow: false
+  test-on-return: false
+  validation-query: select 1
+  validation-query-timeout: 10
+  keep-alive: false
+  filters: stat
+
+  enable-query-log: true
+  result-limit: 1000000
+
+
+spring:
+  mvc:
+    async:
+      request-timeout: 30s
+  rest:
+    proxy-host: squid.jishu.idc
+    proxy-port: 8000
+    proxy-ignore: '\S*\.idc|\S*\.corp|10.\S*|127.0.0.1|localhost|localhost.domain.com'
+
+
+  # davinci datasource config
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://10.120.5.56:3541/davinci3?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+    username: davinci3
+    password: OFu6rmNw4NeVFmxsCfRk
+    driver-class-name: com.mysql.jdbc.Driver
+    initial-size: 10
+    min-idle: 10
+    max-wait: 30000
+    max-active: 20
+    break-after-acquire-failure: false
+    connection-error-retry-attempts: 1
+    time-between-eviction-runs-millis: 120000
+    min-evictable-idle-time-millis: 600000
+    max-evictable-idle-time-millis: 900000
+    time-between-connect-error-millis: 60000  
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: select 1
+    validation-query-timeout: 10
+    keep-alive: false
+    filters: stat
+
+
+  redis:
+
+    isEnable: true
+    # standalone config
+    # host: 127.0.0.1
+    # port: 6379
+
+    #  cluster config
+    #  cluster:
+    #       nodes:
+
+    password: U0X9S97e0AFWeKC3MakP
+    database: 0
+    timeout: 1000
+    jedis:
+      pool:
+        max-active: 24
+        max-wait: 1
+        max-idle: 8
+        min-idle: 0
+
+    sentinel:
+      master: master6032
+      nodes: 10.120.30.11:16032, 10.120.30.12:16032, 10.120.30.13:16032
+
+
+  mail:
+    host: email.creditease.cn
+    port: 587
+    username: it.edp.support@creditease.cn
+    password: edp@$%^963&
+    nickname: Davinci
+
+    properties:
+      smtp:
+        starttls:
+          enable: true
+          required: true
+        auth: true
+      mail:
+        smtp:
+          ssl:
+            enable: false
+
+
+  ldap:
+    urls: ldap://10.134.98.26:389
+    username: davinci-ldap02
+    password: m6#6EY69
+    base: OU=宜信公司,OU=HABROOT,DC=creditease,DC=corp
+    domainName: '@creditease.cn'
+
+
+  security:
+    oauth2:
+      enable: false
+
+
+data-auth-center:
+  channels:
+    - name: DAC
+      base-url: http://dac.adx.jishu.idc/api/v1/service/tenants
+      auth-code: f57fdeec6829d51e8797a0fe307211b6
+
+
+moa:
+  base-url: http://moa-pc.jishu.idc/api
+
+
+screenshot:
+  default_browser: CHROME
+  timeout_second: 1800
+  chromedriver_path: /app/chrome/chromedriver
+
+
+statistic:
+  enable: true
+
+  # You can use external elasticsearch storage [127.0.0.1:9300]
+  # elastic_urls:
+  # elastic_user:
+  # elastic_index_prefix:
+  # You can also use external mysql storage
+
+  mysql_url: jdbc:mysql://10.120.5.56:3541/davinci3?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+  mysql_username: davinci3
+  mysql_password: OFu6rmNw4NeVFmxsCfRk
+  
+  # You can also use external kafka
+  # kafka.bootstrap.servers:
+  # kafka.topic:
+  # java.security.krb5.conf:
+  # java.security.keytab:
+  # java.security.principal:
+
+encryption:
+  maxEncryptSize: 1024
+  type: Off # Off is to turn off encryption, to enable encryption, please select AES or RSA
+
+
+start_all_jobs_when_server_start: false

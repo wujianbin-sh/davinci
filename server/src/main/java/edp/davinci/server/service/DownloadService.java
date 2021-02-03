@@ -23,6 +23,7 @@ import edp.davinci.core.dao.entity.DownloadRecord;
 import edp.davinci.server.dto.view.DownloadViewExecuteParam;
 import edp.davinci.server.enums.DownloadType;
 import edp.davinci.core.dao.entity.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ import java.util.List;
  * @Date 19/5/28 09:44
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public interface DownloadService {
 
 

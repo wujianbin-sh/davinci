@@ -64,6 +64,12 @@ public class LdapServiceImpl implements LdapService {
     @Value("${spring.ldap.urls:''}")
     private String ldapUrls;
 
+    @Value("${spring.ldap.username}")
+    private String username;
+
+    @Value("${spring.ldap.password}")
+    private String password;
+
     @Autowired
     private UserExtendMapper userExtendMapper;
 
@@ -86,7 +92,7 @@ public class LdapServiceImpl implements LdapService {
      * @throws Exception
      */
     @Override
-    public LdapPerson findByUsername(String username, String password) {
+    public LdapPerson checkUser(String username, String password) {
 		LdapPerson ldapPerson = null;
 
 		if (StringUtils.endsWithIgnoreCase(username, ldapDomainName)) {
@@ -96,7 +102,8 @@ public class LdapServiceImpl implements LdapService {
 
 		DirContext ctx = null;
 		try {
-			ctx = ldapTemplate.getContextSource().getContext(userDn, password);
+
+		    ctx = ldapTemplate.getContextSource().getContext(userDn, password);
 
 			List<LdapPerson> search = ldapTemplate.search(
 					query().where("objectclass").is("person").and("sAMAccountName").is(username),
@@ -123,6 +130,44 @@ public class LdapServiceImpl implements LdapService {
     }
 
     @Override
+    public LdapPerson searchUser(String username) {
+        LdapPerson ldapPerson = null;
+
+        if (StringUtils.endsWithIgnoreCase(username, ldapDomainName)) {
+            username = username.replaceAll("(?i)" + ldapDomainName, EMPTY);
+        }
+
+        DirContext ctx = null;
+        try {
+
+            ctx = ldapTemplate.getContextSource().getContext(this.username, this.password);
+
+            List<LdapPerson> search = ldapTemplate.search(
+                    query().where("objectclass").is("person").and("sAMAccountName").is(username),
+                    (AttributesMapper<LdapPerson>) attributes -> {
+                        LdapPerson person = new LdapPerson();
+                        person.setName(attributes.get("cn").get().toString());
+                        person.setSAMAccountName(attributes.get("sAMAccountName").get().toString());
+                        person.setEmail(attributes.get("mail").get().toString());
+                        return person;
+                    });
+
+            if (!CollectionUtils.isEmpty(search)) {
+                ldapPerson = search.get(0);
+            }
+
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        } finally {
+            if (null != ctx) {
+                LdapUtils.closeContext(ctx);
+            }
+        }
+
+        return ldapPerson;
+    }
+
+    @Override
     @Transactional
     public User registPerson(LdapPerson ldapPerson) throws ServerException {
         User user = new User();
@@ -140,27 +185,27 @@ public class LdapServiceImpl implements LdapService {
             throw new ServerException("Ldap regist fail:unspecified error");
         }
         
-        Long userId = user.getId();
-        
-        String orgName = user.getUsername() + "'s Organization";
-        Organization organization = new Organization();
-        organization.setName(orgName);
-        organization.setMemberNum(1);
-        organization.setMemberPermission((short)1);
-        organization.setAllowCreateProject(true);
-        organization.setUserId(userId);
-        organization.setCreateBy(userId);
-        organization.setCreateTime(new Date());
-        
-        if (organizationExtendMapper.insertSelective(organization) > 0) {
-            RelUserOrganization relUserOrganization = new RelUserOrganization();
-            relUserOrganization.setOrgId(organization.getId());
-            relUserOrganization.setUserId(userId);
-            relUserOrganization.setRole(UserOrgRoleEnum.OWNER.getRole());
-            relUserOrganization.setCreateBy(userId);
-            relUserOrganization.setCreateTime(new Date());
-            relUserOrganizationMapper.insert(relUserOrganization);
-        }
+//        Long userId = user.getId();
+//
+//        String orgName = user.getUsername() + "'s Organization";
+//        Organization organization = new Organization();
+//        organization.setName(orgName);
+//        organization.setMemberNum(1);
+//        organization.setMemberPermission((short)1);
+//        organization.setAllowCreateProject(true);
+//        organization.setUserId(userId);
+//        organization.setCreateBy(userId);
+//        organization.setCreateTime(new Date());
+//
+//        if (organizationExtendMapper.insertSelective(organization) > 0) {
+//            RelUserOrganization relUserOrganization = new RelUserOrganization();
+//            relUserOrganization.setOrgId(organization.getId());
+//            relUserOrganization.setUserId(userId);
+//            relUserOrganization.setRole(UserOrgRoleEnum.OWNER.getRole());
+//            relUserOrganization.setCreateBy(userId);
+//            relUserOrganization.setCreateTime(new Date());
+//            relUserOrganizationMapper.insert(relUserOrganization);
+//        }
 
         return user;
     }

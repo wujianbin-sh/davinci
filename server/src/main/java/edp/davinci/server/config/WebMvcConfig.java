@@ -22,6 +22,7 @@ package edp.davinci.server.config;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -114,10 +115,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(loginRequiredInterceptor()).addPathPatterns(Constants.BASE_API_PATH + "/**")
-				.excludePathPatterns(Constants.BASE_API_PATH + "/login");
-		registry.addInterceptor(platformAuthInterceptor()).addPathPatterns(Constants.AUTH_API_PATH + "/**");
-		super.addInterceptors(registry);
+        registry.addInterceptor(loginRequiredInterceptor()).addPathPatterns(Constants.BASE_API_PATH + "/**")
+                .excludePathPatterns(Arrays.asList(new String[]{Constants.BASE_API_PATH + "/login",
+                        Constants.BASE_API_PATH + "/moa/login"}));
+        registry.addInterceptor(platformAuthInterceptor()).addPathPatterns(Constants.AUTH_API_PATH + "/**");
+        super.addInterceptors(registry);
     }
 
     @Override

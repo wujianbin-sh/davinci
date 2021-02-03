@@ -43,6 +43,8 @@ public class Constants {
 
 	public static final String SQL_TEMPLATE = "templates/sql/sqlTemplate.stg";
 
-	public static final String REG_SENSITIVE_SQL = "drop\\s|alter\\s|grant\\s|insert\\s|replace\\s|delete\\s|truncate\\s|update\\s|remove\\s";
-    public static final Pattern PATTERN_SENSITIVE_SQL = Pattern.compile(REG_SENSITIVE_SQL);
+	public static final String REG_SENSITIVE_SQL = "drop\\s|drop`|alter\\s|alter`|grant\\s|grant`|insert\\s|insert`" +
+			"|replace\\s|replace`|delete\\s|delete`|truncate\\s|truncate`|update\\s|update`|remove\\s|remove`";
+
+	public static final Pattern PATTERN_SENSITIVE_SQL = Pattern.compile(REG_SENSITIVE_SQL);
 }

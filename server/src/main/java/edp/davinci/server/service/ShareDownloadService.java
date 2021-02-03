@@ -23,9 +23,11 @@ import edp.davinci.core.dao.entity.ShareDownloadRecord;
 import edp.davinci.server.dto.view.DownloadViewExecuteParam;
 import edp.davinci.server.enums.DownloadType;
 import edp.davinci.core.dao.entity.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public interface ShareDownloadService {
 
     /**

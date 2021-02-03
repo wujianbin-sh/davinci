@@ -21,9 +21,10 @@ package edp.davinci.server.service;
 
 import edp.davinci.server.controller.ResultMap;
 import edp.davinci.server.enums.CheckEntityEnum;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-
+@Component
 public interface CheckService {
     ResultMap checkSource(String name, Long id, CheckEntityEnum checkEntityEnum, Long scopeId, HttpServletRequest request);
 }

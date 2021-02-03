@@ -30,10 +30,12 @@ import edp.davinci.core.dao.entity.User;
 import edp.davinci.data.pojo.DatabaseType;
 import edp.davinci.data.pojo.SourceConfig;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Component
 public interface SourceService extends CheckEntityService {
 
     List<Source> getSources(Long projectId, User user) throws NotFoundException, UnAuthorizedException, ServerException;

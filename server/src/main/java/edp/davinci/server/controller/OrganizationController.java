@@ -279,35 +279,6 @@ public class OrganizationController extends BaseController {
      * 邀请组织成员
      *
      * @param orgId
-     * @param memId
-     * @param user
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "invite member to join the organization")
-    @PostMapping("/{orgId}/member/{memId}")
-    public ResponseEntity inviteMember(@PathVariable("orgId") Long orgId,
-                                       @PathVariable("memId") Long memId,
-                                       @ApiIgnore @CurrentUser User user,
-                                       HttpServletRequest request) {
-
-        if (invalidId(orgId)) {
-            ResultMap resultMap = new ResultMap(tokenUtils).failAndRefreshToken(request).message("Invalid organization id");
-            return ResponseEntity.status(resultMap.getCode()).body(resultMap);
-        }
-        if (invalidId(memId)) {
-            ResultMap resultMap = new ResultMap(tokenUtils).failAndRefreshToken(request).message("Invalid member id");
-            return ResponseEntity.status(resultMap.getCode()).body(resultMap);
-        }
-
-        organizationService.inviteMember(orgId, memId, user);
-        return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request));
-    }
-
-        /**
-     * 邀请组织成员
-     *
-     * @param orgId
      * @param inviteMembers
      * @param user
      * @param request

@@ -23,7 +23,9 @@ import java.util.Map;
 
 import edp.davinci.core.dao.entity.Platform;
 import edp.davinci.core.dao.entity.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface AuthenticationService {
 
     User checkUser(Platform platform, Map<String, String[]> parameter) throws RuntimeException;

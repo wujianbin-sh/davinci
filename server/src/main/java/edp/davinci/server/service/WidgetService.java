@@ -31,12 +31,14 @@ import edp.davinci.server.dto.widget.WidgetWithViewName;
 import edp.davinci.server.exception.NotFoundException;
 import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.exception.UnAuthorizedException;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Component
 public interface WidgetService extends CheckEntityService {
     List<WidgetWithViewName> getWidgets(Long projectId, User user) throws NotFoundException, UnAuthorizedException, ServerException;
 

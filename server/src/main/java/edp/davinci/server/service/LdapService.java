@@ -22,21 +22,32 @@ package edp.davinci.server.service;
 import edp.davinci.server.exception.ServerException;
 import edp.davinci.server.model.LdapPerson;
 import edp.davinci.core.dao.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface LdapService {
 
     boolean existLdapServer();
 
     /**
-     * 查找 ldap 用户
+     * 校验ldap用户
      *
      * @param username
      * @param password
      * @return
      * @throws Exception
      */
-    LdapPerson findByUsername(String username, String password);
+    LdapPerson checkUser(String username, String password);
 
+    /**
+     * 查询ldap用户
+     *
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    LdapPerson searchUser(String username);
 
     User registPerson(LdapPerson ldapPerson) throws ServerException;
 }

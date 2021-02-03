@@ -29,17 +29,22 @@ import edp.davinci.server.enums.UserDistinctType;
 import edp.davinci.server.exception.ServerException;
 import edp.davinci.core.dao.entity.User;
 
+import edp.davinci.server.model.MOAEmployee;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Component
 public interface UserService extends CheckEntityService {
 
     User getByUsername(String username);
 
     User userLogin(UserLogin userLogin) throws ServerException;
+
+    User userLogin(MOAEmployee employee) throws ServerException;
 
     List<UserBaseInfo> getUsersByKeyword(String keyword, User user, Long orgId, Boolean includeSelf);
 

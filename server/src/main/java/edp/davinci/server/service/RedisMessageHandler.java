@@ -19,6 +19,9 @@
 
 package edp.davinci.server.service;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public interface RedisMessageHandler {
 
     void handle(Object message, String flag);
