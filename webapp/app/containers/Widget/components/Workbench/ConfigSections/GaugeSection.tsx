@@ -74,6 +74,7 @@ export interface IGaugeConfig {
   splitLineSize: string
   splitLineStyle: string
   splitLineColor: string
+  axisSegement: string[]
 }
 
 interface IGaugeSectionProps {
@@ -82,8 +83,10 @@ interface IGaugeSectionProps {
   onChange: (prop: string, value: any) => void
 }
 
-export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
-
+export class GaugeSection extends React.PureComponent<IGaugeSectionProps> {
+  public constructor(props) {
+    super(props)
+  }
   private inputChange = (prop) => (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange(prop, e.target.value)
   }
@@ -115,9 +118,28 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
     </Option>
   ))
 
-  public render () {
-    const { title, config } = this.props
+  private SegmentOptions = () => {
+    const defaultColors = [
+      '#7DFFB2',
+      '#67e0e3',
+      '#FDDD60',
+      '#37a2da',
+      '#fd666d'
+    ]
+    return defaultColors.map((s) => (
+      <Option key={`${s}sp`} value={s}>
+        <>
+          <span
+            style={{ background: `${s}` }}
+            className={styles.segmentOptionItem}
+          />
+        </>
+      </Option>
+    ))
+  }
 
+  public render() {
+    const { title, config } = this.props
     const {
       radius,
       splitNumber,
@@ -159,14 +181,19 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
       splitLineLength,
       splitLineSize,
       splitLineStyle,
-      splitLineColor
+      splitLineColor,
+      axisSegement
     } = config
 
     const fontFamilies = PIVOT_CHART_FONT_FAMILIES.map((f) => (
-      <Option key={f.value} value={f.value}>{f.name}</Option>
+      <Option key={f.value} value={f.value}>
+        {f.name}
+      </Option>
     ))
     const fontSizes = PIVOT_CHART_FONT_SIZES.map((f) => (
-      <Option key={`${f}`} value={`${f}`}>{f}</Option>
+      <Option key={`${f}`} value={`${f}`}>
+        {f}
+      </Option>
     ))
 
     return (
@@ -174,7 +201,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
         <div className={styles.paneBlock}>
           <h4>{title}</h4>
           <div className={styles.blockBody}>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>目标值</Col>
               <Col span={10}>
                 <InputNumber
@@ -184,7 +216,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>前缀</Col>
               <Col span={6}>
                 <Input
@@ -202,7 +239,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>半径</Col>
               <Col span={6}>
                 <InputNumber
@@ -223,7 +265,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>起始角度</Col>
               <Col span={6}>
                 <InputNumber
@@ -241,7 +288,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={10}>
                 <Checkbox
                   checked={clockwise}
@@ -256,7 +308,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
         <div className={styles.paneBlock}>
           <h4>标题</h4>
           <div className={styles.blockBody}>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={10}>
                 <Checkbox
                   checked={showTitle}
@@ -266,7 +323,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 </Checkbox>
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={10}>
                 <Select
                   placeholder="字体"
@@ -294,7 +356,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>距离左侧</Col>
               <Col span={12}>
                 <InputNumber
@@ -306,7 +373,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>距离顶部</Col>
               <Col span={12}>
                 <InputNumber
@@ -323,7 +395,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
         <div className={styles.paneBlock}>
           <h4>数据</h4>
           <div className={styles.blockBody}>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={10}>
                 <Checkbox
                   checked={showDetail}
@@ -333,7 +410,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 </Checkbox>
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={10}>
                 <Select
                   placeholder="字体"
@@ -361,7 +443,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>距离左侧</Col>
               <Col span={12}>
                 <InputNumber
@@ -373,7 +460,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={6}>距离顶部</Col>
               <Col span={12}>
                 <InputNumber
@@ -390,7 +482,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
         <div className={styles.paneBlock}>
           <h4>指针</h4>
           <div className={styles.blockBody}>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={10}>
                 <Checkbox
                   checked={showPointer}
@@ -407,18 +504,21 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                   自定颜色
                 </Checkbox>
               </Col>
-              {
-                customPointerColor && (
-                  <Col span={4}>
-                    <ColorPicker
-                      value={pointerColor}
-                      onChange={this.colorChange('pointerColor')}
-                    />
-                  </Col>
-                )
-              }
+              {customPointerColor && (
+                <Col span={4}>
+                  <ColorPicker
+                    value={pointerColor}
+                    onChange={this.colorChange('pointerColor')}
+                  />
+                </Col>
+              )}
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={4}>长度</Col>
               <Col span={8}>
                 <InputNumber
@@ -440,7 +540,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={4}>边框</Col>
               <Col span={8}>
                 <Select
@@ -473,7 +578,43 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
         <div className={styles.paneBlock}>
           <h4>轴</h4>
           <div className={styles.blockBody}>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
+              <Col span={12}>
+                <Checkbox
+                  checked={showAxisTick}
+                  onChange={this.checkboxChange('showAxisTick')}
+                >
+                  显示刻度
+                </Checkbox>
+              </Col>
+              <Col span={12}>
+                <Checkbox
+                  checked={showAxisLabel}
+                  onChange={this.checkboxChange('showAxisLabel')}
+                >
+                  显示标签
+                </Checkbox>
+              </Col>
+            </Row>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
+              <Col span={4}>距离</Col>
+              <Col span={8}>
+                <InputNumber
+                  className={styles.blockElm}
+                  value={axisLabelDistance}
+                  onChange={this.inputNumberChange('axisLabelDistance')}
+                />
+              </Col>
               <Col span={4}>粗细</Col>
               <Col span={8}>
                 <InputNumber
@@ -484,36 +625,15 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                   parser={this.pixelParser}
                 />
               </Col>
-              <Col span={4}>颜色</Col>
-              <Col span={4}>
-                <ColorPicker
-                  value={axisLineColor}
-                  onChange={this.colorChange('axisLineColor')}
-                />
-              </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
-              <Col span={12}>
-                <Checkbox
-                  checked={showAxisTick}
-                  onChange={this.checkboxChange('showAxisTick')}
-                >
-                  显示刻度
-                </Checkbox>
-              </Col>
-            </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
-              <Col span={12}>
-                <Checkbox
-                  checked={showAxisLabel}
-                  onChange={this.checkboxChange('showAxisLabel')}
-                >
-                  显示标签
-                </Checkbox>
-              </Col>
-            </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
-              <Col span={10}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
+              <Col span={4}> 字体</Col>
+              <Col span={8}>
                 <Select
                   placeholder="标签字体"
                   className={styles.blockElm}
@@ -523,7 +643,7 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                   {fontFamilies}
                 </Select>
               </Col>
-              <Col span={10}>
+              <Col span={8}>
                 <Select
                   placeholder="标签文字大小"
                   className={styles.blockElm}
@@ -540,14 +660,24 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
                 />
               </Col>
             </Row>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
-              <Col span={6}>距离轴线</Col>
-              <Col span={12}>
-                <InputNumber
+
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
+              <Col span={4}> 分段</Col>
+              <Col span={20}>
+                <Select
+                  placeholder="仪表盘分段"
+                  mode="tags"
                   className={styles.blockElm}
-                  value={axisLabelDistance}
-                  onChange={this.inputNumberChange('axisLabelDistance')}
-                />
+                  value={axisSegement}
+                  onChange={this.selectChange('axisSegement')}
+                >
+                  {this.SegmentOptions()}
+                </Select>
               </Col>
             </Row>
           </div>
@@ -555,7 +685,12 @@ export class GaugeSection extends React.PureComponent<IGaugeSectionProps, {}> {
         <div className={styles.paneBlock}>
           <h4>分隔线</h4>
           <div className={styles.blockBody}>
-            <Row gutter={8} type="flex" align="middle" className={styles.blockRow}>
+            <Row
+              gutter={8}
+              type="flex"
+              align="middle"
+              className={styles.blockRow}
+            >
               <Col span={16}>
                 <Checkbox
                   checked={showSplitLine}
