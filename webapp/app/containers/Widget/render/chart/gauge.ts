@@ -24,20 +24,9 @@ import { EChartOption } from 'echarts'
 import { getFormattedValue } from '../../components/Config/Format'
 
 export default function (chartProps: IChartProps, drillOptions?: any) {
-  const {
-    width,
-    height,
-    data,
-    cols,
-    metrics,
-    chartStyles
-  } = chartProps
+  const { width, height, data, cols, metrics, chartStyles } = chartProps
 
-  const {
-    axis,
-    splitLine,
-    gauge
-  } = chartStyles
+  const { axis, splitLine, gauge } = chartStyles
 
   const {
     radius,
@@ -79,7 +68,8 @@ export default function (chartProps: IChartProps, drillOptions?: any) {
     splitLineLength,
     splitLineSize,
     splitLineStyle,
-    splitLineColor
+    splitLineColor,
+    axisSegement
   } = gauge
   const max = gauge.max || 100
 
@@ -115,7 +105,11 @@ export default function (chartProps: IChartProps, drillOptions?: any) {
           detailOffsetLeft ? `${detailOffsetLeft}%` : 0,
           detailOffsetTop ? `${detailOffsetTop}%` : 0
         ],
-        formatter: (value) => `${prefix}${getFormattedValue(Number(value) * 100 / max, m.format)}${suffix}`,
+        formatter: (value) =>
+          `${prefix}${getFormattedValue(
+            (Number(value) * 100) / max,
+            m.format
+          )}${suffix}`
         // rich: {},
         // width: 240,
         // height: 240,
@@ -125,17 +119,16 @@ export default function (chartProps: IChartProps, drillOptions?: any) {
       },
       // animationDuration: 1000,
       // animationDurationUpdate: 1000,
-      data: [{
-        value: data.length ? data[0][`${m.agg}(${decodedMetricName})`] : 0,
-        name: m.field.alias || decodedMetricName
-      }],
+      data: [
+        {
+          value: data.length ? data[0][`${m.agg}(${decodedMetricName})`] : 0,
+          name: m.field.alias || decodedMetricName
+        }
+      ],
       axisLine: {
         lineStyle: {
           width: axisLineSize,
-          color: [
-            [data.length ? data[0][`${m.agg}(${decodedMetricName})`] / max : 0, axisLineColor],
-            [1, '#ddd']
-          ]
+          color: createAxisSegementColor(axisSegement)
         }
       },
       axisTick: {
@@ -181,4 +174,17 @@ export default function (chartProps: IChartProps, drillOptions?: any) {
     tooltip,
     series: seriesArr
   }
+}
+
+function createAxisSegementColor(colors: string[]) {
+  const length = colors.length
+  if (length === 0) {
+    return [['1.0', '#37a2da']]
+  }
+  return new Array(length)
+    .fill('#37a2da')
+    .map((color: string, index: number) => {
+      const segement = (index + 1) * (1 / length)
+      return [segement.toFixed(1), colors[index]]
+    })
 }
