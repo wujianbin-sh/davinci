@@ -332,37 +332,6 @@ public class FileUtils {
     }
 
     /**
-     * Read content from file
-     * @param fileName
-     * @return
-     */
-    public static String readFileToString(String fileName, String charset) {
-        File file = new File(fileName);
-        BufferedReader reader = null;
-        StringBuffer sbf = new StringBuffer();
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
-            String tempStr;
-            while ((tempStr = reader.readLine()) != null) {
-                sbf.append(tempStr);
-            }
-            reader.close();
-            return sbf.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-        return sbf.toString();
-    }
-
-    /**
      * Write content to file
      * @param path
      * @param fileName

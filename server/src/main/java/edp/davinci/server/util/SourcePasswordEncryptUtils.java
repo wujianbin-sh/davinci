@@ -6,6 +6,7 @@ import edp.davinci.core.dao.entity.Source;
 import edp.davinci.data.pojo.SourceConfig;
 import edp.davinci.data.util.JdbcSourceUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import sun.misc.BASE64Decoder;
@@ -16,9 +17,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -98,16 +97,40 @@ public class SourcePasswordEncryptUtils {
     private static String RSA_PUBLIC_KEY;
 
     static {
-        try {
-            String path = ResourceUtils.getURL("classpath:").getPath();
-            AES_BASE_PATH = path + "AES" + File.separatorChar;
-            RSA_BASE_PATH = path + "RSA" + File.separatorChar;
-            AES_PRIVATE_KEY = FileUtils.readFileToString(AES_BASE_PATH + AES_PRIVATE, CODE_TYPE);
-            RSA_PRIVATE_KEY = FileUtils.readFileToString(RSA_BASE_PATH + RSA_PRIVATE, CODE_TYPE);
-            RSA_PUBLIC_KEY = FileUtils.readFileToString(RSA_BASE_PATH + RSA_PUBLIC, CODE_TYPE);
-        } catch (FileNotFoundException e) {
+
+        AES_BASE_PATH = "AES" + File.separatorChar;
+        RSA_BASE_PATH = "RSA" + File.separatorChar;
+
+        try (InputStream aesPrivateKeyStream = new ClassPathResource(AES_BASE_PATH + AES_PRIVATE).getInputStream();
+             InputStream rsaPrivateKeyStream = new ClassPathResource(RSA_BASE_PATH + RSA_PRIVATE).getInputStream();
+             InputStream rsaPublicKeyStream = new ClassPathResource(RSA_BASE_PATH + RSA_PUBLIC).getInputStream()) {
+            AES_PRIVATE_KEY = readFileToString(aesPrivateKeyStream, CODE_TYPE);
+            RSA_PRIVATE_KEY = readFileToString(rsaPrivateKeyStream, CODE_TYPE);
+            RSA_PUBLIC_KEY = readFileToString(rsaPublicKeyStream, CODE_TYPE);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Read content from file
+     *
+     * @param inputStream
+     * @return
+     */
+    private static String readFileToString(InputStream inputStream, String charset) {
+        StringBuffer sbf = new StringBuffer();
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charset);
+             BufferedReader reader = new BufferedReader(inputStreamReader)) {
+            String tempStr;
+            while ((tempStr = reader.readLine()) != null) {
+                sbf.append(tempStr);
+            }
+            return sbf.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sbf.toString();
     }
 
     public static Source decryptPassword(Source source) {

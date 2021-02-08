@@ -26,6 +26,22 @@
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <fileSets>
+        <!-- ext jdbc driver -->
+        <fileSet>
+            <directory>
+                ${project.parent.basedir}/server/lib
+            </directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ${project.parent.basedir}/server/target/lib
+            </directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>${project.parent.basedir}</directory>
             <outputDirectory>/</outputDirectory>
@@ -87,17 +103,16 @@
                 ${project.parent.basedir}/webapp/build
             </directory>
             <outputDirectory>davinci-ui</outputDirectory>
+            <includes>
+                <include>*/**</include>
+            </includes>
         </fileSet>
     </fileSets>
 
     <dependencySets>
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
-            <useTransitiveDependencies>true</useTransitiveDependencies>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
         </dependencySet>
     </dependencySets>
-
 </assembly>
