@@ -37,6 +37,7 @@ import gauge from './gauge'
 import iframe from './iframe'
 import richText from './richText'
 import doubleYAxis from './doubleYAxis'
+import treeMap from './treemap'
 
 const widgetlibs: IChartInfo[] = [
   table,
@@ -55,7 +56,8 @@ const widgetlibs: IChartInfo[] = [
   iframe,
   richText,
   doubleYAxis,
-  gauge
+  gauge,
+  treeMap
 ]
 
 export default widgetlibs

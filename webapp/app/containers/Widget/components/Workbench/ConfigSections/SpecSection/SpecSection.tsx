@@ -6,6 +6,7 @@ import {
   PieSection,
   FunnelSection,
   MapSection,
+  TreeMapSection,
   ParallelSection,
   SankeySection,
   DoubleYAxisSection
@@ -29,7 +30,7 @@ export class SpecSection extends React.PureComponent<ISpecSectionProps, {}> {
     this.props.onChange(value, SpecSection.BasePropPath.concat(propPath))
   }
 
-  public render () {
+  public render() {
     const { name, title, config, isLegendSection } = this.props
     let renderHtml: JSX.Element
     switch (name) {
@@ -46,13 +47,16 @@ export class SpecSection extends React.PureComponent<ISpecSectionProps, {}> {
         renderHtml = <MapSection spec={config} title={title} isLegendSection={isLegendSection} onChange={this.specChange} />
         break
       case 'parallel':
-        renderHtml = <ParallelSection spec={config} title={title} onChange={this.specChange}/>
+        renderHtml = <ParallelSection spec={config} title={title} onChange={this.specChange} />
         break
       case 'sankey':
-        renderHtml = <SankeySection spec={config} title={title} onChange={this.specChange}/>
+        renderHtml = <SankeySection spec={config} title={title} onChange={this.specChange} />
         break
       case 'doubleYAxis':
-        renderHtml = <DoubleYAxisSection spec={config} title={title} onChange={this.specChange}/>
+        renderHtml = <DoubleYAxisSection spec={config} title={title} onChange={this.specChange} />
+        break
+      case 'treemap':
+        renderHtml = <TreeMapSection spec={config} title={title} onChange={this.specChange} />
         break
       default:
         renderHtml = <div />

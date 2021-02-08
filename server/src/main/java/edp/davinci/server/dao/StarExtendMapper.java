@@ -40,13 +40,11 @@ public interface StarExtendMapper extends StarMapper {
     })
     int delete(@Param("userId") Long userId, @Param("targetId") Long targetId, @Param("target") String target);
 
-
     @Select({
             "select * from star",
             "where target = #{target} and target_id = #{targetId} and user_id = #{userId}"
     })
     Star select(@Param("userId") Long userId, @Param("targetId") Long targetId, @Param("target") String target);
-
 
     @Select({
             "select p.*, u.id as 'createBy.id', IF(u.`name` is NULL,u.username,u.`name`) as 'createBy.username', u.avatar as 'createBy.avatar'  from project p left join user u on u.id = p.user_id ",

@@ -1,4 +1,4 @@
-@import "~assets/less/variable";
+@import '~assets/less/variable';
 
 .workbench {
   background-color: @body-bg;
@@ -121,7 +121,7 @@
         i {
           color: @text-color;
         }
-        .more{
+        .more {
           display: block;
         }
       }
@@ -132,7 +132,7 @@
         text-align: center;
         flex-shrink: 0;
       }
-      .more{
+      .more {
         display: none;
       }
 
@@ -341,7 +341,6 @@
       }
 
       .blockBody {
-
       }
 
       .blockRow {
@@ -405,7 +404,10 @@
       padding-bottom: 2px;
     }
     :global(.ant-select-selection--multiple > ul > li),
-    :global(.ant-select-selection--multiple .ant-select-selection__rendered > ul > li) {
+    :global(.ant-select-selection--multiple
+        .ant-select-selection__rendered
+        > ul
+        > li) {
       margin-top: 2px;
       height: 22px;
       line-height: 20px;
@@ -415,7 +417,7 @@
       height: 26px;
     }
 
-    :global(.ant-select-selection__rendered){
+    :global(.ant-select-selection__rendered) {
       line-height: 26px;
     }
   }
@@ -610,7 +612,7 @@
 .valueDropDown {
   li:hover,
   li > div:hover {
-    background-color: color(~`colorPalette("@{light-green}", 1)`);
+    background-color: color(~`colorPalette('@{light-green}', 1) `);
   }
 }
 
@@ -636,7 +638,7 @@
       .ellipsis;
 
       &:hover {
-        background-color: color(~`colorPalette("@{primary-color}", 1)`);
+        background-color: color(~`colorPalette('@{primary-color}', 1) `);
       }
 
       &.selected {
@@ -703,7 +705,7 @@
         }
 
         &:hover {
-          background-color: color(~`colorPalette("@{primary-color}", 1)`);
+          background-color: color(~`colorPalette('@{primary-color}', 1) `);
         }
 
         &.selected {
@@ -822,7 +824,7 @@
     flex-shrink: 0;
     position: relative;
 
-    &:after{
+    &:after {
       width: 10px;
       height: 0;
       border-top: 1px solid @primary-color;
@@ -934,4 +936,10 @@
   max-width: 640px;
   max-height: 480px;
   overflow-y: auto;
+}
+
+.segmentOptionItem {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
 }
