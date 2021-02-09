@@ -52,7 +52,7 @@ public class QuartzHandler {
     public void addJob(ScheduleJob scheduleJob) throws ServerException, SchedulerException {
 
         if (null == scheduleJob) {
-            throw new ServerException("EMPTY job");
+            throw new ServerException("Empty job");
         }
 
         if (System.currentTimeMillis() > scheduleJob.getEndDate().getTime()) {

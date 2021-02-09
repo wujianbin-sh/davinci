@@ -57,7 +57,7 @@ public class RoleController extends BaseController {
 
 
     /**
-     * 新建Role
+     * 新建role
      *
      * @param role
      * @param bindingResult
@@ -107,7 +107,7 @@ public class RoleController extends BaseController {
 
 
     /**
-     * 修改 Role
+     * 修改role
      *
      * @param id
      * @param role
@@ -140,7 +140,7 @@ public class RoleController extends BaseController {
 
 
     /**
-     * 获取 Role详情
+     * 获取role详情
      *
      * @param id
      * @param user
@@ -161,9 +161,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payload(role));
     }
 
-
     /**
-     * 添加Role与User关联
+     * 添加role与user关联，全量更新
      *
      * @param id
      * @param memberIds
@@ -171,12 +170,12 @@ public class RoleController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "add relation between a role and members")
+    @ApiOperation(value = "replace all relation between role and members")
     @PostMapping(value = "/{id}/members", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addMember(@PathVariable Long id,
-                                    @RequestBody Long[] memberIds,
-                                    @ApiIgnore @CurrentUser User user,
-                                    HttpServletRequest request) {
+    public ResponseEntity addMembers(@PathVariable Long id,
+                                     @RequestBody Long[] memberIds,
+                                     @ApiIgnore @CurrentUser User user,
+                                     HttpServletRequest request) {
         if (invalidId(id)) {
             ResultMap resultMap = new ResultMap(tokenUtils).failAndRefreshToken(request).message("Invalid role id");
             return ResponseEntity.status(resultMap.getCode()).body(resultMap);
@@ -186,16 +185,15 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(relRoleMembers));
     }
 
-
     /**
-     * 删除Role与User关联
+     * 删除role与user关联
      *
      * @param relationId
      * @param user
      * @param request
      * @return
      */
-    @ApiOperation(value = "delete relation between a role and a member")
+    @ApiOperation(value = "delete relation between role and member")
     @DeleteMapping("/member/{relationId}")
     public ResponseEntity deleteMember(@PathVariable Long relationId,
                                        @ApiIgnore @CurrentUser User user,
@@ -209,39 +207,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request));
     }
 
-
     /**
-     * 更新role 和 member关联
-     *
-     * @param id
-     * @param memberIds
-     * @param user
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "update role member relations", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PutMapping(value = "/{id}/members", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateMembers(@PathVariable Long id,
-                                        @RequestBody Long[] memberIds,
-                                        @ApiIgnore @CurrentUser User user,
-                                        HttpServletRequest request) {
-        if (invalidId(id)) {
-            ResultMap resultMap = new ResultMap(tokenUtils).failAndRefreshToken(request).message("Invalid role id");
-            return ResponseEntity.status(resultMap.getCode()).body(resultMap);
-        }
-
-        if (null == memberIds || memberIds.length == 0) {
-            ResultMap resultMap = new ResultMap(tokenUtils).failAndRefreshToken(request).message("Members cannot be empty");
-            return ResponseEntity.status(resultMap.getCode()).body(resultMap);
-        }
-
-        List<RelRoleMember> relRoleMembers = roleService.updateMembers(id, Arrays.asList(memberIds), user);
-        return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(relRoleMembers));
-    }
-
-
-    /**
-     * 获取 Role 关联用户
+     * 获取role关联用户
      *
      * @param id
      * @param user
@@ -262,9 +229,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payloads(members));
     }
 
-
     /**
-     * 添加Role与Project关联
+     * 添加role与project关联
      *
      * @param id
      * @param projectId
@@ -292,9 +258,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payload(roleProject));
     }
 
-
     /**
-     * 删除Role和Project之间的关联
+     * 删除role和project之间的关联
      *
      * @param id
      * @param projectId
@@ -322,9 +287,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request));
     }
 
-
     /**
-     * 修改Role和Project之间的关联
+     * 修改role和project之间的关联
      *
      * @param id
      * @param projectId
@@ -361,9 +325,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request));
     }
 
-
     /**
-     * 修改Role和Project之间的关联
+     * 获取role针对viz的可见性
      *
      * @param id
      * @param projectId
@@ -392,9 +355,8 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(new ResultMap(tokenUtils).successAndRefreshToken(request).payload(vizPermission));
     }
 
-
     /**
-     * 修改Role和Project之间的关联
+     * 修改role针对viz的可见性
      *
      * @param id
      * @param vizVisibility
