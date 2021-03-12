@@ -32,7 +32,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>edp.davinci</groupId>
+            <groupId>com.creditease</groupId>
             <artifactId>davinci-server</artifactId>
             <version>${project.version}</version>
         </dependency>

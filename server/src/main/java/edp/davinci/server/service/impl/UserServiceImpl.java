@@ -412,28 +412,28 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
 				user.setUpdateTime(new Date());
 				userExtendMapper.activeUser(user);
 
-				String orgName = user.getUsername() + "'s Organization";
-				// 激活成功，创建默认Organization
-				Organization organization = new Organization();
-		        organization.setName(orgName);
-		        organization.setUserId(userId);
-		        organization.setMemberNum(1);
-		        organization.setProjectNum(0);
-		        organization.setRoleNum(0);
-		        organization.setMemberPermission((short)1);
-		        organization.setAllowCreateProject(true);
-		        organization.setCreateBy(userId);
-		        organization.setCreateTime(new Date());
-				organizationExtendMapper.insertSelective(organization);
-
-				// 关联用户和组织，创建人是组织的owner
-	            RelUserOrganization relUserOrganization = new RelUserOrganization();
-	            relUserOrganization.setOrgId(organization.getId());
-	            relUserOrganization.setUserId(userId);
-	            relUserOrganization.setRole(UserOrgRoleEnum.OWNER.getRole());
-	            relUserOrganization.setCreateBy(userId);
-	            relUserOrganization.setCreateTime(new Date());
-				relUserOrganizationMapper.insert(relUserOrganization);
+//				String orgName = user.getUsername() + "'s Organization";
+//				// 激活成功，创建默认Organization
+//				Organization organization = new Organization();
+//		        organization.setName(orgName);
+//		        organization.setUserId(userId);
+//		        organization.setMemberNum(1);
+//		        organization.setProjectNum(0);
+//		        organization.setRoleNum(0);
+//		        organization.setMemberPermission((short)1);
+//		        organization.setAllowCreateProject(true);
+//		        organization.setCreateBy(userId);
+//		        organization.setCreateTime(new Date());
+//				organizationExtendMapper.insertSelective(organization);
+//
+//				// 关联用户和组织，创建人是组织的owner
+//	            RelUserOrganization relUserOrganization = new RelUserOrganization();
+//	            relUserOrganization.setOrgId(organization.getId());
+//	            relUserOrganization.setUserId(userId);
+//	            relUserOrganization.setRole(UserOrgRoleEnum.OWNER.getRole());
+//	            relUserOrganization.setCreateBy(userId);
+//	            relUserOrganization.setCreateTime(new Date());
+//				relUserOrganizationMapper.insert(relUserOrganization);
 
 				UserLoginResult userLoginResult = new UserLoginResult();
 				BeanUtils.copyProperties(user, userLoginResult);

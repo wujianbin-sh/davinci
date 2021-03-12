@@ -26,7 +26,7 @@ CREATE TABLE `cron_job` (
 	`is_folder` TINYINT ( 1 ) DEFAULT NULL,
 	`index` INT ( 5 ) DEFAULT NULL,
 	PRIMARY KEY ( `id` ) USING BTREE,
-	UNIQUE KEY `name_UNIQUE` ( `name` ) USING BTREE 
+    UNIQUE KEY `idx_name_project` (`name`,`project_id`) USING BTREE
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 -- ----------------------------
@@ -47,7 +47,7 @@ CREATE TABLE `dashboard` (
 	`update_by` BIGINT ( 20 ) DEFAULT NULL,
 	`update_time` TIMESTAMP NULL,
 	PRIMARY KEY ( `id` ) USING BTREE,
-	KEY `idx_dashboard_id` ( `dashboard_portal_id` ) USING BTREE,
+	KEY `idx_portal_id` ( `dashboard_portal_id` ) USING BTREE,
 	KEY `idx_parent_id` ( `parent_id` ) USING BTREE 
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
@@ -157,7 +157,7 @@ CREATE TABLE `mem_dashboard_widget` (
 	`update_by` BIGINT ( 20 ) DEFAULT NULL,
 	`update_time` TIMESTAMP NULL,
 	PRIMARY KEY ( `id` ) USING BTREE,
-	KEY `idx_protal_id` ( `dashboard_id` ) USING BTREE,
+	KEY `idx_dashboard_id` ( `dashboard_id` ) USING BTREE,
 	KEY `idx_widget_id` ( `widget_Id` ) USING BTREE 
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
@@ -202,7 +202,10 @@ CREATE TABLE `organization` (
 	`create_by` BIGINT ( 20 ) NOT NULL DEFAULT '0',
 	`update_time` TIMESTAMP NULL,
 	`update_by` BIGINT ( 20 ) DEFAULT '0',
-	PRIMARY KEY ( `id` ) USING BTREE 
+	PRIMARY KEY (`id`) USING BTREE,
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_allow_create_project` (`allow_create_project`),
+    KEY `idx_member_permission` (`member_permission`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 -- ----------------------------
@@ -244,7 +247,10 @@ CREATE TABLE `project` (
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`update_by` BIGINT ( 20 ) DEFAULT NULL,
 	`update_time` TIMESTAMP NULL,
-	PRIMARY KEY ( `id` ) USING BTREE 
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `idx_org_id` (`org_id`),
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_visibility` (`visibility`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 -- ----------------------------
@@ -392,7 +398,8 @@ CREATE TABLE `rel_user_organization` (
 	`update_by` BIGINT ( 20 ) DEFAULT NULL,
 	`update_time` TIMESTAMP NULL,
 	PRIMARY KEY ( `id` ) USING BTREE,
-	UNIQUE KEY `idx_org_user` ( `org_id`, `user_id` ) USING BTREE 
+    UNIQUE KEY `idx_org_user` (`org_id`, `user_id`) USING BTREE,
+    KEY `idx_role` (`role`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 -- ----------------------------
@@ -410,7 +417,7 @@ CREATE TABLE `role` (
 	`update_time` TIMESTAMP NULL,
 	`avatar` VARCHAR ( 255 ) DEFAULT NULL,
 	PRIMARY KEY ( `id` ) USING BTREE,
-	KEY `idx_orgid` ( `org_id` ) USING BTREE 
+	KEY `idx_org_id` ( `org_id` ) USING BTREE
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '权限表';
 
 -- ----------------------------
@@ -470,7 +477,9 @@ CREATE TABLE `user` (
 	`create_by` BIGINT ( 20 ) NOT NULL DEFAULT '0',
 	`update_by` BIGINT ( 20 ) DEFAULT NULL,
 	`update_time` TIMESTAMP NULL,
-	PRIMARY KEY ( `id` ) USING BTREE 
+	PRIMARY KEY (`id`) USING BTREE,
+    KEY `idx_email` (`email`),
+    KEY `idx_username` (`username`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 -- ----------------------------

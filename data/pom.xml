@@ -34,13 +34,13 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>edp.davinci</groupId>
+			<groupId>com.creditease</groupId>
 			<artifactId>davinci-commons</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>edp.davinci</groupId>
+			<groupId>com.creditease</groupId>
 			<artifactId>davinci-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
-			<version>1.1.22</version>
+			<version>1.2.3</version>
 			<scope>compile</scope>
 		</dependency>
 

@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static edp.davinci.commons.Constants.*;
+import static edp.davinci.data.commons.Constants.PATTERN_SENSITIVE_SQL;
 
 //import static edp.davinci.data.commons.Constants.PATTERN_SENSITIVE_SQL;
 
@@ -73,7 +74,7 @@ public class SqlParseUtils {
     public static final Pattern PATTERN_SQL_ANNOTATION = Pattern.compile(REG_SQL_ANNOTATION);
 
     public static String parseAnnotations(String sql) {
-        return PATTERN_SQL_ANNOTATION.matcher(sql).replaceAll("$1").replace(NEW_LINE, EMPTY).replaceAll("(;+\\s*)+",
+        return PATTERN_SQL_ANNOTATION.matcher(sql).replaceAll("$1").replace(NEW_LINE, SPACE).replaceAll("(;+\\s*)+",
                 SEMICOLON);
     }
 
@@ -526,6 +527,8 @@ public class SqlParseUtils {
 		if (StringUtils.isEmpty(str)) {
 			return null;
         }
+
+//		str = parseAnnotations(sql);
         
 		if (str.startsWith(SEMICOLON)) {
 			str = str.substring(1);
@@ -541,6 +544,7 @@ public class SqlParseUtils {
 		if (strArr.length > 0) {
 			list = new ArrayList<>();
 			for (String s : strArr) {
+			    s = s.trim();
 				boolean select = isQuerySql(s);
 				if (isQuery) {
 					if (select) {
@@ -558,17 +562,16 @@ public class SqlParseUtils {
     }
 
     private static boolean isQuerySql(String sql) {
-        String temp = parseAnnotations(sql);
-        return temp.toLowerCase().startsWith(SELECT) || temp.toLowerCase().startsWith(WITH);
+        return sql.toLowerCase().startsWith(SELECT) || sql.toLowerCase().startsWith(WITH);
     }
 
     private static void checkSensitiveSql(String sql) {
-//         Matcher matcher = PATTERN_SENSITIVE_SQL.matcher(sql.toLowerCase());
-//         if (matcher.find()) {
-//             String group = matcher.group();
-//             log.warn("Sensitive SQL operations are not allowed:{}", group.toUpperCase());
-//             throw new RuntimeException("Sensitive SQL operations are not allowed:" + group.toUpperCase());
-//         }
+         Matcher matcher = PATTERN_SENSITIVE_SQL.matcher(sql.toLowerCase());
+         if (matcher.find()) {
+             String group = matcher.group();
+             log.warn("Sensitive SQL operations are not allowed:{}", group.toUpperCase());
+             throw new RuntimeException("Sensitive SQL operations are not allowed:" + group.toUpperCase());
+         }
     }
     
     public static String parseSqlWithFragment(String sql) {

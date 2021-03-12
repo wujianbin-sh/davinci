@@ -29,16 +29,16 @@ import edp.davinci.data.pojo.SqlQueryParam;
 public abstract class StatementParser {
 
     public abstract String getParserType();
-    
+
+    /**
+     * prepare parse, you can do something before parse
+     */
+    public abstract String preParse(String statement, SqlQueryParam queryParam, Map<String, List<String>> authParams, Map<String, Object> queryParams, Source source, User user);
+
     /**
      * parse view sql with system vars
      */
     public abstract String parseSystemVars(String statement, SqlQueryParam queryParam, Source source, User user);
-
-    /**
-     * parse view sql with query vars
-     */
-    public abstract String parseQueryVars(String statement, SqlQueryParam queryParam, Map<String, Object> queryParams, Map<String, List<String>> authParams, Source source, User user);
 
     /**
      * parse view sql with auth vars
@@ -46,6 +46,11 @@ public abstract class StatementParser {
      * if authParams is empty, means no permission
      */
     public abstract String parseAuthVars(String statement, SqlQueryParam queryParam, Map<String, List<String>> authParams, Map<String, Object> queryParams, Source source, User user);
+
+    /**
+     * parse view sql with query vars
+     */
+    public abstract String parseQueryVars(String statement, SqlQueryParam queryParam, Map<String, Object> queryParams, Map<String, List<String>> authParams, Source source, User user);
 
     /**
      * get execute statement from parsed statement to do execute

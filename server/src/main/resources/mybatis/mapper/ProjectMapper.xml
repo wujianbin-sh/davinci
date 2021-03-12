@@ -125,7 +125,7 @@
 
         union all
 
-        <!--当前org 下project对普通成员可见-->
+        <!--当前org下project对普通成员可见-->
         select distinct p.id
         from project p
         left join rel_user_organization ruo on ruo.org_id = p.org_id

@@ -1,7 +1,7 @@
 #  <<
 #  Davinci
 #  ==
-#  Copyright (C) 2016 - 2018 EDP
+#  Copyright (C) 2016 - 2020 EDP
 #  ==
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,28 +21,30 @@ server:
   port: 8080
 
   servlet:
-    context-path:
+    context-path: /
 
   access:
-    address: davinci3.edp.creditease.corp
+    address: test.davinci.creditease.corp
     port: 80
 
 
+## jwt is one of the important configuration of the application
+## jwt config cannot be null or empty
 jwtToken:
   secret: secret
   timeout: 21600000
   algorithm: HS512
 
 
-#your datasource config
+## your datasource config
 source:
   initial-size: 5
   min-idle: 5
-  max-wait: 30000
+  max-wait: 60000
   max-active: 50
   break-after-acquire-failure: false
   connection-error-retry-attempts: 1
-  time-between-eviction-runs-millis: 120000
+  time-between-eviction-runs-millis: 2000
   min-evictable-idle-time-millis: 600000
   max-evictable-idle-time-millis: 900000
   time-between-connect-error-millis: 60000
@@ -58,6 +60,17 @@ source:
   result-limit: 1000000
 
 
+aggregator:
+  name: h2
+  url: jdbc:h2:file:~/h2/data/davinci;DB_CLOSE_DELAY=-1;COMPRESS=true;TRACE_LEVEL_FILE=0;TRACE_LEVEL_SYSTEM_OUT=0;AUTO_SERVER=true;DATABASE_TO_UPPER=false
+  username:
+  password:
+  keyword_prefix: '"'
+  keyword_suffix: '"'
+  ttl: 60000
+  result-limit: 300000
+
+
 spring:
   mvc:
     async:
@@ -68,23 +81,23 @@ spring:
     proxy-ignore: '\S*\.idc|\S*\.corp|10.\S*|127.0.0.1|localhost|localhost.domain.com'
 
 
-  # davinci datasource config
+  ## davinci datasource config
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://10.120.5.56:3541/davinci3?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: davinci3
     password: OFu6rmNw4NeVFmxsCfRk
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     initial-size: 10
     min-idle: 10
-    max-wait: 30000
+    max-wait: 60000
     max-active: 20
     break-after-acquire-failure: false
     connection-error-retry-attempts: 1
-    time-between-eviction-runs-millis: 120000
+    time-between-eviction-runs-millis: 2000
     min-evictable-idle-time-millis: 600000
     max-evictable-idle-time-millis: 900000
-    time-between-connect-error-millis: 60000  
+    time-between-connect-error-millis: 60000
     test-while-idle: true
     test-on-borrow: false
     test-on-return: false
@@ -94,16 +107,18 @@ spring:
     filters: stat
 
 
+  ## redis config
+  ## please choose either of the two ways
   redis:
-
     isEnable: true
-    # standalone config
-    # host: 127.0.0.1
-    # port: 6379
 
-    #  cluster config
-    #  cluster:
-    #       nodes:
+    ## standalone config
+    #    host: 127.0.0.1
+    #    port: 6379
+
+    ## cluster config
+    #    cluster:
+    #      nodes:
 
     password: U0X9S97e0AFWeKC3MakP
     database: 0
@@ -119,12 +134,15 @@ spring:
       master: master6032
       nodes: 10.120.30.11:16032, 10.120.30.12:16032, 10.120.30.13:16032
 
-
+  ## mail is one of the important configuration of the application
+  ## mail config cannot be null or empty
+  ## some mailboxes need to be set separately password for the SMTP service)
   mail:
     host: email.creditease.cn
     port: 587
     username: it.edp.support@creditease.cn
-    password: edp@$%^963&
+    fromAddress:
+    password: 'edp@$%^963&'
     nickname: Davinci
 
     properties:
@@ -140,7 +158,7 @@ spring:
 
 
   ldap:
-    urls: ldap://10.134.98.26:389
+    urls: ldap://10.151.6.97:389
     username: davinci-ldap02
     password: m6#6EY69
     base: OU=宜信公司,OU=HABROOT,DC=creditease,DC=corp
@@ -150,6 +168,57 @@ spring:
   security:
     oauth2:
       enable: false
+  #      client:
+  #        registration:
+  #          cas:
+  #            provider: cas
+  #            client-id: "xxxxx"
+  #            client-name: "Sign in with XXX"
+  #            client-secret: "xxxxx"
+  #            authorization-grant-type: authorization_code
+  #            client-authentication-method: post
+  #            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+  #            scope: userinfo
+  #        provider:
+  #          cas:
+  #            authorization-uri: https://cas.xxxxx.cn/cas/oauth2.0/authorize
+  #            token-uri: https://cas.xxxxx.cn/cas/oauth2.0/accessToken
+  #            user-info-uri: https://cas.xxxxx.cn/cas/oauth2.0/profile
+  #            user-name-attribute: id
+  #            userMapping:
+  #              email: "attributes.Email"
+  #              name: "attributes.CnName1"
+  #              avatar: "attributes.Avatar"
+
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+      schema: classpath:quartz_table.sql
+    properties:
+      org:
+        quartz:
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 8
+          scheduler:
+            instanceName: DavinciScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            dataSource: davinci
+            isClustered: true
+
+
+cronjob:
+  reload-all: false
+
+
+screenshot:
+  default_browser: CHROME
+  timeout_second: 600
+  chromedriver_path: /Users/xiaolong/dev/chromedriver/chromedriver
 
 
 data-auth-center:
@@ -163,35 +232,27 @@ moa:
   base-url: http://moa-pc.jishu.idc/api
 
 
-screenshot:
-  default_browser: CHROME
-  timeout_second: 1800
-  chromedriver_path: /app/chrome/chromedriver
-
-
 statistic:
   enable: true
 
-  # You can use external elasticsearch storage [127.0.0.1:9300]
-  # elastic_urls:
-  # elastic_user:
-  # elastic_index_prefix:
-  # You can also use external mysql storage
+## You can use external elasticsearch storage [127.0.0.1:9300]
+#  elastic_urls:
+#  elastic_user:
+#  elastic_index_prefix:
 
-  mysql_url: jdbc:mysql://10.120.5.56:3541/davinci3?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
-  mysql_username: davinci3
-  mysql_password: OFu6rmNw4NeVFmxsCfRk
-  
-  # You can also use external kafka
-  # kafka.bootstrap.servers:
-  # kafka.topic:
-  # java.security.krb5.conf:
-  # java.security.keytab:
-  # java.security.principal:
+## You can also use external mysql storage
+#  mysql_url:
+#  mysql_username:
+#  mysql_password:
+
+## You can also use external kafka
+#  kafka.bootstrap.servers:
+#  kafka.topic:
+#  java.security.krb5.conf:
+#  java.security.keytab:
+#  java.security.principal:
+
 
 encryption:
   maxEncryptSize: 1024
   type: Off # Off is to turn off encryption, to enable encryption, please select AES or RSA
-
-
-start_all_jobs_when_server_start: false
