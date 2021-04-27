@@ -53,6 +53,18 @@ public class WidgetQueryParam extends ConcurrencyStrategy {
 
     }
 
+    /**
+     * for json deserialization
+     *
+     * @param groups
+     * @param aggregators
+     * @param orders
+     * @param filters
+     * @param params
+     * @param cache
+     * @param expired
+     * @param nativeQuery
+     */
     public WidgetQueryParam(List<String> groups,
                             List<Aggregator> aggregators,
                             List<Order> orders,

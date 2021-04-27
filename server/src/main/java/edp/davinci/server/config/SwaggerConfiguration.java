@@ -62,7 +62,7 @@ public class SwaggerConfiguration {
                 .globalResponseMessage(RequestMethod.DELETE, responseMessageList)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("edp.davinci.controller"))
+                .apis(RequestHandlerSelectors.basePackage("edp.davinci.server.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(Lists.newArrayList(apiKey()));

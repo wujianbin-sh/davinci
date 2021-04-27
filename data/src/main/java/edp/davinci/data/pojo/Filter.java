@@ -2,6 +2,7 @@ package edp.davinci.data.pojo;
 
 import java.util.List;
 
+import edp.davinci.commons.util.JSONUtils;
 import lombok.Data;
 
 @Data
@@ -23,4 +24,23 @@ public class Filter {
     private String operator;
 
     private List<Filter> children;
+
+    public Filter() {
+
+    }
+
+    /**
+     * for json deserialization
+     *
+     * @param filterStr
+     */
+    public Filter(String filterStr) {
+        Filter f = JSONUtils.toObject(filterStr, Filter.class);
+        this.name = f.getName();
+        this.type = f.getType();
+        this.value = f.getValue();
+        this.sqlType = f.getSqlType();
+        this.operator = f.getOperator();
+        this.children = f.getChildren();
+    }
 }

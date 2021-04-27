@@ -101,10 +101,6 @@ public class DateUtils {
         }
     }
 
-    private DateUtils() {
-
-    }
-
     public static Date toDate(String timeString) throws Exception {
         if (StringUtils.isEmpty(timeString)) {
             return null;

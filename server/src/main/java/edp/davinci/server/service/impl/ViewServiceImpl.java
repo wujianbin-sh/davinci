@@ -76,6 +76,7 @@ import java.util.stream.Collectors;
 
 import static edp.davinci.commons.Constants.*;
 import static edp.davinci.server.commons.Constants.NO_AUTH_PERMISSION;
+import static edp.davinci.server.commons.Constants.AUTH_PERMISSION;
 import static edp.davinci.server.enums.SqlVariableTypeEnum.AUTHVAR;
 
 @Slf4j
@@ -787,47 +788,72 @@ public class ViewServiceImpl extends BaseEntityService implements ViewService {
                 List<Object> defaultValues = v.getDefaultValues();
                 Optional<AuthParamValue> optional = paramValues.stream().filter(paramValue -> paramValue.getName().equals(v.getName()))
                         .findFirst();
+
                 if (defaultValues == null) {
-                    v.setDefaultValues(new ArrayList<>());
-                    optional.ifPresent(paramValue -> {
+                    if (optional.isPresent()) {
+                        AuthParamValue paramValue = optional.get();
                         if (paramValue.isEnable()) {
                             if (CollectionUtils.isEmpty(paramValue.getValues())) {
                                 v.setDefaultValues(Arrays.asList(new String[]{NO_AUTH_PERMISSION}));
                             } else {
                                 v.setDefaultValues(paramValue.getValues());
                             }
+                        } else {
+                            v.setDefaultValues(Arrays.asList(new String[]{AUTH_PERMISSION}));
                         }
-                    });
+                    } else {
+                        v.setDefaultValues(Arrays.asList(new String[]{AUTH_PERMISSION}));
+                    }
                     return;
                 }
 
                 if (!optional.isPresent()) {
-                    v.setDefaultValues(new ArrayList<>());
+                    v.setDefaultValues(Arrays.asList(new String[]{AUTH_PERMISSION}));
                     return;
                 }
 
                 AuthParamValue paramValue = optional.get();
+                List<Object> values = paramValue.getValues();
                 if (paramValue.isEnable()) {
-                    if (!CollectionUtils.isEmpty(paramValue.getValues())) {
+                    if (!CollectionUtils.isEmpty(values)) {
                         boolean denied = defaultValues.size() == 1 && defaultValues.get(0).equals(NO_AUTH_PERMISSION);
-                        boolean disable = defaultValues.size() == 0;
                         if (denied) {
-                            v.setDefaultValues(paramValue.getValues());
-                        } else if (!disable) {
-                            defaultValues.addAll(paramValue.getValues());
+                            v.setDefaultValues(values);
+                            return;
                         }
+
+                        boolean permission = defaultValues.size() == 1 && defaultValues.get(0).equals(AUTH_PERMISSION);
+                        if (permission) {
+                            return;
+                        }
+
+                        defaultValues.addAll(values);
+
                     }
                 } else {
-                    v.setDefaultValues(new ArrayList<>());
+                    v.setDefaultValues(Arrays.asList(new String[]{AUTH_PERMISSION}));
                 }
 
             });
         });
 
         for (SqlVariable var : authVars) {
-            String varName = var.getName();
+            List<Object> defaultValues = var.getDefaultValues();
+            if (defaultValues != null) {
+                boolean permission = defaultValues.size() == 1 && defaultValues.get(0).equals(AUTH_PERMISSION);
+                if (permission) {
+                    var.setDefaultValues(null);
+                }
+
+                boolean denied = defaultValues.size() == 1 && defaultValues.get(0).equals(NO_AUTH_PERMISSION);
+                if (denied) {
+                    var.setDefaultValues(Collections.emptyList());
+                }
+            }
+
             List<String> values = authVarUtils.getValue(var, user.getEmail());
-            if (values == null) {
+            String varName = var.getName();
+            if (values != null && values.size() == 0) {
                 authParams.put(varName, Arrays.asList(new String[]{NO_AUTH_PERMISSION}));
             } else {
                 authParams.put(varName, values);
@@ -1179,5 +1205,4 @@ public class ViewServiceImpl extends BaseEntityService implements ViewService {
         sql += String.join(Constants.NEW_LINE, queryStatements);
         return sql;
     }
-
 }

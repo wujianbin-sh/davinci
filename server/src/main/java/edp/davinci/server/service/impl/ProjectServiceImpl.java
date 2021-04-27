@@ -545,7 +545,7 @@ public class ProjectServiceImpl extends BaseEntityService implements ProjectServ
 		admins.forEach(u -> {
 			RelProjectAdmin rel = new RelProjectAdmin();
 			rel.setProjectId(id);
-			rel.setUserId(user.getId());
+			rel.setUserId(u.getId());
 			rel.setCreateBy(user.getId());
 			rel.setCreateTime(new Date());
 			relProjectAdmins.add(rel);
