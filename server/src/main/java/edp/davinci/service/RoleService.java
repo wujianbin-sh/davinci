@@ -42,7 +42,7 @@ public interface RoleService {
 
 
     /**
-     * 删除 Role
+     * 删除Role
      *
      * @param id
      * @param user
@@ -103,7 +103,7 @@ public interface RoleService {
 
 
     /**
-     * 更新role member
+     * 更新Role与User关联
      *
      * @param roleId
      * @param memberIds
