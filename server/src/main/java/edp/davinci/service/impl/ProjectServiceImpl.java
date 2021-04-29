@@ -760,7 +760,7 @@ public class ProjectServiceImpl extends BaseEntityService implements ProjectServ
 
 
     /**
-     * user是否project 的维护者
+     * user是否project的维护者
      *
      * @param projectDetail
      * @param user
