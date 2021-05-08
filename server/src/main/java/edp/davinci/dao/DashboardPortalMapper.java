@@ -31,6 +31,7 @@ import java.util.List;
 
 @Component
 public interface DashboardPortalMapper {
+
     int insert(DashboardPortal dashboardPortal);
 
     @Delete({"delete from dashboard_portal where id = #{id}"})

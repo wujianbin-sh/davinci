@@ -542,7 +542,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
 
         User tempUser = userMapper.getById(id);
         if (null == tempUser) {
-            return resultMap.failAndRefreshToken(request).message("user not found");
+            return resultMap.failAndRefreshToken(request).message("User not found");
         }
 
         UserProfile userProfile = new UserProfile();
@@ -602,7 +602,7 @@ public class UserServiceImpl extends BaseEntityService implements UserService {
             case USERNAME:
                 String username = ticket.getTicket();
                 if (StringUtils.isEmpty(username)) {
-                    throw new ServerException("username cannot be EMPTY!");
+                    throw new ServerException("Username cannot be EMPTY!");
                 }
                 user = userMapper.selectByUsername(username);
                 if (user == null) {

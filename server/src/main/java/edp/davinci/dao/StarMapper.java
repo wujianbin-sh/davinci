@@ -58,7 +58,6 @@ public interface StarMapper {
     })
     List<ProjectWithCreateBy> getStarProjectListByUser(@Param("userId") Long userId, @Param("target") String target);
 
-
     @Select({
             "select u.id, IF(u.`name` is NULL,u.username,u.`name`) as username, u.email, u.avatar, s.star_time from star s left join user u on u.id = s.user_id",
             "where s.target = #{target} and s.target_id = #{targetId}"
