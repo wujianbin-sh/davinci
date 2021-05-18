@@ -377,16 +377,6 @@ public class SourceServiceImpl extends BaseEntityService implements SourceServic
 
         try {
 
-            if (!sourceTest.isExt()) {
-                sourceTest.setVersion(null);
-            }
-
-            if (StringUtils.isEmpty(sourceTest.getVersion())
-                    || JDBC_DATASOURCE_DEFAULT_VERSION.equals(sourceTest.getVersion())) {
-                sourceTest.setVersion(null);
-                sourceTest.setExt(false);
-            }
-
             JdbcSourceInfo jdbcSourceInfo = JdbcSourceInfoBuilder
                     .aJdbcSourceInfo()
                     .withJdbcUrl(sourceTest.getUrl())
@@ -399,7 +389,7 @@ public class SourceServiceImpl extends BaseEntityService implements SourceServic
 
             testConnection = new SourceUtils(jdbcDataSource).testSource(jdbcSourceInfo);
 
-        } catch (SourceException e) {
+        } catch (Exception e) {
             log.error(e.toString(), e);
             throw new ServerException(e.getMessage());
         }
