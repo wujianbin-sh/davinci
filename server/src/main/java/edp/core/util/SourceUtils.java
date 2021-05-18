@@ -19,7 +19,6 @@
 
 package edp.core.util;
 
-import com.alibaba.druid.util.StringUtils;
 import edp.core.common.jdbc.ExtendedJdbcClassLoader;
 import edp.core.common.jdbc.JdbcDataSource;
 import edp.core.consts.Consts;
@@ -31,14 +30,13 @@ import edp.core.model.JdbcSourceInfo;
 import edp.davinci.runner.LoadSupportDataSourceRunner;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 
@@ -63,22 +61,42 @@ public class SourceUtils {
      * @return
      * @throws SourceException
      */
-    public boolean testSource(JdbcSourceInfo jdbcSourceInfo) {
+    public boolean testSource(JdbcSourceInfo jdbcSourceInfo) throws Exception {
 
-        try {
-            Class.forName(getDriverClassName(jdbcSourceInfo.getJdbcUrl(), jdbcSourceInfo.getDbVersion()));
-        } catch (ClassNotFoundException e) {
-            log.error(e.toString(), e);
-            return false;
+        String jdbcUrl = jdbcSourceInfo.getJdbcUrl();
+        String userName = jdbcSourceInfo.getUsername();
+        String password = jdbcSourceInfo.getPassword();
+        String version = jdbcSourceInfo.getDbVersion();
+        boolean isExt = jdbcSourceInfo.isExt();
+        String className = getDriverClassName(jdbcUrl, version);
+
+        if (!isExt || StringUtils.isEmpty(version) || JDBC_DATASOURCE_DEFAULT_VERSION.equals(version)) {
+            try {
+                Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                log.error(e.toString(), e);
+                throw e;
+            }
+
+            try (Connection con = DriverManager.getConnection(jdbcUrl, userName, password);) {
+                return con != null;
+            } catch (SQLException e) {
+                throw e;
+            }
+        } else {
+            String path = System.getenv("DAVINCI3_HOME") + File.separator  + String.format(Consts.PATH_EXT_FORMATTER,
+                    getDataSourceName(jdbcUrl), jdbcSourceInfo.getDbVersion());
+            ExtendedJdbcClassLoader extendedJdbcClassLoader = ExtendedJdbcClassLoader.getExtJdbcClassLoader(path);
+            Driver driver = (Driver) extendedJdbcClassLoader.loadClass(className).newInstance();
+            Properties properties = new Properties();
+            properties.put("user", userName);
+            properties.put("password", password);
+            try (Connection con = driver.connect(jdbcUrl, properties);) {
+                return con != null;
+            } catch (SQLException e) {
+                throw e;
+            }
         }
-
-        try (Connection con = DriverManager.getConnection(jdbcSourceInfo.getJdbcUrl(), jdbcSourceInfo.getUsername(), jdbcSourceInfo.getPassword());) {
-            return con != null;
-        } catch (SQLException e) {
-            log.error(e.toString(), e);
-        }
-
-        return false;
     }
 
     /**
@@ -220,6 +238,13 @@ public class SourceUtils {
     }
 
     public static String getDriverClassName(String jdbcUrl, String version) {
+        if (!StringUtils.isEmpty(version)
+                && !JDBC_DATASOURCE_DEFAULT_VERSION.equals(version)) {
+            CustomDataSource customDataSource = CustomDataSourceUtils.getInstance(jdbcUrl, version);
+            if (customDataSource != null) {
+                return customDataSource.getDriver().trim();
+            }
+        }
 
         String className = null;
 
@@ -232,11 +257,6 @@ public class SourceUtils {
         if (!StringUtils.isEmpty(className) && !className.contains("com.sun.proxy")
                 && !className.contains("net.sf.cglib.proxy")) {
             return className;
-        }
-
-        CustomDataSource customDataSource = CustomDataSourceUtils.getInstance(jdbcUrl, version);
-        if (customDataSource != null) {
-            return customDataSource.getDriver().trim();
         }
 
         DataTypeEnum dataTypeEnum = DataTypeEnum.urlOf(jdbcUrl);
