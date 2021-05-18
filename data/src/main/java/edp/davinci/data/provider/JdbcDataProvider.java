@@ -24,8 +24,10 @@ import edp.davinci.commons.util.MD5Utils;
 import edp.davinci.commons.util.StringUtils;
 import edp.davinci.core.dao.entity.Source;
 import edp.davinci.core.dao.entity.User;
+import edp.davinci.data.commons.Constants;
 import edp.davinci.data.enums.DatabaseTypeEnum;
 import edp.davinci.data.exception.SourceException;
+import edp.davinci.data.jdbc.ExtendedJdbcClassLoader;
 import edp.davinci.data.pojo.*;
 import edp.davinci.data.source.JdbcDataSource;
 import edp.davinci.data.util.JdbcSourceUtils;
@@ -39,9 +41,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -71,21 +75,50 @@ public class JdbcDataProvider extends DataProvider {
 	@Override
 	public boolean test(Source source, User user) {
 		SourceConfig config = JdbcSourceUtils.getSourceConfig(source);
+		boolean ext = config.isExt();
+		String url = config.getUrl();
+		String username = config.getUsername();
+		String password = config.getPassword();
+		String version = config.getVersion();
+		String className = JdbcSourceUtils.getDriverClassName(url, version);
 
-		try {
-			Class.forName(JdbcSourceUtils.getDriverClassName(config.getUrl(), config.getVersion()));
-		} catch (ClassNotFoundException e) {
-			log.error(e.toString(), e);
-			return false;
+		if (!ext || StringUtils.isEmpty(version)
+				|| Constants.DATABASE_DEFAULT_VERSION.equals(version)) {
+			try {
+				Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				log.error(e.toString(), e);
+				return false;
+			}
+
+			try (Connection con = DriverManager.getConnection(url, username, password);) {
+				return con != null;
+			} catch (SQLException e) {
+				log.error(e.toString(), e);
+				return false;
+			}
+
+		} else {
+			String path = System.getenv("DAVINCI_HOME") + File.separator  + String.format(Constants.EXT_LIB_PATH_FORMATTER, config.getDatabase(), version);
+			ExtendedJdbcClassLoader extendedJdbcClassLoader = ExtendedJdbcClassLoader.getExtJdbcClassLoader(path);
+			Driver driver;
+			try {
+				driver = (Driver) extendedJdbcClassLoader.loadClass(className).newInstance();
+			} catch (Exception e) {
+				log.error(e.toString(), e);
+				return false;
+			}
+
+			Properties properties = new Properties();
+			properties.put("user", username);
+			properties.put("password", password);
+			try (Connection con = driver.connect(url, properties);) {
+				return con != null;
+			} catch (SQLException e) {
+				log.error(e.toString(), e);
+				return false;
+			}
 		}
-
-		try (Connection con = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());) {
-			return con != null;
-		} catch (SQLException e) {
-			log.error(e.toString(), e);
-		}
-
-		return false;
 	}
 
 	@Override

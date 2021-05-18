@@ -84,11 +84,11 @@ public class CustomDatabaseUtils {
             CustomDatabase database = mapper.convertValue(entry.getValue(), CustomDatabase.class);
 
             if (StringUtils.isNull(database.getName())) {
-                throw new Exception("Load custom datasource error: name cannot be null");
+                throw new Exception("Load custom database error: name cannot be null");
             }
             
             if (StringUtils.isNull(database.getDriver())) {
-                throw new Exception("Load custom datasource error: driver cannot be null");
+                throw new Exception("Load custom database error: driver cannot be null");
             }
 
             if (StringUtils.isNull(database.getDesc())) {
@@ -97,13 +97,13 @@ public class CustomDatabaseUtils {
 
             if (!StringUtils.isEmpty(database.getKeywordPrefix()) || !StringUtils.isEmpty(database.getKeywordSuffix())) {
                 if (StringUtils.isEmpty(database.getKeywordPrefix()) || StringUtils.isEmpty(database.getKeywordSuffix())) {
-                    throw new Exception("Load custom datasource error: keyword prefixes and suffixes must be configured in pairs");
+                    throw new Exception("Load custom database error: keyword prefixes and suffixes must be configured in pairs");
                 }
             }
 
             if (!StringUtils.isEmpty(database.getAliasPrefix()) || !StringUtils.isEmpty(database.getAliasSuffix())) {
                 if (StringUtils.isEmpty(database.getAliasPrefix()) || StringUtils.isEmpty(database.getAliasSuffix())) {
-                    throw new Exception("Load custom datasource error: alias prefixes and suffixes must be configured in pairs");
+                    throw new Exception("Load custom database error: alias prefixes and suffixes must be configured in pairs");
                 }
             }
 

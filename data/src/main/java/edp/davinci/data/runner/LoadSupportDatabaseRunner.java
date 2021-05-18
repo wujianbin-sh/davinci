@@ -35,7 +35,7 @@ import static edp.davinci.data.commons.Constants.ORACLE_JDBC_URL_PREFIX;
 
 import java.util.*;
 
-@Order(0)
+@Order(1)
 @Component
 public class LoadSupportDatabaseRunner implements ApplicationRunner {
 

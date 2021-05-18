@@ -257,8 +257,8 @@ public class JdbcDataSource {
         
         try {
 
-            if (StringUtils.isEmpty(version) ||
-                    !ext || Constants.DATABASE_DEFAULT_VERSION.equals(version)) {
+            if (!ext || StringUtils.isEmpty(version)
+                    || Constants.DATABASE_DEFAULT_VERSION.equals(version)) {
 
                 String className = JdbcSourceUtils.getDriverClassName(url, null);
                 try {

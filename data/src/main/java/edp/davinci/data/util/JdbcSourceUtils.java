@@ -23,6 +23,7 @@ import edp.davinci.commons.util.JSONUtils;
 import edp.davinci.commons.util.MD5Utils;
 import edp.davinci.commons.util.StringUtils;
 import edp.davinci.core.dao.entity.Source;
+import edp.davinci.data.commons.Constants;
 import edp.davinci.data.enums.DatabaseTypeEnum;
 import edp.davinci.data.exception.SourceException;
 import edp.davinci.data.jdbc.ExtendedJdbcClassLoader;
@@ -130,6 +131,13 @@ public class JdbcSourceUtils {
 
     public static String getDriverClassName(String url, String version) {
 
+        if (!StringUtils.isEmpty(version) && !Constants.DATABASE_DEFAULT_VERSION.equals(version)) {
+            CustomDatabase customDatabase = CustomDatabaseUtils.getInstance(url, version);
+            if (customDatabase != null) {
+                return customDatabase.getDriver().trim();
+            }
+        }
+
         String className = null;
 
         try {
@@ -141,11 +149,6 @@ public class JdbcSourceUtils {
         if (!StringUtils.isEmpty(className) && !className.contains("com.sun.proxy")
                 && !className.contains("net.sf.cglib.proxy")) {
             return className;
-        }
-
-        CustomDatabase customDatabase = CustomDatabaseUtils.getInstance(url, version);
-        if (customDatabase != null) {
-            return customDatabase.getDriver().trim();
         }
 
         DatabaseTypeEnum dataTypeEnum = DatabaseTypeEnum.urlOf(url);

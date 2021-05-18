@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 import edp.davinci.data.util.CustomDatabaseUtils;
 
-@Order(1)
+@Order(0)
 @Component
 @Slf4j
 public class CustomDatabaseRunner implements ApplicationRunner {
