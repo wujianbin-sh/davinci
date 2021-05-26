@@ -9,13 +9,21 @@ import { message } from 'antd'
 import { IScheduleRaw, ISchedule } from './components/types'
 import { scheduleConfigMigrationRecorder } from 'app/utils/migrationRecorders'
 
-export function* getSchedules (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.LOAD_SCHEDULES) { return }
+export function* getSchedules(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.LOAD_SCHEDULES) {
+    return
+  }
 
   try {
-    const asyncData = yield call(request, `${api.schedule}?projectId=${action.payload.projectId}`)
+    const asyncData = yield call(
+      request,
+      `${api.schedule}?projectId=${action.payload.projectId}`
+    )
     const rawSchedules: IScheduleRaw[] = asyncData.payload
-    const schedules = rawSchedules.map<ISchedule>((schedule) => ({ ...schedule, config: JSON.parse(schedule.config) }))
+    const schedules = rawSchedules.map<ISchedule>((schedule) => ({
+      ...schedule,
+      config: JSON.parse(schedule.config)
+    }))
     yield put(ScheduleActions.schedulesLoaded(schedules))
   } catch (err) {
     yield put(ScheduleActions.loadSchedulesFail())
@@ -23,13 +31,20 @@ export function* getSchedules (action: ScheduleActionType) {
   }
 }
 
-export function* getScheduleDetail (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.LOAD_SCHEDULE_DETAIL) { return }
+export function* getScheduleDetail(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.LOAD_SCHEDULE_DETAIL) {
+    return
+  }
 
   try {
-    const asyncData = yield call(request, `${api.schedule}/${action.payload.scheduleId}`)
+    const asyncData = yield call(
+      request,
+      `${api.schedule}/${action.payload.scheduleId}`
+    )
     const schedule = asyncData.payload
-    schedule.config = scheduleConfigMigrationRecorder(JSON.parse(schedule.config))
+    schedule.config = scheduleConfigMigrationRecorder(
+      JSON.parse(schedule.config)
+    )
     yield put(ScheduleActions.scheduleDetailLoaded(schedule))
   } catch (err) {
     yield put(ScheduleActions.loadScheduleDetailFail())
@@ -37,11 +52,16 @@ export function* getScheduleDetail (action: ScheduleActionType) {
   }
 }
 
-export function* addSchedule (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.ADD_SCHEDULE) { return }
+export function* addSchedule(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.ADD_SCHEDULE) {
+    return
+  }
 
   const { schedule, resolve } = action.payload
-  const rawSchedule: IScheduleRaw = { ...schedule, config: JSON.stringify(schedule.config) }
+  const rawSchedule: IScheduleRaw = {
+    ...schedule,
+    config: JSON.stringify(schedule.config)
+  }
   try {
     const asyncData = yield call(request, {
       method: 'post',
@@ -58,8 +78,10 @@ export function* addSchedule (action: ScheduleActionType) {
   }
 }
 
-export function* deleteSchedule (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.DELETE_SCHEDULE) { return }
+export function* deleteSchedule(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.DELETE_SCHEDULE) {
+    return
+  }
 
   const { id } = action.payload
   try {
@@ -74,8 +96,10 @@ export function* deleteSchedule (action: ScheduleActionType) {
   }
 }
 
-export function* changeScheduleStatus (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.CHANGE_SCHEDULE_STATUS) { return }
+export function* changeScheduleStatus(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.CHANGE_SCHEDULE_STATUS) {
+    return
+  }
 
   const { currentStatus, id } = action.payload
   try {
@@ -103,8 +127,10 @@ export function* changeScheduleStatus (action: ScheduleActionType) {
   }
 }
 
-export function* executeScheduleImmediately (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.EXECUTE_SCHEDULE_IMMEDIATELY) { return }
+export function* executeScheduleImmediately(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.EXECUTE_SCHEDULE_IMMEDIATELY) {
+    return
+  }
 
   const { id, resolve } = action.payload
   try {
@@ -118,8 +144,10 @@ export function* executeScheduleImmediately (action: ScheduleActionType) {
   }
 }
 
-export function* editSchedule (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.EDIT_SCHEDULE) { return }
+export function* editSchedule(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.EDIT_SCHEDULE) {
+    return
+  }
 
   const { schedule, resolve } = action.payload
   try {
@@ -136,8 +164,10 @@ export function* editSchedule (action: ScheduleActionType) {
   }
 }
 
-export function* getSuggestMails (action: ScheduleActionType) {
-  if (action.type !== ActionTypes.LOAD_SUGGEST_MAILS) { return }
+export function* getSuggestMails(action: ScheduleActionType) {
+  if (action.type !== ActionTypes.LOAD_SUGGEST_MAILS) {
+    return
+  }
 
   const { keyword } = action.payload
   if (!keyword) {
@@ -158,13 +188,19 @@ export function* getSuggestMails (action: ScheduleActionType) {
 }
 
 // @FIXME need remove
-export function* getVizsData (action) {
+export function* getVizsData(action) {
   const { projectId } = action.payload
   try {
-    const portalsData = yield call(request, `${api.portal}?projectId=${projectId}`)
+    const portalsData = yield call(
+      request,
+      `${api.portal}?projectId=${projectId}`
+    )
     const portalsList = portalsData.payload
 
-    const displayData = yield call(request, `${api.display}?projectId=${projectId}`)
+    const displayData = yield call(
+      request,
+      `${api.display}?projectId=${projectId}`
+    )
     const displayList = displayData.payload.map((display) => ({
       ...display,
       vizType: 'display',
@@ -175,11 +211,13 @@ export function* getVizsData (action) {
       isLeaf: true
     }))
 
-    const list = yield all(portalsList.map((portals, index) => {
-      return call(request, `${api.portal}/${portals.id}/dashboards`)
-    }))
+    const list = yield all(
+      portalsList.map((portals, index) => {
+        return call(request, `${api.portal}/${portals.id}/dashboards`)
+      })
+    )
     const portals = portalsList.map((portal, index) => {
-      portal.children =  buildTree(list[index].payload)
+      portal.children = buildTree(list[index].payload)
       return {
         ...portal,
         vizType: 'portal',
@@ -190,55 +228,61 @@ export function* getVizsData (action) {
         isLeaf: !portal.children.length
       }
     })
-    const result = [{
-      contentType: 'display',
-      title: `Display`,
-      key: 'DISPLAYS',
-      value: 'display',
-      isTitle: true,
-      children: displayList
-    },
-    {
-      contentType: 'portal',
-      title: `Dashboard`,
-      key: 'DASHBOARDS',
-      value: 'portal',
-      isTitle: true,
-      children: portals
-    }]
+    const result = [
+      {
+        contentType: 'display',
+        title: `Display`,
+        key: 'DISPLAYS',
+        value: 'display',
+        isTitle: true,
+        children: displayList
+      },
+      {
+        contentType: 'portal',
+        title: `Dashboard`,
+        key: 'DASHBOARDS',
+        value: 'portal',
+        isTitle: true,
+        children: portals
+      }
+    ]
     yield put(ScheduleActions.vizsLoaded(result))
   } catch (err) {
     yield put(ScheduleActions.loadVizsFail())
     message.error('获取失败')
   }
 
-  function buildTree (list) {
+  function buildTree(list) {
+    console.log(JSON.stringify(list))
+    // debugger
     const temp = {}
     const tree = {}
     const result = []
-    list.forEach((l, index) => temp[list[index].id] = list[index])
+    list.forEach((l, index) => (temp[list[index].id] = list[index]))
     for (const i in temp) {
       if (temp[i].parentId) {
-        if (!temp[temp[i].parentId].children) {
-          temp[temp[i].parentId].children = {}
+        if (temp[temp[i].parentId]) {
+          if (!temp[temp[i].parentId].children) {
+            temp[temp[i].parentId].children = {}
+          }
+          temp[temp[i].parentId].children[temp[i].id] = temp[i]
         }
-        temp[temp[i].parentId].children[temp[i].id] = temp[i]
       } else {
-        tree[temp[i].id] =  temp[i]
+        tree[temp[i].id] = temp[i]
       }
     }
-    function arr (tree, wrapper) {
+    function arr(tree, wrapper) {
       for (const attr in tree) {
         if (tree[attr]['children']) {
           tree[attr] = {
             ...tree[attr],
             ...{
-                vizType: 'dashboard',
-                contentType: 'portal',
-                label: `${tree[attr].name}`,
-                key: tree[attr].name,
-                value: `${tree[attr].id}(p)`,
-                isLeaf: true
+              vizType: 'dashboard',
+              contentType: 'portal',
+              label: `${tree[attr].name}`,
+              key: tree[attr].name,
+              value: `${tree[attr].id}(p)`,
+              isLeaf: true
             }
           }
           wrapper.push(tree[attr])
@@ -249,12 +293,12 @@ export function* getVizsData (action) {
           tree[attr] = {
             ...tree[attr],
             ...{
-                vizType: 'dashboard',
-                contentType: 'portal',
-                label: `${tree[attr].name}`,
-                key: tree[attr].name,
-                value: `${tree[attr].id}(p)`,
-                isLeaf: true
+              vizType: 'dashboard',
+              contentType: 'portal',
+              label: `${tree[attr].name}`,
+              key: tree[attr].name,
+              value: `${tree[attr].id}(p)`,
+              isLeaf: true
             }
           }
           wrapper.push(tree[attr])
@@ -266,14 +310,17 @@ export function* getVizsData (action) {
   }
 }
 
-export default function* rootScheduleSaga () {
+export default function* rootScheduleSaga() {
   yield all([
     takeEvery(ActionTypes.LOAD_SCHEDULES, getSchedules),
     takeEvery(ActionTypes.LOAD_SCHEDULE_DETAIL, getScheduleDetail),
     takeEvery(ActionTypes.ADD_SCHEDULE, addSchedule),
     takeEvery(ActionTypes.DELETE_SCHEDULE, deleteSchedule),
     takeEvery(ActionTypes.CHANGE_SCHEDULE_STATUS, changeScheduleStatus),
-    takeEvery(ActionTypes.EXECUTE_SCHEDULE_IMMEDIATELY, executeScheduleImmediately),
+    takeEvery(
+      ActionTypes.EXECUTE_SCHEDULE_IMMEDIATELY,
+      executeScheduleImmediately
+    ),
     takeEvery(ActionTypes.EDIT_SCHEDULE, editSchedule),
     takeLatest(ActionTypes.LOAD_SUGGEST_MAILS, getSuggestMails),
     takeEvery(ActionTypes.LOAD_VIZS, getVizsData)
