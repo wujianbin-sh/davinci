@@ -28,12 +28,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ExtendedJdbcClassLoader extends URLClassLoader {
 
     private static final String JAR_FILE_SUFFIX = ".jar";
 
-    private static volatile Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
+    private static volatile Map<String, Class<?>> classMap = new ConcurrentHashMap<>();
     private static volatile Map<String, ExtendedJdbcClassLoader> classLoaderMap = new HashMap<String, ExtendedJdbcClassLoader>();
 
     private ExtendedJdbcClassLoader(URL[] urls) {
