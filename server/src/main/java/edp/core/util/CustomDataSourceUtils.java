@@ -125,10 +125,6 @@ public class CustomDataSourceUtils {
                 versions.add(customDataSource.getVersion());
             }
 
-            if (versions.size() == 1 && versions.get(0).equals(JDBC_DATASOURCE_DEFAULT_VERSION)) {
-                versions.remove(0);
-            }
-
             dataSourceVersion.put(customDataSource.getName(), versions);
             customDataSourceMap.put(getKey(customDataSource.getName(), customDataSource.getVersion()), customDataSource);
         }
