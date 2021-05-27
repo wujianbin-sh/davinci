@@ -238,16 +238,13 @@ public class SourceUtils {
     }
 
     public static String getDriverClassName(String jdbcUrl, String version) {
-        if (!StringUtils.isEmpty(version)
-                && !JDBC_DATASOURCE_DEFAULT_VERSION.equals(version)) {
-            CustomDataSource customDataSource = CustomDataSourceUtils.getInstance(jdbcUrl, version);
-            if (customDataSource != null) {
-                return customDataSource.getDriver().trim();
-            }
+
+        CustomDataSource dataSource = CustomDataSourceUtils.getInstance(jdbcUrl, version);
+        if (dataSource != null) {
+            return dataSource.getDriver().trim();
         }
 
         String className = null;
-
         try {
             className = DriverManager.getDriver(jdbcUrl.trim()).getClass().getName();
         } catch (SQLException e) {
@@ -266,7 +263,6 @@ public class SourceUtils {
 
         throw new SourceException("Not supported data type: jdbcUrl=" + jdbcUrl);
     }
-
 
     /**
      * 释放失效数据源
