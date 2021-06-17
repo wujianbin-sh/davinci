@@ -32,6 +32,7 @@ import edp.davinci.server.dao.ViewExtendMapper;
 import edp.davinci.server.dto.cronjob.MsgMailExcel;
 import edp.davinci.server.dto.view.SimpleView;
 import edp.davinci.server.dto.view.WidgetQueryParam;
+import edp.davinci.server.enums.ActionEnum;
 import edp.davinci.server.enums.FileTypeEnum;
 import edp.davinci.server.model.ExcelHeader;
 import edp.davinci.server.util.ExcelUtils;
@@ -117,8 +118,10 @@ public class WorkbookWorker<T> extends MsgNotifier implements Callable {
                     logger.error(e.toString(), e);
                 }
 
-                MsgMailExcel msg = (MsgMailExcel) wrapper.getMsg();
-                msg.setException(e);
+                if (wrapper.getAction() == ActionEnum.MAIL) {
+                    MsgMailExcel msg = (MsgMailExcel) wrapper.getMsg();
+                    msg.setException(e);
+                }
             }
 
             if (rst) {
@@ -151,13 +154,16 @@ public class WorkbookWorker<T> extends MsgNotifier implements Callable {
                 logger.error(e.toString(), e);
             }
 
-            MsgMailExcel msg = (MsgMailExcel) wrapper.getMsg();
-            msg.setException(e);
-            super.tell(wrapper);
+            if (wrapper.getAction() == ActionEnum.MAIL) {
+                MsgMailExcel msg = (MsgMailExcel) wrapper.getMsg();
+                msg.setException(e);
+            }
 
             if (StringUtils.isNotEmpty(filePath)) {
                 FileUtils.delete(filePath);
             }
+
+            super.tell(wrapper);
 
         } finally {
             workbookDispose(wb);
