@@ -24,18 +24,27 @@
 
     <properties>
         <skipTests>true</skipTests>
-        <main.basedir>${project.parent.basedir}</main.basedir>
         <sbt.project.name>assembly</sbt.project.name>
         <build.testJarPhase>none</build.testJarPhase>
         <build.copyDependenciesPhase>package</build.copyDependenciesPhase>
+        <server-version>${parent.version}</server-version>
+        <task-version>0.1-SNAPSHOT</task-version>
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>com.creditease</groupId>
             <artifactId>davinci-server</artifactId>
-            <version>${project.version}</version>
+            <version>${server-version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.creditease</groupId>
+            <artifactId>davinci-task</artifactId>
+            <version>${task-version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -65,8 +74,24 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <finalName>davinci-server-${server-version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
-                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                                <descriptor>src/main/assembly/server.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>task</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>davinci-task-${task-version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/task.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
@@ -74,11 +99,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>server</id>
-        </profile>
-    </profiles>
-
 </project>

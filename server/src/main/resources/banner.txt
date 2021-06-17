@@ -3,5 +3,5 @@
  | |) |/ _` |\ V /| || ' \ / _|| |
  |___/ \__,_| \_/ |_||_||_|\__||_|
 
- Davinci version: 0.4
+ Davinci Server version: 0.4
  Spring Boot version: 2.2.6.RELEASE

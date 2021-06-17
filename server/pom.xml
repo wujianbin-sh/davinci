@@ -36,19 +36,19 @@
 		<dependency>
 			<groupId>com.creditease</groupId>
 			<artifactId>davinci-commons</artifactId>
-			<version>${project.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.creditease</groupId>
 			<artifactId>davinci-core</artifactId>
-			<version>${project.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.creditease</groupId>
 			<artifactId>davinci-data</artifactId>
-			<version>${project.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 
 		<dependency>
@@ -434,6 +434,7 @@
 						<configuration>
 							<type>jar</type>
 							<includeTypes>jar</includeTypes>
+							<includeScope>compile</includeScope>
 							<outputDirectory>
 								${project.build.directory}/lib
 							</outputDirectory>

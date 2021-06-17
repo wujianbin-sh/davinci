@@ -39,9 +39,11 @@ public class Constants {
 
 	public static final Pattern JDBC_URL_PATTERN = Pattern.compile("jdbc:\\w+");
 
+	public static final String SQL_TEMPLATE = "templates/sql/sqlTemplate.stg";
+
 	public static final String NO_AUTH_PERMISSION = "@DAVINCI_DATA_ACCESS_DENIED@";
 
-	public static final String SQL_TEMPLATE = "templates/sql/sqlTemplate.stg";
+	public static final String AUTH_PERMISSION = "@DAVINCI_DATA_ACCESS_PERMISSION@";
 
 	public static final String REG_SENSITIVE_SQL = "drop\\s|drop`|alter\\s|alter`|grant\\s|grant`|insert\\s|insert`" +
 			"|replace\\s|replace`|delete\\s|delete`|truncate\\s|truncate`|update\\s|update`|remove\\s|remove`";

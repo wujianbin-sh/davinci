@@ -19,17 +19,16 @@
 
 package edp.davinci.server.enums;
 
-import edp.davinci.server.commons.Constants;
-import static edp.davinci.commons.Constants.*;
-
-import edp.davinci.server.util.DataUtils;
-
+import edp.davinci.data.commons.Constants;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static edp.davinci.commons.Constants.SINGLE_QUOTES;
+import static edp.davinci.commons.Constants.EMPTY;
 
 public enum SqlVariableValueTypeEnum {
     STRING("string"),

@@ -131,15 +131,12 @@ public class JdbcSourceUtils {
 
     public static String getDriverClassName(String url, String version) {
 
-        if (!StringUtils.isEmpty(version) && !Constants.DATABASE_DEFAULT_VERSION.equals(version)) {
-            CustomDatabase customDatabase = CustomDatabaseUtils.getInstance(url, version);
-            if (customDatabase != null) {
-                return customDatabase.getDriver().trim();
-            }
+        CustomDatabase customDatabase = CustomDatabaseUtils.getInstance(url, version);
+        if (customDatabase != null) {
+            return customDatabase.getDriver().trim();
         }
 
         String className = null;
-
         try {
             className = DriverManager.getDriver(url.trim()).getClass().getName();
         } catch (SQLException e) {

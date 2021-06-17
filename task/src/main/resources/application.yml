@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: pro
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: none
+  mail:
+    host: email.creditease.cn
+    port: 587
+    username: it.edp.support@creditease.cn
+    fromAddress:
+    password: 'edp@$%^963&'
+    nickname: 'Davinci Task'
+    properties:
+      smtp:
+        starttls:
+          enable: true
+          required: true
+        auth: true
+      mail:
+        smtp:
+          ssl:
+            enable: false
+
+
+aggregator:
+  enable: false
+
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*Mapper.xml
+  config-locations: classpath:mybatis/mybatis-config.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+
+custom-database-driver-path: ${DAVINCI_TASK_HOME}/config/database_driver.yml

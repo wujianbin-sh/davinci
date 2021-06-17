@@ -1,0 +1,66 @@
+spring:
+  ## davinci datasource config
+  datasource:
+    name: davinci
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/davinci?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initial-size: 1
+    min-idle: 1
+    max-wait: 60000
+    max-active: 5
+    break-after-acquire-failure: false
+    connection-error-retry-attempts: 1
+    time-between-eviction-runs-millis: 2000
+    min-evictable-idle-time-millis: 600000
+    max-evictable-idle-time-millis: 900000
+    time-between-connect-error-millis: 60000
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: select 1
+    validation-query-timeout: 10
+    keep-alive: false
+    filters: stat
+
+  quartz:
+    job-store-type: memory
+    properties:
+      org:
+        quartz:
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 4
+
+
+## your datasource config
+source:
+  initial-size: 1
+  min-idle: 1
+  max-wait: 60000
+  max-active: 1
+  break-after-acquire-failure: false
+  connection-error-retry-attempts: 1
+  time-between-eviction-runs-millis: 2000
+  min-evictable-idle-time-millis: 600000
+  max-evictable-idle-time-millis: 900000
+  time-between-connect-error-millis: 60000
+  test-while-idle: true
+  test-on-borrow: false
+  test-on-return: false
+  validation-query: select 1
+  validation-query-timeout: 10
+  keep-alive: false
+  filters: stat
+
+  enable-query-log: true
+  result-limit: 1000000
+
+
+data-auth-center:
+  channels:
+    - name: DAC
+      base-url: http://10.143.131.33:8082/api/v1/service/tenants
+      auth-code: f57fdeec6829d51e8797a0fe307211b6

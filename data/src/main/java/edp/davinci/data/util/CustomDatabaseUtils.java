@@ -119,10 +119,6 @@ public class CustomDatabaseUtils {
                 versions.add(database.getVersion());
             }
 
-            if (versions.size() == 1 && versions.get(0).equals(Constants.DATABASE_DEFAULT_VERSION)) {
-                versions.remove(0);
-            }
-
             databaseVersionMap.put(database.getName(), versions);
             customDatabaseMap.put(getKey(database.getName(), database.getVersion()), database);
         }

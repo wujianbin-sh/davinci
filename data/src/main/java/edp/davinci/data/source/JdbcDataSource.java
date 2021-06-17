@@ -153,7 +153,7 @@ public class JdbcDataSource {
     @Getter
     protected String validationQuery;
 
-    @Value("${aggregator.name}")
+    @Value("${aggregator.name:h2}")
     @Getter
     protected String aggregatorName;
 
@@ -271,7 +271,7 @@ public class JdbcDataSource {
 
             } else {
             	druidDataSource.setDriverClassName(CustomDatabaseUtils.getInstance(url, version).getDriver());
-            	String path = System.getenv("DAVINCI_HOME") + File.separator  + String.format(Constants.EXT_LIB_PATH_FORMATTER, config.getDatabase(), version);
+                String path = System.getenv("DAVINCI_HOME") + File.separator + String.format(Constants.EXT_LIB_PATH_FORMATTER, config.getDatabase(), version);
             	druidDataSource.setDriverClassLoader(ExtendedJdbcClassLoader.getExtJdbcClassLoader(path));
             }
 

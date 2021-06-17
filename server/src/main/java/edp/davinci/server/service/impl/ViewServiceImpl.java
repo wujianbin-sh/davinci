@@ -75,9 +75,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static edp.davinci.commons.Constants.*;
-import static edp.davinci.server.commons.Constants.NO_AUTH_PERMISSION;
-import static edp.davinci.server.commons.Constants.AUTH_PERMISSION;
-import static edp.davinci.server.enums.SqlVariableTypeEnum.AUTHVAR;
+import static edp.davinci.data.commons.Constants.NO_AUTH_PERMISSION;
+import static edp.davinci.data.commons.Constants.AUTH_PERMISSION;
 
 @Slf4j
 @Service("viewService")
@@ -582,7 +581,7 @@ public class ViewServiceImpl extends BaseEntityService implements ViewService {
             Map<String, List<String>> authParams = new HashMap<>();
             if (isMaintainer) {
                 authParams = null;
-            }else{
+            } else {
                 setAuthVarValue(authParams, variables, roleViewList, user);
             }
 
@@ -775,7 +774,7 @@ public class ViewServiceImpl extends BaseEntityService implements ViewService {
         }
 
         List<SqlVariable> authVars = variables.stream()
-                .filter(v -> AUTHVAR == SqlVariableTypeEnum.typeOf(v.getType())).collect(Collectors.toList());
+                .filter(v -> SqlVariableTypeEnum.AUTHVAR == SqlVariableTypeEnum.typeOf(v.getType())).collect(Collectors.toList());
 
         roleViewList.forEach(r -> {
 

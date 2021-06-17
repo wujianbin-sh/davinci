@@ -19,7 +19,7 @@
   -->
 
 <assembly>
-    <id>dist</id>
+    <id>server</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -29,7 +29,7 @@
         <!-- ext jdbc driver -->
         <fileSet>
             <directory>
-                ${project.parent.basedir}/server/lib
+                ${project.parent.basedir}/lib
             </directory>
             <outputDirectory>lib</outputDirectory>
         </fileSet>
@@ -62,14 +62,13 @@
         </fileSet>
         <fileSet>
             <directory>
-                ${project.parent.basedir}/bin
+                ${project.parent.basedir}/bin/server
             </directory>
             <outputDirectory>bin</outputDirectory>
-            <excludes>
-                <exclude>upgrade/**</exclude>
-                <exclude>upgrade.*</exclude>
-                <exclude>upgrade-*</exclude>
-            </excludes>
+            <includes>
+                <include>*.sh</include>
+                <include>*.bat</include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>
@@ -113,6 +112,11 @@
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
             <useTransitiveDependencies>false</useTransitiveDependencies>
+            <excludes>
+                <exclude>
+                    com.creditease:davinci-task:jar
+                </exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
 </assembly>

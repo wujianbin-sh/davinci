@@ -31,7 +31,6 @@ public class UnAuthorizedException extends RuntimeException {
         super(message);
     }
 
-
     public UnAuthorizedException() {
         super(HttpCodeEnum.UNAUTHORIZED.getMessage());
     }

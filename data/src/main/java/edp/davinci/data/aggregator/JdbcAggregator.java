@@ -66,16 +66,16 @@ public class JdbcAggregator extends Aggregator {
 
 	public static final String DATA_TABLE_NAME = "davinci_data_table";
 
-	@Value("${aggregator.name}")
+	@Value("${aggregator.name:h2}")
 	private String name;
 
 	@Value("${aggregator.url:jdbc:h2:file:~/h2/data/davinci;DB_CLOSE_DELAY=-1;COMPRESS=true;TRACE_LEVEL_FILE=0;TRACE_LEVEL_SYSTEM_OUT=0;AUTO_SERVER=true;DATABASE_TO_UPPER=false}")
 	private String url;
 
-	@Value("${aggregator.username}")
+	@Value("${aggregator.username:}")
 	private String username;
 
-	@Value("${aggregator.password}")
+	@Value("${aggregator.password:}")
 	private String password;
 
 	@Value("${aggregator.ttl:30000}")

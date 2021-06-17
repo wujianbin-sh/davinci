@@ -192,10 +192,6 @@ public class Constants {
 
     public static final String LDAP_USER_PASSWORD = "LDAP";
 
-    public static final String NO_AUTH_PERMISSION = "@DAVINCI_DATA_ACCESS_DENIED@";
-
-    public static final String AUTH_PERMISSION = "@DAVINCI_DATA_ACCESS_PERMISSION@";
-
     public static final String DAVINCI_TOPIC_CHANNEL = "DAVINCI_TOPIC_CHANNEL";
 
     public static final int INVALID_SHEET_NAME_LENGTH = 28;
