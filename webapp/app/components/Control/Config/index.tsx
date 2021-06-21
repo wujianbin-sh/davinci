@@ -497,7 +497,6 @@ export class ControlConfig extends PureComponent<
     const { formedViews } = this.props
     const { editingControlBase, editingRelatedViewList } = this.state
     const { multiple } = editingControlBase
-
     const changedControlBase: Partial<IControl> = {
       type: value,
       multiple: void 0,
@@ -558,7 +557,7 @@ export class ControlConfig extends PureComponent<
   }
 
   private multipleSettingChange = (e: CheckboxChangeEvent) => {
-    const { editingControlBase } = this.state
+    const { editingControlBase, controls } = this.state
     const { type } = editingControlBase
     const changedFields: Partial<IControl> = {
       operator: getValidOperator(
@@ -569,13 +568,23 @@ export class ControlConfig extends PureComponent<
       defaultValueType: ControlDefaultValueTypes.Fixed,
       defaultValue: void 0
     }
+
+    // const relationControl = controls.find(
+    //   (item) =>
+    //     item?.conditions &&
+    //     item?.conditions[0]?.control == editingControlBase.key
+    // )
+    // if (relationControl) {
+    //   relationControl.operator = changedFields.operator
+    //   relationControl.conditions[0].operator = changedFields.operator
+    // }
     this.setState({
       editingControlBase: {
         ...editingControlBase,
         multiple: e.target.checked,
         defaultValueType: ControlDefaultValueTypes.Fixed
       },
-      controlFormWillChangeValues: changedFields
+      controlFormWillChangeValues: changedFields,
     })
   }
 
