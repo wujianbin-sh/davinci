@@ -713,7 +713,6 @@ export function getPanelRenderState(
   const validControls: IControl[] = []
   const itemIds = items.split(',')
   const defaultValues = {}
-
   controls.forEach((control) => {
     defaultValues[control.key] = getPreciseDefaultValue(control)
     validControls.push({
@@ -733,7 +732,6 @@ export function getPanelRenderState(
   })
 
   const { renderTree, flatTree } = getControlRenderTree(validControls)
-
   return {
     renderTree,
     flatTree,
@@ -760,9 +758,9 @@ export function getControlConditionValue(
           case OperatorTypes.NotEqual:
             return controlValues[conditionControlKey] !== value
           case OperatorTypes.In:
-            return controlValues[conditionControlKey].includes(value)
+            return Array.isArray(controlValues[conditionControlKey]) && controlValues[conditionControlKey].includes(value)
           case OperatorTypes.NotIn:
-            return !controlValues[conditionControlKey].includes(value)
+            return Array.isArray(controlValues[conditionControlKey]) && !controlValues[conditionControlKey].includes(value)
         }
       }
     }
@@ -778,7 +776,7 @@ export function getControlVisibility(
   const { visibility, conditions } = control
   switch (visibility) {
     case ControlVisibilityTypes.Conditional:
-      return getControlConditionValue(controls, conditions, controlValues)
+      return Object.keys(controlValues).length ? getControlConditionValue(controls, conditions, controlValues) : false
     case ControlVisibilityTypes.Visible:
       return true
     case ControlVisibilityTypes.Hidden:

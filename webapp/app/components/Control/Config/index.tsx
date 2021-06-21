@@ -497,7 +497,6 @@ export class ControlConfig extends PureComponent<
     const { formedViews } = this.props
     const { editingControlBase, editingRelatedViewList } = this.state
     const { multiple } = editingControlBase
-
     const changedControlBase: Partial<IControl> = {
       type: value,
       multiple: void 0,
