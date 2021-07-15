@@ -353,7 +353,8 @@ function getDownloadInfo(
   relatedWidget: IWidgetFormed,
   formedViews: IFormedViews,
   localControlFormValues: object,
-  globalControlConditions: IGlobalControlConditions
+  globalControlConditions: IGlobalControlConditions,
+  exportHTML?: string
 ): IDataDownloadStatistic {
   const localControlConditions = getCurrentControlValues(
     ControlPanelTypes.Local,
@@ -377,7 +378,8 @@ function getDownloadInfo(
       ...getRequestBody(requestParams),
       flush: true,
       pageNo: 0,
-      pageSize: 0
+      pageSize: 0,
+      exportHTML: exportHTML
     },
     itemId,
     widget: relatedWidget
@@ -389,7 +391,7 @@ export function* initiateDownloadTask(action: DashboardActionType) {
     return
   }
   const { DownloadTaskInitiated, initiateDownloadTaskFail } = DashboardActions
-  const { type, itemId } = action.payload
+  const { type, itemId, exportHTML } = action.payload
   const currentDashboard: IDashboard = yield select(
     makeSelectCurrentDashboard()
   )
@@ -456,7 +458,8 @@ export function* initiateDownloadTask(action: DashboardActionType) {
         relatedWidget,
         formedViews,
         localControlFormValues,
-        globalControlConditionsByItem[itemId]
+        globalControlConditionsByItem[itemId],
+        exportHTML
       )
     )
   }
