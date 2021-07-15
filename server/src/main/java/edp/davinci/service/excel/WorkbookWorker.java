@@ -52,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 /**
@@ -101,7 +102,20 @@ public class WorkbookWorker<T> extends MsgNotifier implements Callable {
                 sheetContext.setSheet(sheet);
                 sheetContext.setWorkbook(wb);
                 sheetContext.setSheetNo(sheetNo);
-                Future<Boolean> future = ExecutorUtils.submitSheetTask(sheetContext, context.getCustomLogger());
+                //Future<Boolean> future = ExecutorUtils.submitSheetTask(sheetContext, context.getCustomLogger());
+
+                Future<Boolean> future = null;
+                Optional<WidgetContext> widgetContext = context.getWidgets().stream().findFirst();
+                Widget widget = null;
+                if (widgetContext.isPresent()) {
+                    widget = widgetContext.get().getWidget();
+                }
+                if (widget != null && widgetContext.get().hasExportHtmlParam() && ExcelUtils.isPivotTable(widget.getConfig())) {
+                    future = ExecutorUtil.submitSheetTask(context, sheetContext, context.getCustomLogger());
+                } else {
+                    future = ExecutorUtil.submitSheetTask(sheetContext, context.getCustomLogger());
+                }
+
                 futures.add(future);
             }
 
