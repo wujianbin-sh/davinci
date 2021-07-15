@@ -131,13 +131,14 @@ export const DashboardActions = {
     }
   },
 
-  initiateDownloadTask(type: DownloadTypes, id?: number, itemId?: number) {
+  initiateDownloadTask(type: DownloadTypes, id?: number, itemId?: number, exportHTML?: string) {
     return {
       type: ActionTypes.INITIATE_DOWNLOAD_TASK,
       payload: {
         type,
         id,
-        itemId
+        itemId,
+        exportHTML
       }
     }
   },
