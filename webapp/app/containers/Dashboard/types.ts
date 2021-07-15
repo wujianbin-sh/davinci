@@ -135,6 +135,8 @@ export interface IDataRequestBody {
   pageNo: number
   pageSize: number
   nativeQuery: boolean
+  selectedChart?: number,
+  exportHTML?: string
 }
 
 export interface IDataDownloadStatistic {

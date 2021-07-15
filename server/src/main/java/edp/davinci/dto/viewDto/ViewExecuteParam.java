@@ -50,6 +50,8 @@ public class ViewExecuteParam extends ConcurrencyStrategy{
 
     private boolean nativeQuery = false;
 
+    private String exportHTML;
+
     public ViewExecuteParam() {
 
     }
@@ -61,7 +63,8 @@ public class ViewExecuteParam extends ConcurrencyStrategy{
                             List<Param> params,
                             Boolean cache,
                             Long expired,
-                            Boolean nativeQuery) {
+                            Boolean nativeQuery,
+                            String exportHTML) {
         this.groups = groupList;
         this.aggregators = aggregators;
         this.orders = orders;
@@ -70,6 +73,7 @@ public class ViewExecuteParam extends ConcurrencyStrategy{
         this.cache = cache;
         this.expired = expired;
         this.nativeQuery = nativeQuery;
+        this.exportHTML = exportHTML;
     }
 
     public List<String> getGroups() {

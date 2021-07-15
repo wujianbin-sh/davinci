@@ -418,7 +418,16 @@ export class Grid extends React.Component<IGridProps & RouteComponentWithParams,
   }
 
   private initiateWidgetDownloadTask = (itemId: number) => {
-    this.props.onInitiateDownloadTask(DownloadTypes.Widget, void 0, itemId)
+    //this.props.onInitiateDownloadTask(DownloadTypes.Widget, void 0, itemId)
+    const widgetDOM = findDOMNode(this[`dashboardItem${itemId}`])
+    let pivotTableHTML;
+    widgetDOM.childNodes.forEach(element => {
+      let emt = element as HTMLElement
+      if (emt.className.indexOf("ant-dropdown-trigger") > 0) {
+        pivotTableHTML = emt.innerHTML;
+      }
+    })
+    this.props.onInitiateDownloadTask(DownloadTypes.Widget, void 0, itemId, pivotTableHTML)
   }
 
   private initiateDashboardDownloadTask = () => {
@@ -1257,8 +1266,9 @@ export function mapDispatchToProps (dispatch) {
     onInitiateDownloadTask: (
       type: DownloadTypes,
       id?: number,
-      itemId?: number
-    ) => dispatch(initiateDownloadTask(type, id, itemId)),
+      itemId?: number,
+      exportHTML?: string
+    ) => dispatch(initiateDownloadTask(type, id, itemId, exportHTML)),
     onLoadSelectOptions: (
       controlKey: string,
       requestParams: { [viewId: string]: IDistinctValueReqeustParams },

@@ -26,6 +26,7 @@ import edp.davinci.model.Widget;
 import lombok.Data;
 
 import java.io.Serializable;
+import org.thymeleaf.util.StringUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -66,5 +67,12 @@ public class WidgetContext implements Serializable {
 
     public boolean hasExecuteParam() {
         return this.executeParam != null;
+    }
+
+    public boolean hasExportHtmlParam() {
+        if(!hasExecuteParam()) return false;
+        
+        String exportHtml = executeParam.getExportHTML();
+        return !StringUtils.isEmpty(exportHtml);
     }
 }

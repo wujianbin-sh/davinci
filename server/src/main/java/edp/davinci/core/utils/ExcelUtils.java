@@ -540,4 +540,24 @@ public class ExcelUtils {
         }
         return false;
     }
+
+    public static boolean isPivotTable(String json) {
+        if (!StringUtils.isEmpty(json)) {
+            try {
+                JSONObject jsonObject = JSONObject.parseObject(json);
+                if (null != jsonObject) {
+                    if (jsonObject.containsKey("selectedChart") && jsonObject.containsKey("mode")) {
+                        Integer selectedChart = jsonObject.getInteger("selectedChart");
+                        String mode = jsonObject.getString("mode");
+                        if (selectedChart.equals(1) && mode.equals("pivot")) {
+                            return true;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
+    }
 }
